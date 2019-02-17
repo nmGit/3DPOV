@@ -146,13 +146,13 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@$(MAKE) --no-print-directory -Onone "gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out"
 
 dependents:
-	-cd C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug && $(MAKE) all
+	-cd C:/Users/Noah/Documents/College/ECE453/3D_POV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug && $(MAKE) all
 
 # Tool invocations
-gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib
+gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/Noah/Documents/College/ECE453/3D_POV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=none -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on -z -m"gpiointerrupt_MSP_EXP432P401R_freertos_ccs.map" -i"C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source" -i"C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/lib" --diag_suppress=10063 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="gpiointerrupt_MSP_EXP432P401R_freertos_ccs_linkInfo.xml" --rom_model -o "gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=none -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on -z -m"gpiointerrupt_MSP_EXP432P401R_freertos_ccs.map" -i"C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source" -i"C:/Users/Noah/Documents/College/ECE453/3D_POV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/lib" --diag_suppress=10063 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="gpiointerrupt_MSP_EXP432P401R_freertos_ccs_linkInfo.xml" --rom_model -o "gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
@@ -173,7 +173,7 @@ clean:
 
 .PHONY: all clean dependents
 .SECONDARY:
-C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib:
+C:/Users/Noah/Documents/College/ECE453/3D_POV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib:
 
 -include ../makefile.targets
 
