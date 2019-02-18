@@ -129,37 +129,37 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out \
+3D_POV_Main_Board.out \
 
 EXE_OUTPUTS__QUOTED += \
-"gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out" \
+"3D_POV_Main_Board.out" \
 
 BIN_OUTPUTS += \
-gpiointerrupt_MSP_EXP432P401R_freertos_ccs.hex \
+3D_POV_Main_Board.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"gpiointerrupt_MSP_EXP432P401R_freertos_ccs.hex" \
+"3D_POV_Main_Board.hex" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out"
+	@$(MAKE) --no-print-directory -Onone "3D_POV_Main_Board.out"
 
 dependents:
-	-cd C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug && $(MAKE) clean all
+	-cd C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug && $(MAKE) all
 
 # Tool invocations
-gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib
+3D_POV_Main_Board.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=none -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on -z -m"gpiointerrupt_MSP_EXP432P401R_freertos_ccs.map" -i"C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source" -i"C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/lib" --diag_suppress=10063 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="gpiointerrupt_MSP_EXP432P401R_freertos_ccs_linkInfo.xml" --rom_model -o "gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=none -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on -z -m"3D_POV_Main_Board.map" -i"C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source" -i"C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/lib" --diag_suppress=10063 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="3D_POV_Main_Board_linkInfo.xml" --rom_model -o "3D_POV_Main_Board.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
-gpiointerrupt_MSP_EXP432P401R_freertos_ccs.hex: $(EXE_OUTPUTS)
+3D_POV_Main_Board.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: ARM Hex Utility'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/bin/armhex"  -o "gpiointerrupt_MSP_EXP432P401R_freertos_ccs.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/bin/armhex"  -o "3D_POV_Main_Board.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 

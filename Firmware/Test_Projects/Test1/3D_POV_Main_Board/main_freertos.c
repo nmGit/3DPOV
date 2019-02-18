@@ -49,6 +49,8 @@
 /* Example/Board Header files */
 #include "Board.h"
 
+/* stdio */
+#include <stdio.h>
 extern void *mainThread(void *arg0);
 
 /* Stack size in bytes */

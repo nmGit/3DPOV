@@ -42,6 +42,7 @@
 /* Example/Board Header files */
 #include "Board.h"
 
+#include <stdio.h>
 /*
  *  ======== gpioButtonFxn0 ========
  *  Callback function for the GPIO interrupt on Board_GPIO_BUTTON0.
@@ -68,6 +69,7 @@ void gpioButtonFxn1(uint_least8_t index)
  */
 void *mainThread(void *arg0)
 {
+    printf("Hello, World!");
     /* Call driver init functions */
     GPIO_init();
 
