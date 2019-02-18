@@ -12,7 +12,7 @@ dpl/MutexP_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/includ
 dpl/MutexP_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdbool.h
 dpl/MutexP_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stddef.h
 dpl/MutexP_freertos.obj: C:/FreeRTOSv9.0.0/FreeRTOS/Source/include/FreeRTOS.h
-dpl/MutexP_freertos.obj: C:/Users/Noah/Documents/College/ECE453/3D_POV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/FreeRTOSConfig.h
+dpl/MutexP_freertos.obj: C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/FreeRTOSConfig.h
 dpl/MutexP_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdlib.h
 dpl/MutexP_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/_ti_config.h
 dpl/MutexP_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/linkage.h
@@ -37,7 +37,7 @@ C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/sys/_stdint.h:
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdbool.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stddef.h: 
 C:/FreeRTOSv9.0.0/FreeRTOS/Source/include/FreeRTOS.h: 
-C:/Users/Noah/Documents/College/ECE453/3D_POV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/FreeRTOSConfig.h: 
+C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/FreeRTOSConfig.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdlib.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/_ti_config.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/linkage.h: 

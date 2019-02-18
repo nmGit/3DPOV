@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v18.1.4                     
 ******************************************************************************
->> Linked Sun Feb 17 16:40:25 2019
+>> Linked Sun Feb 17 18:32:27 2019
 
 OUTPUT FILE NAME:   <gpiointerrupt_MSP_EXP432P401R_freertos_ccs.out>
 ENTRY POINT SYMBOL: "resetISR"  address: 00004261
@@ -281,7 +281,7 @@ MODULE SUMMARY
     +--+----------------------------+-------+---------+---------+
        Total:                       240     76        136    
                                                              
-    C:/Users/Noah/Documents/College/ECE453/3D_POV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib
+    C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/freertos_builds_MSP_EXP432P401R_release_ccs/Debug/freertos_builds_MSP_EXP432P401R_release_ccs.lib
        heap_4.obj                   888     0         65584  
        tasks.obj                    3942    0         720    
        HwiPMSP432_freertos.obj      314     0         4104   
