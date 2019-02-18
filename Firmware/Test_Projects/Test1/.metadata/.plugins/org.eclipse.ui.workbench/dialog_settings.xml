@@ -31,6 +31,8 @@
 		<item value="false" key="WizardFileSystemResourceImportPage1.STORE_CREATE_CONTAINER_STRUCTURE_ID"/>
 		<item value="false" key="WizardFileSystemResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID"/>
 		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="C:\ti\simplelink_msp432p4_sdk_2_40_00_10\source\ti\devices"/>
+			<item value="C:\ti\simplelink_msp432p4_sdk_2_40_00_10\source\ti\drivers\uart"/>
 			<item value="C:\FreeRTOSv9.0.0\FreeRTOS\Source"/>
 		</list>
 	</section>

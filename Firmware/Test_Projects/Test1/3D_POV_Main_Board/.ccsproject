@@ -15,4 +15,5 @@
 	<templateProperties value="id=gpiointerrupt_MSP_EXP432P401R_freertos_ccs.projectspec.gpiointerrupt_MSP_EXP432P401R_freertos_ccs,buildProfile=release,isHybrid=true"/>
 	<origin value="C:\ti\simplelink_msp432p4_sdk_2_40_00_10\examples\rtos\MSP_EXP432P401R\drivers\gpiointerrupt\freertos\ccs\gpiointerrupt_MSP_EXP432P401R_freertos_ccs.projectspec"/>
 	<filesToOpen value=""/>
+	<isTargetManual value="false"/>
 </projectOptions>

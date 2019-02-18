@@ -338,37 +338,12 @@ const Display_Config Display_config[] = {
 const uint_least8_t Display_count = sizeof(Display_config) / sizeof(Display_Config);
 
 
-void UART_init()
-{
-    // Initialize the UART driver
-    UARTMSP432_init();
-    // Create a UART with data processing off
-    UART_Params_init(&uartParams);
-    uartParams.writeDataMode = UART_DATA_BINARY;
-    uartParams.readDataMode = UART_DATA_BINARY;
-    uartParams.readReturnMode = UART_RETURN_FULL;
-    uartParams.readEcho = UART_ECHO_OFF;
-    uartParams.baudRate = 9600;
-
-    // Open an instance of the UART drivers
-    uart = UART_open(Board_UART0, &uartParams);
-
-    if(uart == NULL)
-    {
-        return;
-    }
-
-
-
-}
-
 /*
  *  ======== MSP_EXP432P401R_initGeneral ========
  */
 void MSP_EXP432P401R_initGeneral(void)
 {
     Power_init();
-    UART_init();
 }
 
 /*

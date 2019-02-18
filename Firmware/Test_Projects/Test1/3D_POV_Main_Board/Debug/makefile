@@ -13,6 +13,9 @@ ORDERED_OBJS += \
 "./MSP_EXP432P401R.obj" \
 "./gpiointerrupt.obj" \
 "./main_freertos.obj" \
+"./SimpleLink/UARTMSP432.obj" \
+"./source/communication/DebugUART.obj" \
+"./source/platform/platform_init.obj" \
 "../MSP_EXP432P401R_FREERTOS.cmd" \
 $(GEN_CMDS__FLAG) \
 -l"ti/display/lib/display.aem4f" \
@@ -32,7 +35,13 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir_vars.mk
+-include SimpleLink/subdir_vars.mk
+-include source/communication/subdir_vars.mk
+-include source/platform/subdir_vars.mk
 -include subdir_rules.mk
+-include SimpleLink/subdir_rules.mk
+-include source/communication/subdir_rules.mk
+-include source/platform/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -166,8 +175,9 @@ dependents:
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "MSP_EXP432P401R.obj" "gpiointerrupt.obj" "main_freertos.obj" 
-	-$(RM) "MSP_EXP432P401R.d" "gpiointerrupt.d" "main_freertos.d" 
+	-$(RM) "MSP_EXP432P401R.obj" "gpiointerrupt.obj" "main_freertos.obj" "SimpleLink\UARTMSP432.obj" "source\communication\DebugUART.obj" "source\platform\platform_init.obj" 
+	-$(RM) "MSP_EXP432P401R.d" "gpiointerrupt.d" "main_freertos.d" "SimpleLink\UARTMSP432.d" 
+	-$(RM) "source\communication\DebugUART.d" "source\platform\platform_init.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

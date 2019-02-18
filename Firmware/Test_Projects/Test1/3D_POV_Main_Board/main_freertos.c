@@ -51,6 +51,8 @@
 
 /* stdio */
 #include <stdio.h>
+#include <platform_init.h>
+
 extern void *mainThread(void *arg0);
 
 /* Stack size in bytes */
@@ -73,7 +75,7 @@ int main(void)
 
     /* Call driver init functions */
     Board_init();
-
+    platform_init();
     /* Initialize the attributes structure with default values */
     pthread_attr_init(&attrs);
 

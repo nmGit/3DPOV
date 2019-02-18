@@ -33,6 +33,8 @@
 /*
  *  ======== gpiointerrupt.c ========
  */
+
+#include <platform_init.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -44,7 +46,8 @@
 
 #include <stdio.h>
 
-#include "platform_init.h"
+#include "DebugUART.h"
+
 /*
  *  ======== gpioButtonFxn0 ========
  *  Callback function for the GPIO interrupt on Board_GPIO_BUTTON0.
@@ -71,12 +74,16 @@ void gpioButtonFxn1(uint_least8_t index)
  */
 void *mainThread(void *arg0)
 {
+    dbg_printf("Hello, world! Hex: %x\r\n", 0x10);
+    //dbg_printf("Hello, world! dec: %d\r\n", 0x10);
+    //dbg_printf("Hello, world! chr: %c\r\n", 'a');
+    //dbg_printf("Hello, world! str: %s\r\n", "HELLO");
+    //printf("HELLO");
     /* Call driver init functions */
     GPIO_init();
 
     /* Configure the LED and button pins */
-    GPIO_setConfig(Board_GPIO_LED0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
-    GPIO_setConfig(Board_GPIO_LED1, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
+
     GPIO_setConfig(Board_GPIO_BUTTON0, GPIO_CFG_IN_PU | GPIO_CFG_IN_INT_FALLING);
 
     /* Turn on user LED */
@@ -102,6 +109,6 @@ void *mainThread(void *arg0)
     }
 
 
-    dbgPrint();
+
     return (NULL);
 }

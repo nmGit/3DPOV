@@ -3,13 +3,18 @@
 	<section name="CleanDialogSettings">
 		<item value="828" key="DIALOG_WIDTH"/>
 		<item value="true" key="BUILD_ALL"/>
-		<item value="false" key="TOGGLE_SELECTED"/>
+		<item value="true" key="TOGGLE_SELECTED"/>
 		<item value="595" key="DIALOG_HEIGHT"/>
 		<item value="1186" key="DIALOG_X_ORIGIN"/>
 		<item value="550" key="DIALOG_Y_ORIGIN"/>
 		<item value="false" key="BUILD_NOW"/>
 	</section>
 	<section name="ExternalProjectImportWizard">
+	</section>
+	<section name="org.eclipse.ui.internal.views.markers.FiltersConfigurationDialog">
+		<item value="All Errors on Workspace" key="SELECTED_FILTER_GROUP"/>
+		<list key="PREV_SELECTED_ELEMENTS">
+		</list>
 	</section>
 	<section name="SaveAsDialogSettings">
 		<item value="875" key="DIALOG_WIDTH"/>

@@ -38,6 +38,7 @@ main_freertos.obj: ../Board.h
 main_freertos.obj: ../MSP_EXP432P401R.h
 main_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdio.h
 main_freertos.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdarg.h
+main_freertos.obj: C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/3D_POV_Main_Board/source/platform/include/platform_init.h
 
 ../main_freertos.c: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdint.h: 
@@ -77,3 +78,4 @@ C:/FreeRTOSv9.0.0/FreeRTOS/Source/include/list.h:
 ../MSP_EXP432P401R.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdio.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/stdarg.h: 
+C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/3D_POV_Main_Board/source/platform/include/platform_init.h: 
