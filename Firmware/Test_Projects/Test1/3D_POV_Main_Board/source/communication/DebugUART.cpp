@@ -29,12 +29,12 @@ int dbg_printf(char * format, ...)
         while(*format_char != '%')
         {
             UART_write(dbguart, format_char, 1);
-            format_char++;
-            if(format_char == '\0')
-            {
-                break;
-            }
 
+            if(*format_char == 0)
+            {
+                return 0;
+            }
+            format_char++;
 
         }
         format_char++;
@@ -50,7 +50,7 @@ int dbg_printf(char * format, ...)
                       i = -i;
                       UART_write(dbguart, "-", 1);
                   }
-                  strncpy(buf, convert(i,16), DBG_PRINTF_CONVERT_BUFFER_SIZE);
+                  convert(i,16, buf);
                   UART_write(dbguart, buf, strlen(buf));
                   break;
 
@@ -58,11 +58,11 @@ int dbg_printf(char * format, ...)
                   UART_write(dbguart, s, strlen(s));
                   break;
         case 'x': i = va_arg(arg, unsigned int);
-
-                  strncpy(buf, convert(i,16), DBG_PRINTF_CONVERT_BUFFER_SIZE);
+                  convert(i,16, buf);
                   UART_write(dbguart, buf, strlen(buf));
                   break;
         }
+
     }
 
 
@@ -78,22 +78,28 @@ int dbg_printf(char * format, ...)
 
 }
 
-char * convert(unsigned int num, int base)
+void convert(unsigned int num, int base, char * buf)
 {
     static char Representation[] = "0123456789ABCDEF";
 
     char *ptr;
     char buffer[DBG_PRINTF_CONVERT_BUFFER_SIZE];
-    ptr = buffer + DBG_PRINTF_CONVERT_BUFFER_SIZE;
+    unsigned len = 0;
+    ptr = buffer + DBG_PRINTF_CONVERT_BUFFER_SIZE - 1;
+
+    len++;
     *ptr = '\0';
 
     do
     {
-        *--ptr = Representation[num % base];
+        len++;
+        ptr--;
+        *ptr = Representation[num % base];
         num /= base;
     }while(num != 0);
 
-    return(ptr);
+    memcpy(buf, ptr, len);
+    return;
 
 
 }

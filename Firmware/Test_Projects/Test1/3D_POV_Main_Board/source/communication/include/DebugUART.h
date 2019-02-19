@@ -20,7 +20,7 @@ extern "C" {
 #endif
 
     int dbg_printf(char * format, ...);
-    char * convert(unsigned int num, int base);
+    void convert(unsigned int num, int base, char * buf);
 
 #if __cplusplus
 }
