@@ -48,6 +48,8 @@
 
 #include "DebugUART.h"
 
+static char button_0_pushed = 0;
+static char button_1_pushed = 0;
 /*
  *  ======== gpioButtonFxn0 ========
  *  Callback function for the GPIO interrupt on Board_GPIO_BUTTON0.
@@ -56,6 +58,7 @@ void gpioButtonFxn0(uint_least8_t index)
 {
     /* Clear the GPIO interrupt and toggle an LED */
     GPIO_toggle(Board_GPIO_LED0);
+    button_0_pushed = 1;
 }
 
 /*
@@ -66,7 +69,10 @@ void gpioButtonFxn0(uint_least8_t index)
 void gpioButtonFxn1(uint_least8_t index)
 {
     /* Clear the GPIO interrupt and toggle an LED */
+
     GPIO_toggle(Board_GPIO_LED1);
+    button_1_pushed = 1;
+
 }
 
 /*
@@ -74,10 +80,11 @@ void gpioButtonFxn1(uint_least8_t index)
  */
 void *mainThread(void *arg0)
 {
-    dbg_printf("Hello, world! Hex: %x\r\n", 0x10);
-    //dbg_printf("Hello, world! dec: %d\r\n", 0x10);
-    //dbg_printf("Hello, world! chr: %c\r\n", 'a');
-    //dbg_printf("Hello, world! str: %s\r\n", "HELLO");
+    dbg_printf("MAIN THREAD\r\n");
+//    dbg_printf("Hello, world! Hex: %x\r\n", 0x10);
+//    dbg_printf("Hello, world! dec: %d\r\n", 0x10);
+//    dbg_printf("Hello, world! chr: %c\r\n", 'a');
+//    dbg_printf("Hello, world! str: %s\r\n", "HELLO");
     //printf("HELLO");
     /* Call driver init functions */
     GPIO_init();
@@ -108,7 +115,23 @@ void *mainThread(void *arg0)
         GPIO_enableInt(Board_GPIO_BUTTON1);
     }
 
+    while(1)
+    {
+        if(button_0_pushed)
+        {
+            dbg_printf("GPIO button 0 pushed\r\n");
 
+            button_0_pushed = 0;
+
+        }
+        if(button_1_pushed)
+        {
+            dbg_printf("GPIO button 1 pushed\r\n");
+
+            button_1_pushed = 0;
+
+        }
+    }
 
     return (NULL);
 }

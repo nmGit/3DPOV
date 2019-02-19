@@ -52,11 +52,11 @@
 /* stdio */
 #include <stdio.h>
 #include <platform_init.h>
-
+#include <DebugUART.h>
 extern void *mainThread(void *arg0);
 
 /* Stack size in bytes */
-#define THREADSTACKSIZE   1024
+#define THREADSTACKSIZE   1024*4
 
 /*
  *  ======== main ========
@@ -76,6 +76,7 @@ int main(void)
     /* Call driver init functions */
     Board_init();
     platform_init();
+    //dbg_printf("Booting...\r\n");
     /* Initialize the attributes structure with default values */
     pthread_attr_init(&attrs);
 
@@ -94,7 +95,7 @@ int main(void)
         /* pthread_create() failed */
         while (1) {}
     }
-
+    //dbg_printf("Starting scheduler...\r\n");
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
 
