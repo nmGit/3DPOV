@@ -3,10 +3,13 @@
 #include <stdio.h>
 
 #include <cstring>
-#include "UARTMSP432.h"
+#include "UART.h"
 #include "ti/drivers/GPIO.h"
+#include <ti/devices/msp432p4xx/inc/msp.h>
 #include "Board.h"
 #include <stdarg.h>
+#include "UART/UART.h"
+
 /* Override printf */
 /*
 extern UART_Handle dbguart;
@@ -28,7 +31,7 @@ int dbg_printf(char * format, ...)
     {
         while(*format_char != '%')
         {
-            UART_write(dbguart, format_char, 1);
+            dbg_uart_write(format_char, 1);
 
             if(*format_char == 0)
             {
@@ -41,25 +44,25 @@ int dbg_printf(char * format, ...)
         switch(*format_char)
         {
         case 'c': i = va_arg(arg, int);
-                  UART_write(dbguart, &i, 1);
+                  dbg_uart_write((char*)&i, 1);
                   break;
 
         case 'd': i = va_arg(arg, int);
                   if(i < 0)
                   {
                       i = -i;
-                      UART_write(dbguart, "-", 1);
+                      dbg_uart_write("-", 1);
                   }
                   convert(i,16, buf);
-                  UART_write(dbguart, buf, strlen(buf));
+                  dbg_uart_write(buf, strlen(buf));
                   break;
 
         case 's': s = va_arg(arg, char *);
-                  UART_write(dbguart, s, strlen(s));
+                  dbg_uart_write(buf, strlen(buf));
                   break;
         case 'x': i = va_arg(arg, unsigned int);
                   convert(i,16, buf);
-                  UART_write(dbguart, buf, strlen(buf));
+                  dbg_uart_write(buf, strlen(buf));
                   break;
         }
 
@@ -76,6 +79,19 @@ int dbg_printf(char * format, ...)
     }
 #endif //NAM
 
+}
+
+void dbg_uart_write(char * buf, unsigned len)
+{
+    for(int chr = 0; chr < len; chr++)
+    {
+        putc_dbg(buf[chr]);
+    }
+}
+void putc_dbg(char c)
+{
+    uart_a_submit_for_transmit(EUSCI_A0, c);
+    //EUSCI_A0->TXBUF = c;
 }
 
 void convert(unsigned int num, int base, char * buf)

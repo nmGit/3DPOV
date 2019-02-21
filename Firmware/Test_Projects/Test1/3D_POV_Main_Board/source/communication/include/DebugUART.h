@@ -6,12 +6,10 @@
  */
 
 #include <stdio.h>
-#include "UARTMSP432.h"
+
+#include "UART.h"
 #ifndef SOURCE_COMMUNICATION_INCLUDE_DEBUGUART_H_
 #define SOURCE_COMMUNICATION_INCLUDE_DEBUGUART_H_
-
-extern UART_Handle dbguart;
-extern UART_Params dbguartParams;
 
 #define DBG_PRINTF_CONVERT_BUFFER_SIZE 16
 
@@ -21,6 +19,8 @@ extern "C" {
 
     int dbg_printf(char * format, ...);
     void convert(unsigned int num, int base, char * buf);
+    void dbg_uart_write(char * buf, unsigned len);
+    void putc_dbg(char c);
 
 #if __cplusplus
 }
