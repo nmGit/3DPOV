@@ -1,5 +1,8 @@
 Debug/
+
 Release/
+
 /.xdchelp
-.launches/
+.launches
+/
 .metadata/

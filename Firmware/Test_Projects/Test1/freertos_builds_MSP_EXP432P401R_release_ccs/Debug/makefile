@@ -26,7 +26,6 @@ ORDERED_OBJS += \
 "./freertos/timers.obj" \
 "./freertos/portable/CCS/ARM_CM4F/port.obj" \
 "./freertos/portable/CCS/ARM_CM4F/portasm.obj" \
-"./freertos/startup/startup_msp432_ccs.obj" \
 "./posix/PTLS.obj" \
 "./posix/aeabi_portable.obj" \
 "./posix/clock.obj" \
@@ -52,12 +51,10 @@ RMDIR := RMDIR /S/Q
 -include dpl/subdir_vars.mk
 -include freertos/subdir_vars.mk
 -include freertos/portable/CCS/ARM_CM4F/subdir_vars.mk
--include freertos/startup/subdir_vars.mk
 -include posix/subdir_vars.mk
 -include dpl/subdir_rules.mk
 -include freertos/subdir_rules.mk
 -include freertos/portable/CCS/ARM_CM4F/subdir_rules.mk
--include freertos/startup/subdir_rules.mk
 -include posix/subdir_rules.mk
 -include objects.mk
 
@@ -177,8 +174,8 @@ endif
 # Other Targets
 clean:
 	-$(RM) $(LIB_OUTPUTS__QUOTED)
-	-$(RM) "dpl\ClockP_freertos.obj" "dpl\DebugP_freertos.obj" "dpl\HwiPMSP432_freertos.obj" "dpl\MutexP_freertos.obj" "dpl\PowerMSP432_freertos.obj" "dpl\SemaphoreP_freertos.obj" "dpl\SystemP_freertos.obj" "freertos\croutine.obj" "freertos\event_groups.obj" "freertos\heap_4.obj" "freertos\list.obj" "freertos\queue.obj" "freertos\tasks.obj" "freertos\timers.obj" "freertos\portable\CCS\ARM_CM4F\port.obj" "freertos\portable\CCS\ARM_CM4F\portasm.obj" "freertos\startup\startup_msp432_ccs.obj" "posix\PTLS.obj" "posix\aeabi_portable.obj" "posix\clock.obj" "posix\memory.obj" "posix\mqueue.obj" "posix\pthread.obj" "posix\pthread_barrier.obj" "posix\pthread_cond.obj" "posix\pthread_mutex.obj" "posix\pthread_rwlock.obj" "posix\sched.obj" "posix\semaphore.obj" "posix\sleep.obj" "posix\timer.obj" 
-	-$(RM) "dpl\ClockP_freertos.d" "dpl\DebugP_freertos.d" "dpl\HwiPMSP432_freertos.d" "dpl\MutexP_freertos.d" "dpl\PowerMSP432_freertos.d" "dpl\SemaphoreP_freertos.d" "dpl\SystemP_freertos.d" "freertos\croutine.d" "freertos\event_groups.d" "freertos\heap_4.d" "freertos\list.d" "freertos\queue.d" "freertos\tasks.d" "freertos\timers.d" "freertos\portable\CCS\ARM_CM4F\port.d" "freertos\startup\startup_msp432_ccs.d" "posix\PTLS.d" "posix\aeabi_portable.d" "posix\clock.d" "posix\memory.d" "posix\mqueue.d" "posix\pthread.d" "posix\pthread_barrier.d" "posix\pthread_cond.d" "posix\pthread_mutex.d" "posix\pthread_rwlock.d" "posix\sched.d" "posix\semaphore.d" "posix\sleep.d" "posix\timer.d" 
+	-$(RM) "dpl\ClockP_freertos.obj" "dpl\DebugP_freertos.obj" "dpl\HwiPMSP432_freertos.obj" "dpl\MutexP_freertos.obj" "dpl\PowerMSP432_freertos.obj" "dpl\SemaphoreP_freertos.obj" "dpl\SystemP_freertos.obj" "freertos\croutine.obj" "freertos\event_groups.obj" "freertos\heap_4.obj" "freertos\list.obj" "freertos\queue.obj" "freertos\tasks.obj" "freertos\timers.obj" "freertos\portable\CCS\ARM_CM4F\port.obj" "freertos\portable\CCS\ARM_CM4F\portasm.obj" "posix\PTLS.obj" "posix\aeabi_portable.obj" "posix\clock.obj" "posix\memory.obj" "posix\mqueue.obj" "posix\pthread.obj" "posix\pthread_barrier.obj" "posix\pthread_cond.obj" "posix\pthread_mutex.obj" "posix\pthread_rwlock.obj" "posix\sched.obj" "posix\semaphore.obj" "posix\sleep.obj" "posix\timer.obj" 
+	-$(RM) "dpl\ClockP_freertos.d" "dpl\DebugP_freertos.d" "dpl\HwiPMSP432_freertos.d" "dpl\MutexP_freertos.d" "dpl\PowerMSP432_freertos.d" "dpl\SemaphoreP_freertos.d" "dpl\SystemP_freertos.d" "freertos\croutine.d" "freertos\event_groups.d" "freertos\heap_4.d" "freertos\list.d" "freertos\queue.d" "freertos\tasks.d" "freertos\timers.d" "freertos\portable\CCS\ARM_CM4F\port.d" "posix\PTLS.d" "posix\aeabi_portable.d" "posix\clock.d" "posix\memory.d" "posix\mqueue.d" "posix\pthread.d" "posix\pthread_barrier.d" "posix\pthread_cond.d" "posix\pthread_mutex.d" "posix\pthread_rwlock.d" "posix\sched.d" "posix\semaphore.d" "posix\sleep.d" "posix\timer.d" 
 	-$(RM) "freertos\portable\CCS\ARM_CM4F\portasm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

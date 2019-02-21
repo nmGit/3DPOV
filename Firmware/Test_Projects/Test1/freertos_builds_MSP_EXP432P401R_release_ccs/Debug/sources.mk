@@ -109,6 +109,5 @@ SUBDIRS := \
 dpl \
 freertos \
 freertos/portable/CCS/ARM_CM4F \
-freertos/startup \
 posix \
 
