@@ -38,6 +38,7 @@
 #ifdef __ICCARM__
 #include <DLib_Threads.h>
 #endif
+#include "ti/devices/msp432p4xx/inc/msp.h"
 
 /* POSIX Header files */
 #include <pthread.h>
@@ -50,8 +51,8 @@
 #include "Board.h"
 
 /* stdio */
-#include <stdio.h>
-#include <platform_init.h>
+//#include <stdio.h>
+//#include <platform_init.h>
 #include <DebugUART.h>
 extern void *mainThread(void *arg0);
 
@@ -61,21 +62,21 @@ extern void *mainThread(void *arg0);
 /*
  *  ======== main ========
  */
-int main(void)
-{
-    pthread_t           thread;
-    pthread_attr_t      attrs;
-    struct sched_param  priParam;
-    int                 retc;
 
-    /* initialize the system locks */
+
+int free_rtos_init(void)
+{
+   pthread_t           thread;
+   pthread_attr_t      attrs;
+   struct sched_param  priParam;
+   int                 retc;
+
+
+
 #ifdef __ICCARM__
     __iar_Initlocks();
 #endif
 
-    /* Call driver init functions */
-    Board_init();
-    platform_init();
     //dbg_printf("Booting...\r\n");
     /* Initialize the attributes structure with default values */
     pthread_attr_init(&attrs);
@@ -111,13 +112,16 @@ int main(void)
 //! \return none
 //!
 //*****************************************************************************
-void vApplicationMallocFailedHook()
+
+extern "C" void vApplicationMallocFailedHook()
 {
     /* Handle Memory Allocation Errors */
     while(1)
     {
     }
 }
+
+
 
 //*****************************************************************************
 //
@@ -128,10 +132,12 @@ void vApplicationMallocFailedHook()
 //! \return none
 //!
 //*****************************************************************************
-void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
+extern "C" void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
     //Handle FreeRTOS Stack Overflow
     while(1)
     {
     }
 }
+
+
