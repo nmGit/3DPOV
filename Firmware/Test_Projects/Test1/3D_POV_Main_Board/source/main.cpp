@@ -82,6 +82,8 @@
 //   Built with CCSv6.1, IAR, Keil, GCC
 //******************************************************************************
 #include "ti/devices/msp432p4xx/inc/msp.h"
+#include <ti/devices/msp432p4xx/driverlib/driverlib.h>
+#include "ti/devices/msp432p4xx/driverlib/cs.h"
 #include "irq_handlers.h"
 #include "platform_init.h"
 #include "processor/processor_init.h"
@@ -91,11 +93,18 @@
 
 int main(void)
 {
-    processor_init();
+
+    disable_wdt();
     Board_init();
+    processor_init();
     platform_init();
 
-
+    dbg_printf("-----------------------------\r\n");
+    dbg_printf("MCLK at \t%d Hz\r\n", CS_getMCLK());
+    dbg_printf("BCLK at \t%d Hz\r\n", CS_getBCLK());
+    dbg_printf("HSMCLK at \t%d Hz\r\n", CS_getHSMCLK());
+    dbg_printf("DCO at \t\t%d Hz\r\n", CS_getDCOFrequency());
+    dbg_printf("-----------------------------\r\n");
     dbg_printf("Booting FreeRTOS...\r\n");
     // Starts scheduler. NO RETURN
     free_rtos_init();
