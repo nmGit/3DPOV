@@ -8,7 +8,6 @@
 #ifndef SOURCE_PLATFORM_PLATFORM_INIT_H_
 #define SOURCE_PLATFORM_PLATFORM_INIT_H_
 
-
 #if __cplusplus
 extern "C" {
 #endif

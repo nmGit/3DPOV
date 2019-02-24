@@ -1,5 +1,4 @@
 #include <platform_init.h>
-#include "UARTMSP432.h"
 #include "MSP_EXP432P401R.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <ti/devices/msp432p4xx/inc/msp.h>
@@ -7,23 +6,16 @@
 // NAM
 // UART
 char        input;
-UART_Handle dbguart;
-UART_Params dbguartParams;
+
 
 #define DBG_UART_TX_PIN 2
 #define DBG_UART_RX_PIN 3
 
 extern "C" void dbg_UART_init()
 {
-    // Map pins to uart
-    CS->KEY = CS_KEY_VAL;                   // Unlock CS module for register access
-    CS->CTL0 = 0;                           // Reset tuning parameters
-    CS->CTL0 = CS_CTL0_DCORSEL_3;           // Set DCO to 12MHz (nominal, center of 8-16MHz range)
-    CS->CTL1 = CS_CTL1_SELA_2 |             // Select ACLK = REFO
-               CS_CTL1_SELS_3 |                // SMCLK = DCO
-               CS_CTL1_SELM_3;                 // MCLK = DCO
-    CS->KEY = 0;                            // Lock CS module from unintended accesses
 
+
+    // For MCLK
     // Configure UART pins
     P1->SEL0 |= BIT2 | BIT3;                // set 2-UART pin as secondary function
 
@@ -32,15 +24,15 @@ extern "C" void dbg_UART_init()
     EUSCI_A0->CTLW0 = EUSCI_A_CTLW0_SWRST | // Remain eUSCI in reset
                       EUSCI_B_CTLW0_SSEL__SMCLK;      // Configure eUSCI clock source for SMCLK
     // Baud Rate calculation
-    // N = 12000000/(115200) = 138.8888
+    // N = 48000000/(115200) = 416.66666
     // OS16 = 1
-    // UCBRx = N/16 = INT(138.8888/16) = 8 + 0.681
+    // UCBRx = N/16 = INT(416.66666/16) = 26 + 0.041667
     // UCBRFx = INT([(N/16) - INT(N/16)] * 16) = INT((8.681 - 8)*16) = INT(10.896) = 10
     // UCBRSx = [(N - INT(N))] = [0.681] = 0xD6
 
-    EUSCI_A0->BRW = 6;                     // 12000000/16/9600
-    EUSCI_A0->MCTLW =   (20 << EUSCI_A_MCTLW_BRS_OFS) |
-                        (8 << EUSCI_A_MCTLW_BRF_OFS) |
+    EUSCI_A0->BRW = 26;                     // 12000000/16/9600
+    EUSCI_A0->MCTLW =   (1 << EUSCI_A_MCTLW_BRS_OFS) |
+                        (0 << EUSCI_A_MCTLW_BRF_OFS) |
                         EUSCI_A_MCTLW_OS16;
 
     EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SWRST; // Initialize eUSCI
@@ -63,33 +55,18 @@ void allow_port_mapping()
 {
     PMAP->KEYID = 0x02D52;
 }
-void init_clocks()
+
+void mux_MCLK_out()
 {
-    /* Halting WDT and disabling master interrupts */
-        MAP_WDT_A_holdTimer();
-        MAP_Interrupt_disableMaster();
-
-        /* Set the core voltage level to VCORE1 */
-        MAP_PCM_setCoreVoltageLevel(PCM_VCORE1);
-
-        /* Set 2 flash wait states for Flash bank 0 and 1*/
-        MAP_FlashCtl_setWaitState(FLASH_BANK0, 2);
-        MAP_FlashCtl_setWaitState(FLASH_BANK1, 2);
-
-        /* Initializes Clock System */
-        FlashCtl_setWaitState( FLASH_BANK0, 2);
-        FlashCtl_setWaitState( FLASH_BANK1, 2);
-        PCM_setPowerState( PCM_AM_DCDC_VCORE1 );
-        CS_setDCOCenteredFrequency( CS_DCO_FREQUENCY_48 );
-        CS_setDCOFrequency(48000000);
-        CS_initClockSignal(CS_MCLK, CS_DCOCLK_SELECT, 1);
-        CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, 1);
-        CS_initClockSignal(CS_HSMCLK, CS_DCOCLK_SELECT, 1);
-
+    //MCLK on pin 4.3
+    P4->DIR |= BIT3;
+    P4->SEL1 &= ~BIT3;
+    P4->SEL0 |= BIT3;
 }
 void platform_init()
 {
-    init_clocks();
     allow_port_mapping();
+    mux_MCLK_out();
+
     dbg_UART_init();
 }
