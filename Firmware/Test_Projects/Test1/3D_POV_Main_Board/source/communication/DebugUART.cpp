@@ -53,7 +53,7 @@ int dbg_printf(char * format, ...)
                       i = -i;
                       dbg_uart_write("-", 1);
                   }
-                  convert(i,16, buf);
+                  convert(i,10, buf);
                   dbg_uart_write(buf, strlen(buf));
                   break;
 
