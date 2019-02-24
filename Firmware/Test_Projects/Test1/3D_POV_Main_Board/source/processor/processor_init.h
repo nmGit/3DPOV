@@ -11,7 +11,7 @@
 #include "ti/devices/msp432p4xx/inc/msp.h"
 
 void processor_init();
-
+void disable_wdt();
 
 
 #endif /* SOURCE_PROCESSOR_PROCESSOR_INIT_H_ */
