@@ -37,8 +37,7 @@ void spi_transmit_B_type(void);
 //*****************************************************************************
 // General transmit method for SPI
 //*****************************************************************************
-void spiTx(uint32_t base_in, uint8_t tx_data_in);
-
+void spiTx(uint32_t base_in, uint8_t tx_data_1, uint8_t tx_data_2, uint8_t tx_data_3, uint8_t tx_data_4);
 
 
 #endif

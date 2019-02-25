@@ -53,7 +53,11 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "drivers/include/spi.h"
 
-uint8_t tx_data;
+uint8_t tx_data_1;
+uint8_t tx_data_2;
+uint8_t tx_data_3;
+uint8_t tx_data_4;
+
 uint32_t base;
 
 //*****************************************************************************
@@ -65,9 +69,13 @@ int main(void) {
             WDT_A_CTL_HOLD;
 
     // Set tx_data and base address
-    tx_data = 0x01;       // start with tx_data = 0x01
-    base = EUSCI_A0_BASE; // A0 SPI base addr
+    tx_data_1 = 0xFF;       // 111 + 5bit global
+    tx_data_2 = 0x00;       // Red LED
+    tx_data_3 = 0xFF;       // Blue LED
+    tx_data_4 = 0x00;       // Green LED
 
-    spiTx(base, tx_data);
+    base = EUSCI_B0_BASE; // B0 SPI base addr
+
+    spiTx(base, tx_data_1, tx_data_2, tx_data_3, tx_data_4);
 
 }
