@@ -50,13 +50,16 @@
 //***************************************************************************************
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "drivers/include/spi.h"
+#include "drivers/include/led.h"
 
-uint8_t tx_data_1;
-uint8_t tx_data_2;
-uint8_t tx_data_3;
-uint8_t tx_data_4;
+uint8_t global;
+uint8_t red_led;
+uint8_t blue_led;
+uint8_t green_led;
 
 uint32_t base;
 
@@ -65,17 +68,53 @@ uint32_t base;
 //*****************************************************************************
 int main(void) {
 
+
+
     WDT_A->CTL = WDT_A_CTL_PW |             // Stop watchdog timer
             WDT_A_CTL_HOLD;
 
-    // Set tx_data and base address
-    tx_data_1 = 0xFF;       // 111 + 5bit global
-    tx_data_2 = 0x00;       // Red LED
-    tx_data_3 = 0xFF;       // Blue LED
-    tx_data_4 = 0x00;       // Green LED
 
+    led_flash(EUSCI_B0_BASE, DIM, ORANGE);
+    led_flash(EUSCI_B0_BASE, FULL, ORANGE);
+
+    while(1) {
+
+    }
+
+
+
+
+/*    int c, d;
+
+
+    // Set tx_data and base address
+    global = 0xFF;       // 111 + 5bit global (brightness)
+    red_led = 0xFF;      // Red LED
+    blue_led = 0x00;     // Blue LED
+    green_led = 0xFF;    // Green LED
     base = EUSCI_B0_BASE; // B0 SPI base addr
 
-    spiTx(base, tx_data_1, tx_data_2, tx_data_3, tx_data_4);
+    // transmit the data
+    spiInit(base);
+    spiTx(base, global, red_led, blue_led, green_led);
+
+
+    // Reset tx_data
+    global = 0xE0;
+    red_led = 0x00;      // Red LED
+    blue_led = 0x00;     // Blue LED
+    green_led = 0x00;    // Green LED
+
+    // Super arbitrary delay...gotta figure out the math of how quickly to flash this thing!
+    for (c = 1; c <= 30; c++)
+        for (d = 1; d <= 300; d++)
+        {}
+
+    // transmit the data
+    spiTx(base, global, red_led, blue_led, green_led);
+
+*/
+
+    return 0;
 
 }

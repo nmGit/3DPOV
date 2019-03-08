@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>3D_POV_Radio_Board_LED</name>
+	<name>3D_POV_Radio_Board</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -24,4 +24,10 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>PROJECT_DRIVERS</name>
+			<value>file:/C:/Users/CMPE_STUDENT/Documents/3D_POV/Firmware/Test_Projects/Test1/3D_POV_Radio_Board_LED/drivers/include</value>
+		</variable>
+	</variableList>
 </projectDescription>
