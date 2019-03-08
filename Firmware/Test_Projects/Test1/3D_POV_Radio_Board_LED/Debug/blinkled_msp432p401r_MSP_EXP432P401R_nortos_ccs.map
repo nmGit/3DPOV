@@ -1,0 +1,280 @@
+******************************************************************************
+                  TI ARM Linker PC v18.1.4                     
+******************************************************************************
+>> Linked Mon Feb 25 13:41:35 2019
+
+OUTPUT FILE NAME:   <blinkled_msp432p401r_MSP_EXP432P401R_nortos_ccs.out>
+ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 000002d5
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  MAIN                  00000000   00040000  00000444  0003fbbc  R  X
+  INFO                  00200000   00004000  00000000  00004000  R  X
+  SRAM_CODE             01000000   00010000  00000200  0000fe00  RW X
+  SRAM_DATA             20000000   00010000  00000200  0000fe00  RW  
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+00000000    00000000    00000444   00000444    r-x
+  00000000    00000000    000000e4   000000e4    r-- .intvecs
+  000000e4    000000e4    00000314   00000314    r-x .text
+  000003f8    000003f8    0000004c   0000004c    r-- .const
+2000fe00    2000fe00    00000200   00000000    rw-
+  2000fe00    2000fe00    00000200   00000000    rw- .stack
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.intvecs   0    00000000    000000e4     
+                  00000000    000000e4     startup_msp432p401r_ccs.obj (.intvecs:retain)
+
+.text      0    000000e4    00000314     
+                  000000e4    000000b0     msp432p4xx_driverlib.lib : spi.o (.text:SPI_initMaster)
+                  00000194    00000088                              : gpio.o (.text:GPIO_setAsPeripheralModuleFunctionInputPin)
+                  0000021c    00000078     system_msp432p401r.obj (.text:SystemInit)
+                  00000294    00000040     msp432p4xx_driverlib.lib : spi.o (.text:is_A_Module)
+                  000002d4    00000030     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noinit_noargs:_c_int00_noinit_noargs)
+                  00000304    00000026     msp432p4xx_driverlib.lib : spi.o (.text:SPI_transmitData)
+                  0000032a    00000002     startup_msp432p401r_ccs.obj (.text:Default_Handler)
+                  0000032c    00000024     main.obj (.text:configureSPI)
+                  00000350    00000020     main.obj (.text:main)
+                  00000370    0000001c     msp432p4xx_driverlib.lib : spi.o (.text:SPI_enableModule)
+                  0000038c    00000016                              : spi.o (.text:EUSCI_A_SPI_enable)
+                  000003a2    00000016                              : spi.o (.text:EUSCI_A_SPI_transmitData)
+                  000003b8    00000016                              : spi.o (.text:EUSCI_B_SPI_enable)
+                  000003ce    00000016                              : spi.o (.text:EUSCI_B_SPI_transmitData)
+                  000003e4    0000000c     startup_msp432p401r_ccs.obj (.text:Reset_Handler)
+                  000003f0    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  000003f4    00000004                                   : exit.c.obj (.text:abort:abort)
+
+.const     0    000003f8    0000004c     
+                  000003f8    00000030     msp432p4xx_driverlib.lib : gpio.o (.const:GPIO_PORT_TO_BASE)
+                  00000428    0000001c     main.obj (.const:spiMasterConfig)
+
+.cinit     0    00000000    00000000     UNINITIALIZED
+
+.init_array 
+*          0    00000000    00000000     UNINITIALIZED
+
+.binit     0    00000000    00000000     
+
+.stack     0    2000fe00    00000200     UNINITIALIZED
+                  2000fe00    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.stack)
+                  2000fe04    000001fc     --HOLE--
+
+MODULE SUMMARY
+
+       Module                        code   ro data   rw data
+       ------                        ----   -------   -------
+    .\
+       system_msp432p401r.obj        120    0         0      
+       main.obj                      68     28        0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        188    28        0      
+                                                             
+    .\ccs\
+       startup_msp432p401r_ccs.obj   14     228       0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        14     228       0      
+                                                             
+    C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source/ti/devices/msp432p4xx/driverlib/ccs/msp432p4xx_driverlib.lib
+       spi.o                         394    0         0      
+       gpio.o                        136    48        0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        530    48        0      
+                                                             
+    C:\ti\ccsv8\tools\compiler\ti-cgt-arm_18.1.4.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
+       boot_cortex_m.c.obj           48     0         0      
+       exit.c.obj                    4      0         0      
+       pre_init.c.obj                4      0         0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        56     0         0      
+                                                             
+       Stack:                        0      0         1024   
+    +--+-----------------------------+------+---------+---------+
+       Grand Total:                  788    304       1024   
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address   name                                      
+-------   ----                                      
+0000032b  ADC14_IRQHandler                          
+0000032b  AES256_IRQHandler                         
+0000032b  BusFault_Handler                          
+000003f5  C$$EXIT                                   
+0000032b  COMP_E0_IRQHandler                        
+0000032b  COMP_E1_IRQHandler                        
+0000032b  CS_IRQHandler                             
+0000032b  DMA_ERR_IRQHandler                        
+0000032b  DMA_INT0_IRQHandler                       
+0000032b  DMA_INT1_IRQHandler                       
+0000032b  DMA_INT2_IRQHandler                       
+0000032b  DMA_INT3_IRQHandler                       
+0000032b  DebugMon_Handler                          
+0000032b  Default_Handler                           
+0000032b  EUSCIA0_IRQHandler                        
+0000032b  EUSCIA1_IRQHandler                        
+0000032b  EUSCIA2_IRQHandler                        
+0000032b  EUSCIA3_IRQHandler                        
+0000032b  EUSCIB0_IRQHandler                        
+0000032b  EUSCIB1_IRQHandler                        
+0000032b  EUSCIB2_IRQHandler                        
+0000032b  EUSCIB3_IRQHandler                        
+0000038d  EUSCI_A_SPI_enable                        
+000003a3  EUSCI_A_SPI_transmitData                  
+000003b9  EUSCI_B_SPI_enable                        
+000003cf  EUSCI_B_SPI_transmitData                  
+0000032b  FLCTL_IRQHandler                          
+0000032b  FPU_IRQHandler                            
+00000195  GPIO_setAsPeripheralModuleFunctionInputPin
+0000032b  HardFault_Handler                         
+0000032b  MemManage_Handler                         
+0000032b  NMI_Handler                               
+0000032b  PCM_IRQHandler                            
+0000032b  PORT1_IRQHandler                          
+0000032b  PORT2_IRQHandler                          
+0000032b  PORT3_IRQHandler                          
+0000032b  PORT4_IRQHandler                          
+0000032b  PORT5_IRQHandler                          
+0000032b  PORT6_IRQHandler                          
+0000032b  PSS_IRQHandler                            
+0000032b  PendSV_Handler                            
+0000032b  RTC_C_IRQHandler                          
+000003e5  Reset_Handler                             
+00000371  SPI_enableModule                          
+000000e5  SPI_initMaster                            
+00000305  SPI_transmitData                          
+0000032b  SVC_Handler                               
+0000032b  SysTick_Handler                           
+0000021d  SystemInit                                
+0000032b  T32_INT1_IRQHandler                       
+0000032b  T32_INT2_IRQHandler                       
+0000032b  T32_INTC_IRQHandler                       
+0000032b  TA0_0_IRQHandler                          
+0000032b  TA0_N_IRQHandler                          
+0000032b  TA1_0_IRQHandler                          
+0000032b  TA1_N_IRQHandler                          
+0000032b  TA2_0_IRQHandler                          
+0000032b  TA2_N_IRQHandler                          
+0000032b  TA3_0_IRQHandler                          
+0000032b  TA3_N_IRQHandler                          
+0000032b  UsageFault_Handler                        
+4000480c  WDTCTL_SYM                                
+0000032b  WDT_A_IRQHandler                          
+20010000  __STACK_END                               
+00000200  __STACK_SIZE                              
+ffffffff  __TI_pprof_out_hndl                       
+ffffffff  __TI_prof_data_size                       
+ffffffff  __TI_prof_data_start                      
+00000000  __TI_static_base__                        
+ffffffff  __binit__                                 
+ffffffff  __c_args__                                
+UNDEFED   __mpu_init                                
+2000fe00  __stack                                   
+000002d5  _c_int00_noinit_noargs                    
+000003f1  _system_pre_init                          
+000003f5  abort                                     
+ffffffff  binit                                     
+0000032d  configureSPI                              
+00000000  interruptVectors                          
+00000351  main                                      
+00000428  spiMasterConfig                           
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address   name                                      
+-------   ----                                      
+00000000  __TI_static_base__                        
+00000000  interruptVectors                          
+000000e5  SPI_initMaster                            
+00000195  GPIO_setAsPeripheralModuleFunctionInputPin
+00000200  __STACK_SIZE                              
+0000021d  SystemInit                                
+000002d5  _c_int00_noinit_noargs                    
+00000305  SPI_transmitData                          
+0000032b  ADC14_IRQHandler                          
+0000032b  AES256_IRQHandler                         
+0000032b  BusFault_Handler                          
+0000032b  COMP_E0_IRQHandler                        
+0000032b  COMP_E1_IRQHandler                        
+0000032b  CS_IRQHandler                             
+0000032b  DMA_ERR_IRQHandler                        
+0000032b  DMA_INT0_IRQHandler                       
+0000032b  DMA_INT1_IRQHandler                       
+0000032b  DMA_INT2_IRQHandler                       
+0000032b  DMA_INT3_IRQHandler                       
+0000032b  DebugMon_Handler                          
+0000032b  Default_Handler                           
+0000032b  EUSCIA0_IRQHandler                        
+0000032b  EUSCIA1_IRQHandler                        
+0000032b  EUSCIA2_IRQHandler                        
+0000032b  EUSCIA3_IRQHandler                        
+0000032b  EUSCIB0_IRQHandler                        
+0000032b  EUSCIB1_IRQHandler                        
+0000032b  EUSCIB2_IRQHandler                        
+0000032b  EUSCIB3_IRQHandler                        
+0000032b  FLCTL_IRQHandler                          
+0000032b  FPU_IRQHandler                            
+0000032b  HardFault_Handler                         
+0000032b  MemManage_Handler                         
+0000032b  NMI_Handler                               
+0000032b  PCM_IRQHandler                            
+0000032b  PORT1_IRQHandler                          
+0000032b  PORT2_IRQHandler                          
+0000032b  PORT3_IRQHandler                          
+0000032b  PORT4_IRQHandler                          
+0000032b  PORT5_IRQHandler                          
+0000032b  PORT6_IRQHandler                          
+0000032b  PSS_IRQHandler                            
+0000032b  PendSV_Handler                            
+0000032b  RTC_C_IRQHandler                          
+0000032b  SVC_Handler                               
+0000032b  SysTick_Handler                           
+0000032b  T32_INT1_IRQHandler                       
+0000032b  T32_INT2_IRQHandler                       
+0000032b  T32_INTC_IRQHandler                       
+0000032b  TA0_0_IRQHandler                          
+0000032b  TA0_N_IRQHandler                          
+0000032b  TA1_0_IRQHandler                          
+0000032b  TA1_N_IRQHandler                          
+0000032b  TA2_0_IRQHandler                          
+0000032b  TA2_N_IRQHandler                          
+0000032b  TA3_0_IRQHandler                          
+0000032b  TA3_N_IRQHandler                          
+0000032b  UsageFault_Handler                        
+0000032b  WDT_A_IRQHandler                          
+0000032d  configureSPI                              
+00000351  main                                      
+00000371  SPI_enableModule                          
+0000038d  EUSCI_A_SPI_enable                        
+000003a3  EUSCI_A_SPI_transmitData                  
+000003b9  EUSCI_B_SPI_enable                        
+000003cf  EUSCI_B_SPI_transmitData                  
+000003e5  Reset_Handler                             
+000003f1  _system_pre_init                          
+000003f5  C$$EXIT                                   
+000003f5  abort                                     
+00000428  spiMasterConfig                           
+2000fe00  __stack                                   
+20010000  __STACK_END                               
+4000480c  WDTCTL_SYM                                
+ffffffff  __TI_pprof_out_hndl                       
+ffffffff  __TI_prof_data_size                       
+ffffffff  __TI_prof_data_start                      
+ffffffff  __binit__                                 
+ffffffff  __c_args__                                
+ffffffff  binit                                     
+UNDEFED   __mpu_init                                
+
+[81 symbols]
