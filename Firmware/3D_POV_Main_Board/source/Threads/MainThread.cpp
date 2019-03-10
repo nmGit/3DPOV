@@ -5,13 +5,35 @@
  *      Author: Noah
  */
 
-#include "PAL/PALThread.h"
+//#include "PAL/PALThread.h"
+//#include <DebugUART.h>
+#include "Threads/MainThread.h"
+#include "Threads/MotorThread.h"
+#include "Threads/RadioInterfaceThread.h"
+#include "Threads/ComputerInterfaceThread.h"
+#include "PAL/PALControl.h"
+#include "DebugUART.h"
 
-class MainThread : public PALThread
+MainThread::MainThread(unsigned priority, unsigned stack_size, const char * name):
+    PALThread(priority, stack_size, name)
 {
-public:
-protected:
-private:
-};
+
+}
+void MainThread::Task()
+{
+    dbg_printf("In Main Thread\r\n");
+
+    RadioThread * radioThread = new RadioThread(3, 0x500, "Radio Thread");
+    radioThread->Start();
+
+    MotorThread * motorthread = new MotorThread(3, 0x500, "Motor Thread");
+    motorthread->Start();
+
+    ComputerInterfaceThread * computerthread = new ComputerInterfaceThread(3, 0x500, "Computer Thread");
+    computerthread->Start();
+    while(1){
+        PALYield();
+    }
+}
 
 
