@@ -16,7 +16,7 @@ extern UART_Handle dbguart;
 extern UART_Params dbguartParams;
 */
 
-int dbg_printf(char * format, ...)
+int dbg_printf(const char * format, ...)
 {
     // Loop forever echoing
     char *format_char;
@@ -27,7 +27,7 @@ int dbg_printf(char * format, ...)
 
     char buf[DBG_PRINTF_CONVERT_BUFFER_SIZE] = {0};
 
-    for(format_char = format; *format_char != '\0'; format_char++)
+    for(format_char = const_cast<char *>(format); *format_char != '\0'; format_char++)
     {
         while(*format_char != '%')
         {
@@ -81,7 +81,7 @@ int dbg_printf(char * format, ...)
 
 }
 
-void dbg_uart_write(char * buf, unsigned len)
+void dbg_uart_write(const char * buf, unsigned len)
 {
     for(int chr = 0; chr < len; chr++)
     {

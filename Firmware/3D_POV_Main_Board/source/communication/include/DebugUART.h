@@ -17,9 +17,9 @@
 extern "C" {
 #endif
 
-    int dbg_printf(char * format, ...);
+    int dbg_printf(const char * format, ...);
     void convert(unsigned int num, int base, char * buf);
-    void dbg_uart_write(char * buf, unsigned len);
+    void dbg_uart_write(const char * buf, unsigned len);
     void putc_dbg(char c);
 
 #if __cplusplus
