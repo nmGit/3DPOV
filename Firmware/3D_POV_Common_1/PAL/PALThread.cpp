@@ -4,7 +4,7 @@
  *  Created on: Feb 24, 2019
  *      Author: Noah
  */
-#include "PAL/PALThread.h"
+#include "PAL\PALThread.h"
 #include <FreeRTOS.h>
 #include <task.h>
 #include <pthread.h>

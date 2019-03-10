@@ -5,7 +5,7 @@
  *                                                                            *
  *****************************************************************************/
 
-#include "SPI/spi.h"
+#include "./include/spi.h"
 #include <stdint.h>
 #include "C:\ti\simplelink_msp432p4_sdk_2_40_00_10\source\ti\devices\msp432p4xx\inc\msp432p401r.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
@@ -468,9 +468,9 @@ void EUSCIBX_IRQHandler(void) {
 //*****************************************************************************
 // EUSCI type A Handlers
 //*****************************************************************************
-//extern "C" void EUSCIA0_IRQHandler(void) {
-//    EUSCIAX_IRQHandler();
-//}
+extern "C" void EUSCIA0_IRQHandler(void) {
+    EUSCIAX_IRQHandler();
+}
 
 extern "C" void EUSCIA1_IRQHandler(void) {
     EUSCIAX_IRQHandler();

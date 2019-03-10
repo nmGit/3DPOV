@@ -4,7 +4,7 @@
  *  Created on: Feb 20, 2019
  *      Author: Noah
  */
-#include "Proc/processor_init.h"
+#include "processor/processor_init.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <ti/devices/msp432p4xx/inc/msp.h>
 

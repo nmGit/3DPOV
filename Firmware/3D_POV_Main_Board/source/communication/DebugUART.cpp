@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include <cstring>
-#include "UART.h"
+#include "UART/UART.h"
 #include "ti/drivers/GPIO.h"
 #include <ti/devices/msp432p4xx/inc/msp.h>
 #include "Board.h"

@@ -87,7 +87,7 @@
 #include "ti/devices/msp432p4xx/driverlib/cs.h"
 #include "irq_handlers.h"
 #include "platform_init.h"
-#include "processor/processor_init.h"
+#include "Proc/processor_init.h"
 #include "OS/main_freertos.h"
 #include "Board.h"
 #include "DebugUART.h"

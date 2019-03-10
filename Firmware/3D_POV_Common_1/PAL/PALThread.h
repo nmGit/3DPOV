@@ -1,19 +1,16 @@
-
 /*
  * PALThread.h
  *
  *  Created on: Feb 24, 2019
  *      Author: Noah
  */
-
-
-#ifndef SOURCE_PAL_PALTHREAD_H_
-#define SOURCE_PAL_PALTHREAD_H_
-#define __MSP432P401R__
-
 #include <FreeRTOS.h>
 #include <task.h>
 #include <pthread.h>
+
+#ifndef SOURCE_PAL_PALTHREAD_H_
+#define SOURCE_PAL_PALTHREAD_H_
+
 
 #define PALTHREAD_MAX_NAME_LENGTH 128
 

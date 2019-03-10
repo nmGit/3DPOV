@@ -6,8 +6,8 @@
  *****************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-#include "APA102/led.h"
-#include "SPI/spi.h"
+#include "./include/led.h"
+#include "./include/spi.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "C:\ti\simplelink_msp432p4_sdk_2_40_00_10\source\ti\devices\msp432p4xx\inc\msp432p401r.h"
 #include <ti/devices/msp432p4xx/inc/msp.h>

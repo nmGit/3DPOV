@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include "UART.h"
+#include "UART/UART.h"
 #ifndef SOURCE_COMMUNICATION_INCLUDE_DEBUGUART_H_
 #define SOURCE_COMMUNICATION_INCLUDE_DEBUGUART_H_
 
