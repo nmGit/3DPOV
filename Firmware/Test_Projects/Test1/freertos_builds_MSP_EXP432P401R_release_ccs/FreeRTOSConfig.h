@@ -66,7 +66,7 @@ extern uint32_t CS_getMCLK(void);
 /* Constants related to the behaviour or the scheduler. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #define configTICK_RATE_HZ              ( ( TickType_t ) 1000 )
-#define configUSE_PREEMPTION            1
+#define configUSE_PREEMPTION            0
 #define configUSE_TIME_SLICING          0
 #define configMAX_PRIORITIES            ( 10UL )
 #define configIDLE_SHOULD_YIELD         0
