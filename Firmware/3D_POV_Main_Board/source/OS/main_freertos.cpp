@@ -46,7 +46,8 @@
 /* RTOS header files */
 #include <FreeRTOS.h>
 #include <task.h>
-
+#include "PAL\PALThread.h"
+#include "Threads\MainThread.h"
 /* Example/Board Header files */
 #include "Board.h"
 
@@ -64,19 +65,21 @@ extern void *mainThread(void *arg0);
  */
 
 
+
 int free_rtos_init(void)
 {
+#ifdef NAM
    pthread_t           thread;
    pthread_attr_t      attrs;
    struct sched_param  priParam;
    int                 retc;
-
+#endif // NAM
 
 
 #ifdef __ICCARM__
     __iar_Initlocks();
 #endif
-
+#ifdef NAM
     //dbg_printf("Booting...\r\n");
     /* Initialize the attributes structure with default values */
     pthread_attr_init(&attrs);
@@ -96,7 +99,17 @@ int free_rtos_init(void)
         /* pthread_create() failed */
         while (1) {}
     }
-    //dbg_printf("Starting scheduler...\r\n");
+#endif //NAM
+    /////////////////////////////////////////////////////
+    // The only thing I think is that directly calling malloc
+    // initializes the heap. But the new operator also calls malloc
+    // but the new operator seems to not work correctly (constructors are
+    // not run).
+    malloc(1); // <---- WHY THE HELL DO I NEED THIS  ////
+    /////////////////////////////////////////////////////
+    MainThread * mainthread = new MainThread(2, 0x400, "Main Thread");
+    mainthread->Start();
+    dbg_printf("Starting scheduler...\r\n");
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
 
@@ -116,6 +129,7 @@ int free_rtos_init(void)
 extern "C" void vApplicationMallocFailedHook()
 {
     /* Handle Memory Allocation Errors */
+    dbg_printf("FATAL: Malloc failed!");
     while(1)
     {
     }
