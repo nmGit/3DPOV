@@ -81,6 +81,7 @@
 //   June 2016 (updated) | June 2014 (created)
 //   Built with CCSv6.1, IAR, Keil, GCC
 //******************************************************************************
+#include <stdlib.h>
 #include "ti/devices/msp432p4xx/inc/msp.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "ti/devices/msp432p4xx/driverlib/cs.h"
@@ -105,7 +106,6 @@ int main(void)
     dbg_printf("HSMCLK at \t%d Hz\r\n", CS_getHSMCLK());
     dbg_printf("DCO at \t\t%d Hz\r\n", CS_getDCOFrequency());
     dbg_printf("-----------------------------\r\n");
-    dbg_printf("Booting FreeRTOS...\r\n");
     // Starts scheduler. NO RETURN
     free_rtos_init();
 
