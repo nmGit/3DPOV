@@ -33,7 +33,7 @@ data_frame_type*** LEDS;
 //*****************************************************************************
 // LED Count Constants
 //*****************************************************************************
-#define LEDS_PER_FIN        2     // TESTING -- ultimate goal is 16 LEDs/fin
+#define LEDS_PER_FIN        16     // TESTING -- ultimate goal is 16 LEDs/fin
 #define FINS                1     // TESTING -- ultimate goal is 12 fins
 #define FRAME_BORDER        4
 #define START_FRAME         0x00  // Transmit 4 times for 32 bits of 0
