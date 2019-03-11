@@ -32,7 +32,7 @@
 
 #include <stdint.h>
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-#include "irq_handlers.h"
+#include "platform/irq_handlers.h"
 /* Forward declaration of the default fault handlers. */
 void resetISR(void);
 

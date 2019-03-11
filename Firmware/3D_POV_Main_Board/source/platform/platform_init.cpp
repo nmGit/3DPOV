@@ -1,15 +1,30 @@
-#include <platform_init.h>
+#include <platform/platform_init.h>
 #include "MSP_EXP432P401R.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <ti/devices/msp432p4xx/inc/msp.h>
 #include "Board.h"
-// NAM
-// UART
+// NAM UART
 char        input;
 
 
 #define DBG_UART_TX_PIN 2
 #define DBG_UART_RX_PIN 3
+
+void timerA_init()
+{
+    TIMER_A0->CTL |= TIMER_A_CTL_TASSEL_1       //Using ACLK
+            | TIMER_A_CTL_ID_2                  // Divide ACLK by 4
+            | TIMER_A_CTL_MC__CONTINUOUS        // Timer will count up to 0x0FFFF and reset (continuous)
+            | TIMER_A_CTL_CLR;                  // Clear TAxR
+
+    TIMER_A0->CCTL[0] &= !TIMER_A_CCTLN_CAP;    // Set CAP = 0
+    TIMER_A0->CCTL[0] |= TIMER_A_CCTLN_OUTMOD_2 // Use Toggle/reset output mode
+            | TIMER_A_CCTLN_CCIS__VCC;          // Use VCC as input to PWM
+
+    TIMER_A0->EX0 |= TIMER_A_EX0_TAIDEX_5;      // Divide ACLK by 5 to get 50Hz
+    // TIMER_A0->CCR[0] = 0x7FFF;           // Setup PWM DUTY
+
+}
 
 extern "C" void dbg_UART_init()
 {
@@ -69,4 +84,5 @@ void platform_init()
     mux_MCLK_out();
 
     dbg_UART_init();
+    timerA_init();
 }

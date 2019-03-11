@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
     void platform_init();
+    void timerA_init(void);
 
 #if __cplusplus
 }

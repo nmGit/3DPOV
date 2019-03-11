@@ -34,7 +34,7 @@
  *  ======== gpiointerrupt.c ========
  */
 
-#include <platform_init.h>
+#include <platform/platform_init.h>
 #include <stdint.h>
 #include <stddef.h>
 

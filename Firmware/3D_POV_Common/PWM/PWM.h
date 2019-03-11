@@ -8,7 +8,9 @@
 #ifndef SOURCE_PWM_PWM_H_
 #define SOURCE_PWM_PWM_H_
 
+#include <stdint.h>
 
+void set_duty(uint16_t duty);
 
 
 

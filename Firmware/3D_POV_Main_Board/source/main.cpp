@@ -85,8 +85,8 @@
 #include "ti/devices/msp432p4xx/inc/msp.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "ti/devices/msp432p4xx/driverlib/cs.h"
-#include "irq_handlers.h"
-#include "platform_init.h"
+#include "platform/irq_handlers.h"
+#include "platform/platform_init.h"
 #include "Proc/processor_init.h"
 #include "OS/main_freertos.h"
 #include "Board.h"
