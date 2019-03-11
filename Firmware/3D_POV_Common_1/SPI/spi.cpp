@@ -129,13 +129,13 @@ void spi_transmit_A_type(void) {
                             tx_data = LEDS[r][c]->brightness;
                             submit_for_tx_A(tx_data);
                         } else if (trn%4 == 1) {
-                            tx_data = LEDS[r][c]->red;
-                            submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 2) {
                             tx_data = LEDS[r][c]->blue;
                             submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 3) {
+                        } else if (trn%4 == 2) {
                             tx_data = LEDS[r][c]->green;
+                            submit_for_tx_A(tx_data);
+                        } else if (trn%4 == 3) {
+                            tx_data = LEDS[r][c]->red;
                             submit_for_tx_A(tx_data);
                         }
 
