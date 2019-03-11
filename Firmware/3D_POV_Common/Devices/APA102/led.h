@@ -38,9 +38,14 @@
 //*****************************************************************************
 
 //*****************************************************************************
-// Set an LED with a specified color and brightness
+// Initialize data structure of LEDs
 //*****************************************************************************
 void led_init(void);
+
+//*****************************************************************************
+// Free the LEDs data structure
+//*****************************************************************************
+void led_free(void);
 
 //*****************************************************************************
 // Set an LED with a specified color and brightness
@@ -48,6 +53,23 @@ void led_init(void);
 void led_set(uint32_t base, uint8_t led_row, uint8_t led_col,
              uint8_t brightness, uint32_t color);
 
+//*****************************************************************************
+// Set the LEDs of a single fin with data transferred over
+// from the interface board.
+//*****************************************************************************
+void led_set_fin(uint8_t fin, uint32_t* data);
+
+//*****************************************************************************
+// Set the LEDs of all fins with data transferred over
+// from the interface board.
+//*****************************************************************************
+void led_set_image(uint32_t** data);
+
+//*****************************************************************************
+// set all LEDs from 0 to numLEDs with a specified color
+//*****************************************************************************
+void led_set_all(uint32_t base, uint8_t num_rows, uint8_t num_cols,
+             uint8_t brightness, uint32_t color);
 
 
 
