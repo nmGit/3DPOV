@@ -1,10 +1,8 @@
 from PyQt4 import QtCore, QtGui
-
+import numpy as np
 import sys
 
 from rasterViewer import rasterViewer
-from POVMappedImageWidget import POVMappedImageWidget
-from POVCommandLine import POVCommandLine
 import mapping
 
 import numpy as np
@@ -12,21 +10,31 @@ import os
 import math
 from PIL import Image
 import cv2
-class main(QtGui.QMainWindow):
 
+class POVMappedImageWidget(QtGui.QFrame):
     szx = 32
     szy = 32
     def __init__(self):
-        super(main, self).__init__()
-        self.setWindowTitle("3D POV Tools")
-        self.mainTabWidget = QtGui.QTabWidget()
-        self.mainTabWidget.addTab(POVMappedImageWidget(), "Live View")
-        self.mainTabWidget.addTab(POVCommandLine(), "Command Line")
-        self.setCentralWidget(self.mainTabWidget)
+        super(POVMappedImageWidget, self).__init__()
+        self.mainLayout = QtGui.QGridLayout()
 
 
+        self.setAcceptDrops(True)
+
+        self.raster_view = rasterViewer(self.szx, self.szy)
+        self.raster_view.makeSquare(True)
+
+        self.setLayout(self.mainLayout)
+
+        self.mainLayout.addWidget(self.raster_view, 0, 0, 1, 1)
+        self.raster_view.show()
+
+        self.raster_mapped = rasterViewer(5, 5)
+        self.mainLayout.addWidget(self.raster_mapped, 1, 0, 1, 2)
+
+        self.raster_mapped_scaled = rasterViewer(5, 5)
+        self.mainLayout.addWidget(self.raster_mapped_scaled, 2, 0, 1, 2)
         pass
-
 
     def dragEnterEvent(self, event):
         print event
@@ -127,10 +135,3 @@ class main(QtGui.QMainWindow):
         self.image_pix_mapped_flat = self.flatten_img(self.map_result[2])
         self.raster_mapped.setResolution(self.map_result[0], self.map_result[1])
         self.raster_mapped.setImage([int(x*255) for x in self.map_result_float])
-
-if __name__ == '__main__':
-    print "starting..."
-    app = QtGui.QApplication(sys.argv)
-    main = main()
-    main.show()
-    sys.exit(app.exec_())

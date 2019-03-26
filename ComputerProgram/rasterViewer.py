@@ -21,14 +21,26 @@ class rasterViewer(QtGui.QWidget):
         self.setLayout(self.layout)
         self.szx = szx
         self.szy = szy
+        self.aspect_square = False
+    def setResolution(self, x, y):
+        self.szx = x
+        self.szy = y
+    def makeSquare(self, lock):
 
+        self.aspect_square = lock
+
+    def resizeEvent(self, QResizeEvent):
+        if(self.aspect_square):
+            self.setFixedWidth(self.height())
     def setImage(self, pilimg):
 
         #print "Pilimg:",pilimg
         img = np.array([])
 
         img = img.astype(np.uint32)
+        print("Converting to raster")
         for i in range(len(pilimg)/3):
+            print("%f percent" % ((i/float((len(pilimg)/3)))*100))
             pix = 0xFF000000
             pix |= (pilimg[i*3+0] << 16)
             pix |= (pilimg[i*3+1] << 8)
@@ -38,7 +50,7 @@ class rasterViewer(QtGui.QWidget):
         image = QtGui.QImage(img, self.szx, self.szy, QtGui.QImage.Format_RGB32)
         image.setColorCount(3)
         if image.isNull():
-            QtGui.QMessageBox.information(self, "Image Viewer","Cannot load %s." % fileName)
+            QtGui.QMessageBox.information(self, "Image Viewer","Cannot load image")
             return
 
         self.imageLabel.setPixmap(QtGui.QPixmap.fromImage(image).scaledToHeight(200, QtCore.Qt.FastTransformation))
