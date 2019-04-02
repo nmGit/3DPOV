@@ -188,7 +188,7 @@ void spiInit_A_type() {
                         EUSCI_A_CTLW0_MST |        // Master mode
                         EUSCI_A_CTLW0_MODE_1 |     // 4-pin mode
                         EUSCI_A_CTLW0_STEM |       // STE mode select
-                        EUSCI_A_CTLW0_SSEL__ACLK;  // ACLK
+                        EUSCI_A_CTLW0_SSEL__SMCLK; // SMCLK
     spi_struct->BRW = 0x01;                        // Baud Rate 115200
 
     spi_struct->CTLW0 &= ~EUSCI_A_CTLW0_SWRST;     // Initialize
@@ -366,7 +366,7 @@ void spiInit_B_type() {
                         EUSCI_B_CTLW0_MST |        // Master mode
                         EUSCI_B_CTLW0_MODE_1 |     // 4-pin mode
                         EUSCI_B_CTLW0_STEM |       // STE mode select
-                        EUSCI_B_CTLW0_SSEL__ACLK;  // ACLK
+                        EUSCI_B_CTLW0_SSEL__SMCLK; // SMCLK
     spi_struct->BRW = 0x01;                        // Baud Rate 115200
 
     spi_struct->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;     // Initialize
