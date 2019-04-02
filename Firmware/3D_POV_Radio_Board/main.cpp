@@ -34,6 +34,13 @@ void test_data(void) {
         data[i] = (uint32_t*) malloc(LEDS_PER_FIN * sizeof(uint32_t));
     }
 
+    int r, c;
+    for(r = 0; r < FINS; r++) {
+        for(c = 0; c < LEDS_PER_FIN; c++) {
+            data[r][c] = 0xE2000000;
+        }
+    }
+
     // Initialize data
     data[0][0] = (DIM << 24) | MAGENTA;
     data[0][1] = (DIM << 24) | RED;
@@ -51,6 +58,8 @@ void test_data(void) {
     data[0][13] = (DIM << 24) | GREEN;
     data[0][14] = (DIM << 24) | CYAN;
     data[0][15] = (DIM << 24) | BLUE;
+
+    //data[1][0] = (DIM << 24) | RED;
 }
 
 //*****************************************************************************
@@ -61,7 +70,7 @@ int main(void) {
     // Set up test data
     test_data();
 
-    base = EUSCI_B1_BASE;
+    base = EUSCI_B2_BASE;
 
     WDT_A->CTL = WDT_A_CTL_PW |             // Stop watchdog timer
             WDT_A_CTL_HOLD;
@@ -74,6 +83,7 @@ int main(void) {
 
     // Test led_set_image with some arbitrary data
     led_set_image(data);
+    //led_set_all(base, FINS, LEDS_PER_FIN, NONE, OFF);
 
     // Set LED at row, col
     //led_set(base, 0, 0, DIM, MAGENTA);
@@ -123,7 +133,7 @@ int main(void) {
 */
 
     // Free LEDs
-    led_free();
+    //led_free();
 
     while(1) {
 
