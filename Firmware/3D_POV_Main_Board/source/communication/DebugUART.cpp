@@ -88,6 +88,41 @@ void dbg_uart_write(const char * buf, unsigned len)
         putc_dbg(buf[chr]);
     }
 }
+
+// buf: buffer to read into
+// len: length of buffer (exceeding this would be out of bounds for the buffer)
+// returns: Number of characters received
+unsigned dbg_readLine(char * buf, unsigned len, unsigned timeout_ms)
+{
+    unsigned pos = 0;
+    while(pos == 0 || (buf[pos - 1] != '\r' && pos < len))
+    {
+
+        buf[pos] = getc_dbg(timeout_ms);
+        if(buf[pos] == '\0')
+        {
+            break;
+        }
+        pos++;
+    }
+    buf[pos] = '\0'; // Null terminate that shit
+    return pos;
+}
+
+static char rx_c;
+char getc_dbg(unsigned timeout_ms)
+{
+    if(uart_a_getc(EUSCI_A0, &rx_c, timeout_ms))
+    {
+        return rx_c;
+    }
+    else
+    {
+        return '\0';
+    }
+
+}
+
 void putc_dbg(char c)
 {
     uart_a_submit_for_transmit(EUSCI_A0, c);
