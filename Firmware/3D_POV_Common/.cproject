@@ -44,10 +44,11 @@
 									<listOptionValue builtIn="false" value="${ProjDirPath}/Devices"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
 									<listOptionValue builtIn="false" value="${TI_PRODUCTS_DIR}\simplelink_msp432p4_sdk_2_40_00_10\source"/>
+									<listOptionValue builtIn="false" value="${TI_PRODUCTS_DIR}\simplelink_msp432p4_sdk_2_40_00_10\source\third_party\CMSIS\Include"/>
 									<listOptionValue builtIn="false" value="${TI_PRODUCTS_DIR}\simplelink_msp432p4_sdk_2_40_00_10/source/third_party/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="${TI_PRODUCTS_DIR}\simplelink_msp432p4_sdk_2_40_00_10\source/ti/posix/ccs"/>
 								</option>
-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_18.1.compilerID.DEFINE.1305852638" superClass="com.ti.ccstudio.buildDefinitions.TMS470_18.1.compilerID.DEFINE" valueType="definedSymbols">
+								<option id="com.ti.ccstudio.buildDefinitions.TMS470_18.1.compilerID.DEFINE.1305852638" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_18.1.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__MSP432P401R__"/>
 								</option>
 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_18.1.compiler.inputType__C_SRCS.1886239940" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_18.1.compiler.inputType__C_SRCS"/>
