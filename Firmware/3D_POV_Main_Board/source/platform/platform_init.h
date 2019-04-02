@@ -14,7 +14,7 @@ extern "C" {
 
     void platform_init();
     void timerA_init(void);
-
+    void print_init_message();
 #if __cplusplus
 }
 #endif

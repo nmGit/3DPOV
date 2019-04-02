@@ -2,6 +2,7 @@
 #include "MSP_EXP432P401R.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <ti/devices/msp432p4xx/inc/msp.h>
+#include "DebugUART.h"
 #include "Board.h"
 // NAM UART
 char        input;
@@ -55,11 +56,25 @@ extern "C" void dbg_UART_init()
     EUSCI_A0->IE |= EUSCI_A_IE_RXIE;        // Enable USCI_A0 RX interrupt
 
     // Enable global interrupt
+#ifdef NAM
     __enable_irq();
+#endif // NAM
+//    MAP_Interrupt_setPriority(INT_EUSCIA0, 0x30);
+ //   MAP_Interrupt_enableInterrupt(INT_EUSCIA0);
+   // MAP_UART_enableInterrupt(EUSCI_A0_MODULE, EUSCI_A_UART_RECEIVE_INTERRUPT);
+    MAP_Interrupt_setPriority(INT_EUSCIA0,0x30);
+    MAP_Interrupt_enableInterrupt(INT_EUSCIA0);
+    //MAP_Interrupt_enableSleepOnIsrExit();
+    //MAP_Interrupt_enableMaster();
+#ifdef NAM
+    Interrupt_setPriority(INT_EUSCIA0,0x30);
 
+    Interrupt_enableInterrupt( INT_EUSCIA0);
+#endif // NAM
+#ifdef NAM
     // Enable eUSCIA0 interrupt in NVIC module
     NVIC->ISER[0] = 1 << ((EUSCIA0_IRQn) & 31);
-
+#endif // NAM
     // Enable sleep on exit from ISR
     // SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
@@ -85,4 +100,14 @@ void platform_init()
 
     dbg_UART_init();
     timerA_init();
+}
+
+void print_init_message()
+{
+    dbg_printf("-----------------------------\r\n");
+    dbg_printf("MCLK at \t%d Hz\r\n", CS_getMCLK());
+    dbg_printf("BCLK at \t%d Hz\r\n", CS_getBCLK());
+    dbg_printf("HSMCLK at \t%d Hz\r\n", CS_getHSMCLK());
+    dbg_printf("DCO at \t\t%d Hz\r\n", CS_getDCOFrequency());
+    dbg_printf("-----------------------------\r\n");
 }
