@@ -9,7 +9,6 @@
 
 #ifndef SOURCE_PAL_PALTHREAD_H_
 #define SOURCE_PAL_PALTHREAD_H_
-#define __MSP432P401R__
 
 #include <FreeRTOS.h>
 #include <task.h>
