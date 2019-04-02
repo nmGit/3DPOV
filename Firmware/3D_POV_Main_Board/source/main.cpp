@@ -100,12 +100,8 @@ int main(void)
     processor_init();
     platform_init();
 
-    dbg_printf("-----------------------------\r\n");
-    dbg_printf("MCLK at \t%d Hz\r\n", CS_getMCLK());
-    dbg_printf("BCLK at \t%d Hz\r\n", CS_getBCLK());
-    dbg_printf("HSMCLK at \t%d Hz\r\n", CS_getHSMCLK());
-    dbg_printf("DCO at \t\t%d Hz\r\n", CS_getDCOFrequency());
-    dbg_printf("-----------------------------\r\n");
+    print_init_message();
+
     // Starts scheduler. NO RETURN
     free_rtos_init();
 
