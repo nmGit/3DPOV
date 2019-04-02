@@ -92,6 +92,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/PAL/PALControl.h</locationURI>
 		</link>
 		<link>
+			<name>PAL/PALDelay.cpp</name>
+			<type>1</type>
+			<location>C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/3D_POV_Common/PAL/PALDelay.cpp</location>
+		</link>
+		<link>
+			<name>PAL/PALSemaphore.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/PAL/PALSemaphore.cpp</locationURI>
+		</link>
+		<link>
 			<name>PAL/PALThread.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/PAL/PALThread.cpp</locationURI>
@@ -120,6 +130,11 @@
 			<name>Proc/processor_init.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Proc/processor_init.h</locationURI>
+		</link>
+		<link>
+			<name>Proc/processor_tools.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Proc/processor_tools.cpp</locationURI>
 		</link>
 		<link>
 			<name>SPI/spi.cpp</name>
