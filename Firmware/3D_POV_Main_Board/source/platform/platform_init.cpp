@@ -5,6 +5,7 @@
 #include "DebugUART.h"
 #include "Board.h"
 // NAM UART
+// JS TIMER/PWM
 char        input;
 
 
@@ -13,18 +14,26 @@ char        input;
 
 void timerA_init()
 {
-    TIMER_A0->CTL |= TIMER_A_CTL_TASSEL_1       //Using ACLK
-            | TIMER_A_CTL_ID_2                  // Divide ACLK by 4
-            | TIMER_A_CTL_MC__CONTINUOUS        // Timer will count up to 0x0FFFF and reset (continuous)
-            | TIMER_A_CTL_CLR;                  // Clear TAxR
+    // Pin muxing
+    P2->DIR  |= BIT4;
+    P2->SEL0 |= BIT4;
+    P2->SEL1 &= ~BIT4;
 
-    TIMER_A0->CCTL[0] &= !TIMER_A_CCTLN_CAP;    // Set CAP = 0
-    TIMER_A0->CCTL[0] |= TIMER_A_CCTLN_OUTMOD_2 // Use Toggle/reset output mode
-            | TIMER_A_CCTLN_CCIS__VCC;          // Use VCC as input to PWM
+//    TIMER_A0->CTL |= TIMER_A_CTL_TASSEL_1       // Using SMCLK
+//            | TIMER_A_CTL_MC__UP;               // Timer will count up to value in TA0CCR0 and reset (up mode)
+//
 
-    TIMER_A0->EX0 |= TIMER_A_EX0_TAIDEX_5;      // Divide ACLK by 5 to get 50Hz
-    // TIMER_A0->CCR[0] = 0x7FFF;           // Setup PWM DUTY
+    TIMER_A0->CTL |= TIMER_A_CTL_TASSEL_2       // Using SMCLK
+            | TIMER_A_CTL_ID_3                  // Divide SMCLK by 8 to get max freq 48MHz/8 = 6 MHz
+            | TIMER_A_CTL_MC__UP;               // Timer will count up to value in TA0CCR0 and reset (up mode)
 
+    TIMER_A0->EX0 |= TIMER_A_EX0_TAIDEX_7;      // Divide SMCLK by 8 to get 6MHz/8 = 750 kHz
+
+    // USED to limit timer counter (TA0CCR0)
+    TIMER_A0->CCR[0] = PWM_WRAP_VAL;            // Max frequency of 50Hz (0x3B0Dh found by guess and check with Oscilloscope)
+                                                //  To set duty cycle change TIMER_A0->CCR[1] in PWM.cpp
+
+    //    TIMER A0 CTL0 does not need to be set since we use CCR0 to limit the timer
 }
 
 extern "C" void dbg_UART_init()

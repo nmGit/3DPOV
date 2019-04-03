@@ -69,7 +69,7 @@
 		<link>
 			<name>Devices/ESC</name>
 			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/ESC</locationURI>
 		</link>
 		<link>
 			<name>Devices/HALL</name>
