@@ -171,6 +171,11 @@
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/APA102/led.h</locationURI>
 		</link>
+		<link>
+			<name>Devices/ESC/ESC.cpp</name>
+			<type>1</type>
+			<location>C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/3D_POV_Common/Devices/ESC/ESC.cpp</location>
+		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
