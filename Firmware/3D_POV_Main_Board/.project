@@ -94,7 +94,7 @@
 		<link>
 			<name>PAL/PALDelay.cpp</name>
 			<type>1</type>
-			<location>C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/3D_POV_Common/PAL/PALDelay.cpp</location>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/PAL/PALDelay.cpp</locationURI>
 		</link>
 		<link>
 			<name>PAL/PALSemaphore.cpp</name>
@@ -159,7 +159,7 @@
 		<link>
 			<name>source/3D_POV_Common</name>
 			<type>2</type>
-			<location>C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/Test_Projects/Test1/3D_POV_Common</location>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common</locationURI>
 		</link>
 		<link>
 			<name>Devices/APA102/led.cpp</name>
@@ -174,7 +174,7 @@
 		<link>
 			<name>Devices/ESC/ESC.cpp</name>
 			<type>1</type>
-			<location>C:/Users/Noah/Documents/College/ECE453/3DPOV/Firmware/3D_POV_Common/Devices/ESC/ESC.cpp</location>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/ESC/ESC.cpp</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
