@@ -13,6 +13,31 @@
 
 uint32_t base;
 
+// CMS -- Color constants and brightness constants copied from Radio project's led.h
+// Want these for testing things but could delete later!
+//*****************************************************************************
+// Color Constants -- First 8 bits are don't cares, then order is R G B
+//*****************************************************************************
+#define OFF         0x00000000
+#define MAGENTA     0x00FF00FF
+#define RED         0x00FF0000
+#define ORANGE      0x00FF8000
+#define YELLOW      0x00FFFF00
+#define GREEN       0x0000FF00
+#define CYAN        0x0000FFFF
+#define BLUE        0x000000FF
+#define PURPLE      0x007F00FF
+#define WHITE       0x00FFFFFF
+#define LAVENDER    0x00CC99FF
+
+//*****************************************************************************
+// Brightness Constants
+//*****************************************************************************
+#define FULL    0xFF
+#define HALF    0xF0
+#define DIM     0xE1
+#define NONE    0xE0
+
 //*****************************************************************************
 // Single LED Data Structure
 //*****************************************************************************
