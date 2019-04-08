@@ -7,11 +7,14 @@
 
 //#include "PAL/PALThread.h"
 //#include <DebugUART.h>
+#include <string.h>
 #include "Threads/MainThread.h"
 #include "Threads/MotorThread.h"
 #include "Threads/RadioInterfaceThread.h"
 #include "Threads/ComputerInterfaceThread.h"
+#include "Threads/DataLinkThread.h"
 #include "PAL/PALControl.h"
+#include "platform/platform_init.h"
 #include "DebugUART.h"
 
 MainThread::MainThread(unsigned priority, unsigned stack_size, const char * name):
@@ -21,6 +24,12 @@ MainThread::MainThread(unsigned priority, unsigned stack_size, const char * name
 }
 void MainThread::Task()
 {
+
+    DataLinkThread * dataLinkThread = new DataLinkThread(4, 0x500, "Datalink Thread");
+    dataLinkThread->Start();
+
+    print_init_message();
+
     dbg_printf("In Main Thread\r\n");
 
     RadioThread * radioThread = new RadioThread(3, 0x500, "Radio Thread");
