@@ -189,6 +189,7 @@ static void faultISR(void)
     /* Enter an infinite loop. */
     while(1)
     {
+        printf("Shit, I crashed :(\r\n");
     }
 }
 
