@@ -109,7 +109,7 @@ int free_rtos_init(void)
     /////////////////////////////////////////////////////
     MainThread * mainthread = new MainThread(2, 0x400, "Main Thread");
     mainthread->Start();
-    dbg_printf("Starting scheduler...\r\n");
+    printf("Starting scheduler...\r\n");
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
 

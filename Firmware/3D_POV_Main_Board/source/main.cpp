@@ -102,10 +102,6 @@ int main(void)
     platform_init();
     pwm_init();
 
-
-
-    print_init_message();
-
     // Starts scheduler. NO RETURN
     free_rtos_init();
 
