@@ -97,6 +97,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/PAL/PALDelay.cpp</locationURI>
 		</link>
 		<link>
+			<name>PAL/PALQueue.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/PAL/PALQueue.cpp</locationURI>
+		</link>
+		<link>
 			<name>PAL/PALSemaphore.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/PAL/PALSemaphore.cpp</locationURI>
