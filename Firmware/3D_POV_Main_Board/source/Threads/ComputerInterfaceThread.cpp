@@ -37,18 +37,18 @@ void ComputerInterfaceThread::Task()
 
         CIT_counter++;
 
-        dbg_readLine(rxBuf, COMPUTER_INTERFACE_RX_BUF_LEN, 100);
+        dbg_readLine(rxBuf, COMPUTER_INTERFACE_RX_BUF_LEN);
 
-
+        //printf("recieved: %s\r\n", rxBuf);
         if(strncmp(rxBuf, identify_string, identify_string_len) == 0)
         {
-            printf("recieved: %s\r\n", rxBuf);
+
             dbg_printf("3DPOV\r\n");
             PALDelay_ms(1000);
             print_init_message();
         }else
         {
-            dbg_printf("CIT count: %d\r\n", CIT_counter);
+            //dbg_printf("CIT count: %d\r\n", CIT_counter);
             PALDelay_ms(1000);
         }
     }
