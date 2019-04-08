@@ -9,6 +9,7 @@ class POVCommandLine(QtGui.QFrame):
         super(POVCommandLine, self).__init__()
         self.mainLayout = QtGui.QVBoxLayout()
         self.buttonLayout = QtGui.QHBoxLayout()
+        self.inputLayout = QtGui.QHBoxLayout()
         self.setLayout(self.mainLayout)
 
         self.cmd_buffer = ""
@@ -20,10 +21,16 @@ class POVCommandLine(QtGui.QFrame):
         self.helper.new_message_sig.connect(self.com_state_change)
         self.helper.new_rx_sig.connect(self.cmd_action)
 
-        self.text_window = QtGui.QTextEdit()
-        self.text_window.setReadOnly(True)
+        self.text_window = QtGui.QListWidget()
+        #self.text_window.setReadOnly(True)
         self.text_window.setFont(QtGui.QFont("Lucida Console"))
         self.mainLayout.addWidget(self.text_window)
+
+        self.mainLayout.addLayout(self.inputLayout)
+        self.command_input = QtGui.QLineEdit()
+        self.send_button = QtGui.QPushButton("Send")
+        self.inputLayout.addWidget(self.command_input)
+        self.inputLayout.addWidget(self.send_button)
 
         self.mainLayout.addLayout(self.buttonLayout)
 
@@ -37,6 +44,8 @@ class POVCommandLine(QtGui.QFrame):
         self.buttonLayout.addStretch(1)
         self.buttonLayout.addWidget(self.pause_button)
 
+        self.last_item = None
+        self.line = ''
         self.bufferSize = 1024
 
     def pause_button_handler(self):
@@ -46,20 +55,41 @@ class POVCommandLine(QtGui.QFrame):
         else:
             self.capture_paused = True
             self.pause_button.setText("Start Capture")
-
+    def clear_terminal(self):
+        self.cmd_buffer = ""
+        self.text_window.setText("")
     def com_state_change(self, msg):
         self.info_label.setText(msg)
 
+
     def cmd_action(self, data):
+
         if self.capture_paused:
             return
 
-        self.cmd_buffer += data
-        if(len(self.cmd_buffer) > self.bufferSize):
-            self.cmd_buffer[-1024:-1]
+        #self.cmd_buffer += data
+        #if(len(self.cmd_buffer) > self.bufferSize):
+        #    self.cmd_buffer[-1024:-1]
         # scroll to bottom
-        self.text_window.setText(self.cmd_buffer)
-        self.text_window.verticalScrollBar().setValue(self.text_window.verticalScrollBar().maximum())
+        #self.text_window.setText(self.cmd_buffer)
+
+        if(data == '\n' or self.last_item is None):
+            self.last_item = QtGui.QListWidgetItem()
+            self.text_window.addItem(self.last_item)
+            self.text_window.setItemWidget(self.last_item, QtGui.QLabel(self.line))
+            self.line =""
+
+        elif(data == '\r'):
+            self.line = ""
+            pass
+        else:
+            self.line += data
+            self.text_window.setItemWidget(self.last_item, QtGui.QLabel(self.line))
+
+
+
+            #self.text_window.addItem(QtGui.QLabel(data))
+        #self.text_window.verticalScrollBar().setValue(self.text_window.verticalScrollBar().maximum())
 
 
 class POVCommandLineHelper(QtCore.QThread):
