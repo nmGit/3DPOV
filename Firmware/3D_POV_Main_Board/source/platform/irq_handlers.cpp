@@ -17,5 +17,10 @@ extern "C" void EUSCIA0_IRQHandler(void)
 {
     uart_a_0_ISR();
     EUSCIAX_IRQHandler();
-    //EUSCIAX_IRQHandler();
+}
+
+extern "C" void EUSCIA2_IRQHandler(void)
+{
+    uart_a_2_ISR();
+    EUSCIAX_IRQHandler();
 }
