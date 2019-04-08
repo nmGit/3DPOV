@@ -54,7 +54,7 @@ uint8_t uart_a_getc(EUSCI_A_Type * base, char * c, unsigned timeout_ms)
     else if (base == EUSCI_A2) // EUSCI_A2 used for bluetooth uart
     {
         // Wait for 100 ms for a character
-        if(uart_a_mutex.tryTake(timeout_ms)) // NOTE: replace with a boolean!!!
+        if(uart_a_mutex->tryTake(timeout_ms)) // NOTE: replace with a boolean!!!
         {
 
             // Block until we receive a character
@@ -88,7 +88,7 @@ char uart_a_0_ISR()
          // Echo the received character back
          EUSCI_A0->TXBUF = uart_a_0_rcvd_chr;
 
-         uart_a_mutex.give();
+         uart_a_mutex->give();
      }
     return 0;
 }
