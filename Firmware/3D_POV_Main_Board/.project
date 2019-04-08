@@ -162,11 +162,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/UART/UART.h</locationURI>
 		</link>
 		<link>
-			<name>source/3D_POV_Common</name>
-			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common</locationURI>
-		</link>
-		<link>
 			<name>Devices/APA102/led.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/APA102/led.cpp</locationURI>

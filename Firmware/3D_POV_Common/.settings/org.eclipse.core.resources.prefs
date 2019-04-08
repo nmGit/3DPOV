@@ -1,6 +1,8 @@
 eclipse.preferences.version=1
 encoding//Debug/Devices/APA102/subdir_rules.mk=UTF-8
 encoding//Debug/Devices/APA102/subdir_vars.mk=UTF-8
+encoding//Debug/Devices/ESC/subdir_rules.mk=UTF-8
+encoding//Debug/Devices/ESC/subdir_vars.mk=UTF-8
 encoding//Debug/PAL/subdir_rules.mk=UTF-8
 encoding//Debug/PAL/subdir_vars.mk=UTF-8
 encoding//Debug/PWM/subdir_rules.mk=UTF-8
