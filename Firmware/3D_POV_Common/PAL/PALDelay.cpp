@@ -2,7 +2,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-PALDelay_ms(unsigned delay_ms)
+void PALDelay_ms(unsigned delay_ms)
 {
     TickType_t ticks = delay_ms * (configTICK_RATE_HZ / 1000);
 
