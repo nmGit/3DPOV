@@ -36,6 +36,49 @@ void timerA_init()
     //    TIMER A0 CTL0 does not need to be set since we use CCR0 to limit the timer
 }
 
+extern "C" void bt_UART_init() {
+
+    // Configure UART pins
+    P3->SEL0 |= BIT2 | BIT3;       // Bit 2 is RX, Bit 3 is TX
+
+    // Configure UART
+    EUSCI_A2->CTLW0 |= EUSCI_A_CTLW0_SWRST;         // Put eUSCI in reset
+    EUSCI_A2->CTLW0 = EUSCI_A_CTLW0_SWRST |         // Remain eUSCI in reset
+                      EUSCI_B_CTLW0_SSEL__SMCLK;    // Configure eUSCI clock source for SMCLK
+
+    // Baud Rate calculation
+    // N = 48000000/(115200) = 416.66666
+    // OS16 = 1
+    // UCBRx = N/16 = INT(416.66666/16) = 26 + 0.041667
+    // UCBRFx = INT([(N/16) - INT(N/16)] * 16) = INT((8.681 - 8)*16) = INT(10.896) = 10
+    // UCBRSx = [(N - INT(N))] = [0.681] = 0xD6
+
+    EUSCI_A2->BRW = 26;                     // 12000000/16/9600
+    EUSCI_A2->MCTLW =   (1 << EUSCI_A_MCTLW_BRS_OFS) |
+                        (0 << EUSCI_A_MCTLW_BRF_OFS) |
+                        EUSCI_A_MCTLW_OS16;
+
+    EUSCI_A2->CTLW0 &= ~EUSCI_A_CTLW0_SWRST; // Initialize eUSCI
+    EUSCI_A2->IFG &= ~EUSCI_A_IFG_RXIFG;     // Clear eUSCI RX interrupt flag
+    EUSCI_A2->IE |= EUSCI_A_IE_RXIE;         // Enable USCI_A0 RX interrupt
+
+    // Enable global interrupt
+#ifdef NAM
+    __enable_irq();
+#endif // NAM
+    MAP_Interrupt_setPriority(INT_EUSCIA2,0x30);
+    MAP_Interrupt_enableInterrupt(INT_EUSCIA2);
+#ifdef NAM
+    Interrupt_setPriority(INT_EUSCIA2,0x30);
+    Interrupt_enableInterrupt( INT_EUSCIA2);
+#endif // NAM
+#ifdef NAM
+    // Enable eUSCIA0 interrupt in NVIC module
+    NVIC->ISER[0] = 1 << ((EUSCIA2_IRQn) & 31);
+#endif // NAM
+
+}
+
 extern "C" void dbg_UART_init()
 {
 
@@ -107,6 +150,7 @@ void platform_init()
     allow_port_mapping();
     mux_MCLK_out();
 
+    bt_UART_init();
     dbg_UART_init();
     timerA_init();
 }
