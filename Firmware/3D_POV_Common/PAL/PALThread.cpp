@@ -26,10 +26,9 @@ PALThread::PALThread(unsigned priority, unsigned stack_size, const char * name)
 }
 void PALThread::Task_handler(void * arg0)
 {
-    uint8_t dummy_data = 0;
     static_cast<PALThread *>(arg0)->Task();
     //pthread_exit(&dummy_data);
-    delete arg0;
+    delete static_cast<PALThread *>(arg0);
 }
 bool PALThread::Start()
 {
