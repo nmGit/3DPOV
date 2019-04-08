@@ -29,6 +29,7 @@ class POVCommandLine(QtGui.QFrame):
         self.mainLayout.addLayout(self.inputLayout)
         self.command_input = QtGui.QLineEdit()
         self.send_button = QtGui.QPushButton("Send")
+        self.send_button.clicked.connect(self.send_cmd)
         self.inputLayout.addWidget(self.command_input)
         self.inputLayout.addWidget(self.send_button)
 
@@ -61,7 +62,8 @@ class POVCommandLine(QtGui.QFrame):
     def com_state_change(self, msg):
         self.info_label.setText(msg)
 
-
+    def send_cmd(self):
+        
     def cmd_action(self, data):
 
         if self.capture_paused:
