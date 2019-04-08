@@ -20,7 +20,7 @@ extern "C" {
     int dbg_printf(const char * format, ...);
     void convert(unsigned int num, int base, char * buf);
     void dbg_uart_write(const char * buf, unsigned len);
-    unsigned dbg_readLine(char * buf, unsigned len, unsigned timeout_ms = 100);
+    unsigned dbg_readLine(char * buf, unsigned len, unsigned timeout_ms = (~0));
     char getc_dbg(unsigned timeout_ms = 100);
     void putc_dbg(char c);
 
