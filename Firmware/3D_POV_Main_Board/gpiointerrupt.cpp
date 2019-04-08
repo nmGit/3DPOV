@@ -132,6 +132,4 @@ void *mainThread(void *arg0)
 
         }
     }
-
-    return (NULL);
 }
