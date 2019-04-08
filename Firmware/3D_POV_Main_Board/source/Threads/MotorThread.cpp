@@ -14,6 +14,7 @@
 #include "PWM/PWM.h"
 #include "Devices/ESC/ESC.h"
 #include "PAL/PALDelay.h"
+
 MotorThread::MotorThread(unsigned priority, unsigned stack_size, const char * name):
     PALThread(priority, stack_size, name)
 {
