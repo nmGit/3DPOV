@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 void EUSCIA0_IRQHandler(void);
+void EUSCIA2_IRQHandler(void);
 
 #if __cplusplus
 }
