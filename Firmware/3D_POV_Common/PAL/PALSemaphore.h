@@ -13,7 +13,7 @@
 class PALSemaphore
 {
 public:
-        PALSemaphore();
+        PALSemaphore(bool start_full = false);
         bool take();
         bool tryTake(unsigned timeout_ms);
         void give();
