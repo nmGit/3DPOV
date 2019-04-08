@@ -16,8 +16,9 @@
 void uart_a_submit_for_transmit(EUSCI_A_Type * base, char chr);
 uint8_t uart_a_getc(EUSCI_A_Type * base, char * c, unsigned timeout_ms = 100);
 char uart_a_0_ISR();
+char uart_a_2_ISR();
 
 char uart_a_0_rcvd_chr;
-
+char uart_a_2_rcvd_chr;
 
 #endif /* SOURCE_UART_UART_H_ */
