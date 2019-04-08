@@ -24,6 +24,18 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>APA102</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/APA102</locationURI>
+		</link>
+		<link>
+			<name>SPI</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/SPI</locationURI>
+		</link>
+	</linkedResources>
 	<variableList>
 		<variable>
 			<name>PROJECT_DRIVERS</name>
