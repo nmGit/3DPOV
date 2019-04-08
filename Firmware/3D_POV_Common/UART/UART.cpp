@@ -5,7 +5,7 @@
  *      Author: Noah
  */
 #include "ti/devices/msp432p4xx/inc/msp.h"
-
+#include "PAL/PALQueue.h"
 #include "UART.h"
 #include <stdint.h>
 // backchannel uart is eUSCI_A0
@@ -27,7 +27,9 @@ void EUSCIA0_IRQHandler(void)
 
 // Using externs is not great style, whaddyagonnado?
 extern char uart_a_0_rcvd_chr;
-static PALSemaphore uart_a_mutex = PALSemaphore();
+static PALSemaphore * uart_a_mutex = new PALSemaphore();
+extern PALQueue * computer_rx_queue;
+
 
 void uart_a_submit_for_transmit(EUSCI_A_Type * base, char chr)
 {
@@ -42,15 +44,15 @@ uint8_t uart_a_getc(EUSCI_A_Type * base, char * c, unsigned timeout_ms)
     if(base == EUSCI_A0)
     {
         // Wait for 100 ms for a character
-        if(uart_a_mutex.tryTake(timeout_ms))
+        if(uart_a_mutex->tryTake(timeout_ms))
         {
 
             // Block until we receive a character
             // the semaphore will be available if we have received a character
             // and it hasn't been received
 
-            *c = uart_a_0_rcvd_chr;
-
+            //*c = uart_a_0_rcvd_chr;
+            computer_rx_queue->get(c);
             return 1;
         }
 
@@ -70,11 +72,12 @@ char uart_a_0_ISR()
 
          // Save the received character
          uart_a_0_rcvd_chr =  EUSCI_A0->RXBUF;
+         computer_rx_queue->add(&(uart_a_0_rcvd_chr));
 
          // Echo the received character back
          //EUSCI_A0->TXBUF = uart_a_0_rcvd_chr;
 
-         uart_a_mutex.give();
+         uart_a_mutex->give();
      }
     return 0;
 }
