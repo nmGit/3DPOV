@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-#include "drivers/include/spi.h"
-#include "drivers/include/led.h"
+#include "spi.h"
+#include "led.h"
 
 uint8_t global;
 uint8_t red_led;
@@ -63,12 +63,56 @@ void test_data(void) {
 }
 
 //*****************************************************************************
+// Get data from Bluetooth UART method
+// NOTE: Need UART and BluetoothUART in this project!
+// CMS: Not a function to keep, just drafting my ideas (4/8/19)
+//*****************************************************************************
+void get_data(void) {
+
+    // Allocate memory for the data structure
+    int i;
+    data = (uint32_t**) malloc(FINS * LEDS_PER_FIN * sizeof(uint32_t));
+    for(i = 0; i < FINS; i++) {
+        data[i] = (uint32_t*) malloc(LEDS_PER_FIN * sizeof(uint32_t));
+    }
+
+    // Initialize data structure
+    int r, c;
+    for(r = 0; r < FINS; r++) {
+        for(c = 0; c < LEDS_PER_FIN; c++) {
+            data[r][c] = 0xE2000000;
+        }
+    }
+
+    // Get data from Bluetooth UART
+    // Data is sent in groups of 8 bits at a time
+    uint32_t* led_whole;     // Entire 32 bit data packet for an individual LED
+    uint8_t led_quarter[4];    // One quarter of data for an individual LED
+    for (r = 0; r < FINS; r++) {
+        for (c = 0; c < LEDS_PER_FIN; c++) {
+            for (i = 0; i < 4; i ++) { // 4 bluetooth reads per 1 LED
+                //bt_uart_read(&led_quarter[i], 1, 100);
+            }
+            *led_whole = led_quarter[0] << 24 |
+                        led_quarter[1] << 16 |
+                        led_quarter[2] << 8  |
+                        led_quarter[3] ;
+            data[r][c] = *led_whole;
+        }
+    }
+
+}
+
+//*****************************************************************************
 // Main Method
 //*****************************************************************************
 int main(void) {
 
     // Set up test data
-    test_data();
+    // test_data();
+
+    // Set up data received via Bluetooth UART
+    get_data();
 
     base = EUSCI_B2_BASE;
 
@@ -82,7 +126,7 @@ int main(void) {
     spiInit();
 
     // Test led_set_image with some arbitrary data
-    led_set_image(data);
+    /// led_set_image(data);
     //led_set_all(base, FINS, LEDS_PER_FIN, NONE, OFF);
 
     // Set LED at row, col
