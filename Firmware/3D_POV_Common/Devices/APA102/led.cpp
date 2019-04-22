@@ -52,17 +52,86 @@ void led_init(void) {
 //*****************************************************************************
 // set a single LED with a specified color
 //*****************************************************************************
-void led_set(uint32_t base, uint8_t led_row, uint8_t led_col,
-             uint8_t brightness, uint32_t color) {
+void led_set(uint8_t led_row, uint8_t led_col,
+             uint8_t brightness, uint32_t led_color) {
+
 
     LEDS[led_row][led_col]->brightness = brightness | 0xE0; // Top 3 bits should be 111
-    LEDS[led_row][led_col]->blue = (color);                 // Find the blue LED data in the color
-    LEDS[led_row][led_col]->green = (color >> 8);           // Find the green LED data in the color
-    LEDS[led_row][led_col]->red = (color >> 16);            // Find the red LED data in the color
+    LEDS[led_row][led_col]->blue = (led_color);                 // Find the blue LED data in the color
+    LEDS[led_row][led_col]->green = (led_color >> 8);           // Find the green LED data in the color
+    LEDS[led_row][led_col]->red = (led_color >> 16);            // Find the red LED data in the color
 
     // Call SPI transmit function to turn the LED on
+    //spiTx();
+
+}
+
+//*****************************************************************************
+// Set the LEDs of a single fin with data transferred over
+// from the interface board.
+//*****************************************************************************
+void led_set_fin(uint8_t fin, uint32_t* data) {
+
+    int i; // loop counter
+    for (i = 0; i < 16; i++) {
+        LEDS[fin][i]->brightness = data[i] >> 24;   // Brightness is top 8 bits
+        LEDS[fin][i]->blue = data[i] >> 16;         // Blue is next 8 bits
+        LEDS[fin][i]->green = data[i] >> 8;         // Green is next 8 bits
+        LEDS[fin][i]->red = data[i];                // Red is last 8 bits
+    }
+
+}
+
+//*****************************************************************************
+// Set the LEDs of all fins with data transferred over
+// from the interface board.
+//*****************************************************************************
+void led_set_image(uint32_t** data) {
+
+    // Update the LEDS data structure
+    int i; // loop counter
+    for (i = 0; i < FINS; i++){
+        // Set each fin's data
+        led_set_fin(i, data[i]);
+    }
+
+    // Turn on the LEDs
     spiTx();
 
+}
+
+//*****************************************************************************
+// set all LEDs from 0 to numLEDs with a specified color //JS
+//*****************************************************************************
+void led_set_all(uint8_t brightness, uint32_t led_color) {
+    uint8_t r,c;
+    for (r = 0; r < FINS; r++) {
+        for (c = 0; c < LEDS_PER_FIN; c++) {
+            led_set(r, c, brightness, led_color);
+        }
+    }
+
+    // Turn on the LEDs
+    spiTx();
+}
+
+//*****************************************************************************
+// Free the LEDs data structure
+//*****************************************************************************
+void led_free(void) {
+
+    // Free in the opposite order allocated
+    int i, j;
+    for(i = 0; i < FINS; i++) {
+        for (j = 0; j < LEDS_PER_FIN; j++) {
+            free(LEDS[i][j]);
+            LEDS[i][j] = NULL;
+        }
+        free(LEDS[i]);
+        LEDS[i] = NULL;
+    }
+    free(LEDS);
+    LEDS = NULL;
 }
 
 

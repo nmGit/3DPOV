@@ -9,7 +9,6 @@
 #define __ECE453_POV_LED_H__
 #include <stdint.h>
 
-
 //*****************************************************************************
 // Color Constants -- First 8 bits are don't cares, then order is R G B
 //*****************************************************************************
@@ -30,7 +29,7 @@
 //*****************************************************************************
 #define FULL    0xFF
 #define HALF    0xF0
-#define DIM     0xE2
+#define DIM     0xE1
 #define NONE    0xE0
 
 //*****************************************************************************
@@ -50,8 +49,8 @@ void led_free(void);
 //*****************************************************************************
 // Set an LED with a specified color and brightness
 //*****************************************************************************
-void led_set(uint32_t base, uint8_t led_row, uint8_t led_col,
-             uint8_t brightness, uint32_t color);
+void led_set(uint8_t led_row, uint8_t led_col,
+             uint8_t brightness, uint32_t led_color);
 
 //*****************************************************************************
 // Set the LEDs of a single fin with data transferred over
@@ -68,8 +67,7 @@ void led_set_image(uint32_t** data);
 //*****************************************************************************
 // set all LEDs from 0 to numLEDs with a specified color
 //*****************************************************************************
-void led_set_all(uint32_t base, uint8_t num_rows, uint8_t num_cols,
-             uint8_t brightness, uint32_t color);
+void led_set_all(uint8_t brightness, uint32_t led_color);
 
 
 
