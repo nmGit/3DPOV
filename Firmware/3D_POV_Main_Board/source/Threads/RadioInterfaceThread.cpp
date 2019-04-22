@@ -66,7 +66,6 @@ void test_data(void) {
     data[0][14] = (DIM << 24) | CYAN;
     data[0][15] = (DIM << 24) | BLUE;
 
-    //data[1][0] = (DIM << 24) | RED;
 }
 
 void RadioThread::Task()
@@ -76,40 +75,24 @@ void RadioThread::Task()
 
     // CMS
     // Set up test data
-  test_data();
+    //test_data();
 
-    /* CMS
-     * LED data is sent in packets of 32 bits
-     * but UART transmits in packets of 8 bits
-     */
-/*
-    int r, c, b;
-    uint32_t* fin_data;
-    uint32_t led_data;
-    uint8_t data_8bit;
-    for (r = 0; r < FINS; r++) {
-        fin_data = data[r];
-        for (c = 0; c < LEDS_PER_FIN; c++){
-            led_data = fin_data[c];
+    // Send test data over Bluetooth
+    //bt_uart_send_data(data);
 
-            // Send the 32 bit information in 4 chunks of 8 bits
-            for (b = 3; b >= 0; b--) {
-                // Send in order of highest 8 bits to lowest 8 bits!
-                data_8bit = led_data >> (8*b);
-                bt_uart_write(&data_8bit, 1);
-            }
 
-        }
-    }
-*/
 
-    char cmd_example = 'H';
-    uint8_t value = 80;
+
+
+    //CMS: This test works! Make sure correct COM port is open and connected!
+    char greeting[15] = "hello, world! ";
+    bt_uart_write((uint8_t*)greeting, 15);
 
     while(1){
-      //bt_uart_cmd(&cmd_example, 1000);
-      bt_uart_write(&value, 2); // Writing doesn't seem to be working right now?? 4/7
 
+        // Command mode example
+        PALDelay_ms(2); // 2 ms delay before entering cmd mode
+        //bt_uart_cmd();
 
 
       PALDelay_ms(10);
