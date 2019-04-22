@@ -27,7 +27,7 @@ void MotorThread::Task()
     uint16_t var;
     uint16_t pct_pwr = 0;
 
-    dbg_printf("\rMotor at %d percent power", pct_pwr);
+    //dbg_printf("\rMotor at %d percent power", pct_pwr);
 
     PALDelay_ms(1000);
     pct_pwr = pct_pwr_esc(pct_pwr);

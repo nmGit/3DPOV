@@ -35,8 +35,8 @@ void MainThread::Task()
     RadioThread * radioThread = new RadioThread(3, 0x500, "Radio Thread");
     radioThread->Start();
 
-    MotorThread * motorthread = new MotorThread(3, 0x500, "Motor Thread");
-    motorthread->Start();
+    //MotorThread * motorthread = new MotorThread(3, 0x500, "Motor Thread");
+    //motorthread->Start();
 
     ComputerInterfaceThread * computerthread = new ComputerInterfaceThread(3, 0x500, "Computer Thread");
     computerthread->Start();
