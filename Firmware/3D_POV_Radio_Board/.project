@@ -31,9 +31,24 @@
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/APA102</locationURI>
 		</link>
 		<link>
+			<name>Proc</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Proc</locationURI>
+		</link>
+		<link>
 			<name>SPI</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/SPI</locationURI>
+		</link>
+		<link>
+			<name>UART/RadioUART.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/UART/RadioUART.cpp</locationURI>
+		</link>
+		<link>
+			<name>UART/RadioUART.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/UART/RadioUART.h</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
