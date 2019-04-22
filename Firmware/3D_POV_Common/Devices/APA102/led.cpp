@@ -61,9 +61,6 @@ void led_set(uint8_t led_row, uint8_t led_col,
     LEDS[led_row][led_col]->green = (led_color >> 8);           // Find the green LED data in the color
     LEDS[led_row][led_col]->red = (led_color >> 16);            // Find the red LED data in the color
 
-    // Call SPI transmit function to turn the LED on
-    //spiTx();
-
 }
 
 //*****************************************************************************
@@ -96,7 +93,7 @@ void led_set_image(uint32_t** data) {
     }
 
     // Turn on the LEDs
-    spiTx();
+    led_transmit_data();
 
 }
 
@@ -112,7 +109,144 @@ void led_set_all(uint8_t brightness, uint32_t led_color) {
     }
 
     // Turn on the LEDs
-    spiTx();
+    led_transmit_data();
+}
+
+
+//*****************************************************************************
+// General transmit method for turning on LEDs
+//*****************************************************************************
+void led_transmit_data() {
+
+    // Initialize the SPI  transmission counter and total number of transmissions
+    trn = 0;
+    total_trn = FRAME_BORDER + (LEDS_PER_FIN * TX_PER_LED * FINS) + FRAME_BORDER;
+                    // 4 for start frame
+                    // Plus 4 per LED
+                    // Plus 4 for end frame
+
+    // Pass to appropriate EUSCI-type transmit method
+    if (spi_is_A_type()) {
+        led_transmit_A_type();
+    } else if (spi_is_B_type()) {
+        led_transmit_B_type();
+    } else {
+        //printf("Error: base address not correct. Unable to transmit data.");
+    }
+
+}
+
+
+//*****************************************************************************
+// Transmit method for EUSCI_B_SPI_Type
+// The global variable trn counts the number of transmissions for this
+// SPI transaction.
+//     - The first four transmissions (trn = 0 to trn = 3)
+//       define the start frame, which is 32 bits of 0s.
+//     - The next set of transmissions are the LED frames. Information for
+//       all LEDs in the data structure will be transmitted in the pattern
+//       brightness, red, blue, green.
+//     - The last four transmissions define the end frame, which is
+//       32 bits of 1s. This is split up into 3 transmissions
+//       (for trn >= (LEDS_PER_FIN*FINS)+FRAME_BORDER && trn < total_trn-1)
+//       and then the final transmission, which resets the trn count back to 0.
+//
+//*****************************************************************************
+void led_transmit_B_type(void) {
+
+    uint8_t r, c;           // row, column counters for LED data structure
+    uint8_t trn_per_led;    // Counts 4 transmissions per LED frame
+    uint8_t tx_data;
+
+    while(trn < total_trn) {
+
+        // Transmit Data
+        if (trn >= 0 && trn < FRAME_BORDER) {
+            // 32 bits of 0s define the start frame, send in 8 bit chunks
+            tx_data = START_FRAME;
+            submit_for_tx_B(tx_data);
+            trn++;
+        } else if (trn >= FRAME_BORDER && trn < (LEDS_PER_FIN*FINS*TX_PER_LED) + FRAME_BORDER) {
+            for (r = 0; r < FINS; r++) {
+                for (c = 0; c < LEDS_PER_FIN; c++) {
+                    for (trn_per_led = 0; trn_per_led < TX_PER_LED; trn_per_led++) {
+
+                        if (trn%4 == 0) {
+                            tx_data = LEDS[r][c]->brightness;
+                        } else if (trn%4 == 1) {
+                            tx_data = LEDS[r][c]->red;
+                        } else if (trn%4 == 2) {
+                            tx_data = LEDS[r][c]->blue;
+                        } else if (trn%4 == 3) {
+                            tx_data = LEDS[r][c]->green;
+                        }
+                        submit_for_tx_B(tx_data);
+                        trn++; // Increment transmission count
+                    }
+                }
+            }
+        } else if (trn >= (LEDS_PER_FIN*FINS*TX_PER_LED)+FRAME_BORDER && trn < total_trn) {
+            // 32 bits of 1s define the end frame, send the first three 8 bit chunks
+            tx_data = END_FRAME;
+            submit_for_tx_B(tx_data);
+            trn++;
+        }
+    }
+
+    trn = 0;
+}
+
+
+//*****************************************************************************
+// Transmit method for EUSCI_A_SPI_Type
+//*****************************************************************************
+void led_transmit_A_type(void) {
+
+    uint8_t r, c;           // row, column counters for LED data structure
+    uint8_t trn_per_led;    // Counts 4 transmissions per LED frame
+    uint8_t tx_data;
+
+    while(trn < total_trn) {
+
+        // Transmit Data
+        if (trn >= 0 && trn < FRAME_BORDER) {
+            // 32 bits of 0s define the start frame, send in 8 bit chunks
+            tx_data = START_FRAME;
+            submit_for_tx_A(tx_data);
+            trn++;
+        } else if (trn >= FRAME_BORDER && trn < (LEDS_PER_FIN*FINS*TX_PER_LED) + FRAME_BORDER) {
+            for (r = 0; r < FINS; r++) {
+                for (c = 0; c < LEDS_PER_FIN; c++) {
+                    for (trn_per_led = 0; trn_per_led < 4; trn_per_led++) {
+
+                        if (trn%4 == 0) {
+                            tx_data = LEDS[r][c]->brightness;
+                            submit_for_tx_A(tx_data);
+                        } else if (trn%4 == 1) {
+                            tx_data = LEDS[r][c]->red;
+                            submit_for_tx_A(tx_data);
+                        } else if (trn%4 == 2) {
+                            tx_data = LEDS[r][c]->blue;
+                            submit_for_tx_A(tx_data);
+                        } else if (trn%4 == 3) {
+                            tx_data = LEDS[r][c]->green;
+                        }
+
+                        submit_for_tx_A(tx_data);
+                        trn++; // Increment transmission count
+                    }
+                }
+            }
+        } else if (trn >= (LEDS_PER_FIN*FINS*TX_PER_LED)+FRAME_BORDER && trn < total_trn) {
+            // 32 bits of 1s define the end frame, send the first three 8 bit chunks
+            tx_data = END_FRAME;
+            submit_for_tx_A(tx_data);
+            trn++;
+        }
+    }
+
+    trn = 0;
+
 }
 
 //*****************************************************************************
@@ -133,6 +267,8 @@ void led_free(void) {
     free(LEDS);
     LEDS = NULL;
 }
+
+
 
 
 

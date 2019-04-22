@@ -8,13 +8,7 @@
 #include "spi.h"
 
 
-//*****************************************************************************
-// Globals
-//*****************************************************************************
 
-
-uint8_t trn;          // For counting transmissions
-uint8_t total_trn;    // Total number of transmissions
 
 //*****************************************************************************
 // General initialization method for SPI
@@ -31,28 +25,6 @@ void spiInit() {
         spiInit_A_type();
     } else if (spi_is_B_type()) {
         spiInit_B_type();
-    } else {
-        //printf("Error: base address not correct. Unable to transmit data.");
-    }
-
-}
-
-//*****************************************************************************
-// General transmit method for SPI
-//*****************************************************************************
-void spiTx() {
-
-    // Initialize the transmission counter and total number of transmissions
-    trn = 0;
-    total_trn = FRAME_BORDER + (LEDS_PER_FIN * TX_PER_LED * FINS) + FRAME_BORDER; // 4 for start frame
-                                               // Plus 4 per LED
-                                               // Plus 4 for end frame
-
-    // Pass to appropriate EUSCI-type transmit method
-    if (spi_is_A_type()) {
-        spi_transmit_A_type();
-    } else if (spi_is_B_type()) {
-        spi_transmit_B_type();
     } else {
         //printf("Error: base address not correct. Unable to transmit data.");
     }
@@ -98,57 +70,6 @@ bool spi_is_A_type(void) {
 
 //***************************** A TYPE FUNCTIONS ******************************
 
-//*****************************************************************************
-// Transmit method for EUSCI_A_SPI_Type
-//*****************************************************************************
-void spi_transmit_A_type(void) {
-
-    uint8_t r, c;           // row, column counters for LED data structure
-    uint8_t trn_per_led;    // Counts 4 transmissions per LED frame
-    uint8_t tx_data;
-
-    while(trn < total_trn) {
-
-        // Transmit Data
-        if (trn >= 0 && trn <= 3) {
-            // 32 bits of 0s define the start frame, send in 8 bit chunks
-            tx_data = START_FRAME;
-            submit_for_tx_A(tx_data);
-            trn++;
-        } else if (trn > 3 && trn < (LEDS_PER_FIN*FINS) + 4) {
-            for (r = 0; r < FINS; r++) {
-                for (c = 0; c < LEDS_PER_FIN; c++) {
-                    for (trn_per_led = 0; trn_per_led < 4; trn_per_led++) {
-
-                        if (trn%4 == 0) {
-                            tx_data = LEDS[r][c]->brightness;
-                            submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 1) {
-                            tx_data = LEDS[r][c]->red;
-                            submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 2) {
-                            tx_data = LEDS[r][c]->blue;
-                            submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 3) {
-                            tx_data = LEDS[r][c]->green;
-                            submit_for_tx_A(tx_data);
-                        }
-
-                        trn++; // Increment transmission count
-                    }
-                }
-            }
-        } else if (trn >= (LEDS_PER_FIN*FINS)+FRAME_BORDER && trn < total_trn) {
-            // 32 bits of 1s define the end frame, send the first three 8 bit chunks
-            tx_data = END_FRAME;
-            submit_for_tx_A(tx_data);
-            trn++;
-        }
-    }
-
-    trn = 0;
-
-}
 
 //*****************************************************************************
 // Transmit the data by putting it into the buffer. A-type base.
@@ -259,69 +180,6 @@ void configure_A_pins(void) {
 
 
 //***************************** B TYPE FUNCTIONS ******************************
-
-//*****************************************************************************
-// Transmit method for EUSCI_B_SPI_Type
-// The global variable trn counts the number of transmissions for this
-// SPI transaction.
-//     - The first four transmissions (trn = 0 to trn = 3)
-//       define the start frame, which is 32 bits of 0s.
-//     - The next set of transmissions are the LED frames. Information for
-//       all LEDs in the data structure will be transmitted in the pattern
-//       brightness, red, blue, green.
-//     - The last four transmissions define the end frame, which is
-//       32 bits of 1s. This is split up into 3 transmissions
-//       (for trn >= (LEDS_PER_FIN*FINS)+FRAME_BORDER && trn < total_trn-1)
-//       and then the final transmission, which resets the trn count back to 0.
-//
-//*****************************************************************************
-void spi_transmit_B_type(void) {
-
-    uint8_t r, c;           // row, column counters for LED data structure
-    uint8_t trn_per_led;    // Counts 4 transmissions per LED frame
-    uint8_t tx_data;
-
-    while(trn < total_trn) {
-
-        // Transmit Data
-        if (trn >= 0 && trn < FRAME_BORDER) {
-            // 32 bits of 0s define the start frame, send in 8 bit chunks
-            tx_data = START_FRAME;
-            submit_for_tx_B(tx_data);
-            trn++;
-        } else if (trn >= FRAME_BORDER && trn < (LEDS_PER_FIN*FINS*TX_PER_LED) + FRAME_BORDER) {
-            for (r = 0; r < FINS; r++) {
-                for (c = 0; c < LEDS_PER_FIN; c++) {
-                    for (trn_per_led = 0; trn_per_led < TX_PER_LED; trn_per_led++) {
-
-                        if (trn%4 == 0) {
-                            tx_data = LEDS[r][c]->brightness;
-                            //submit_for_tx_B(tx_data);
-                        } else if (trn%4 == 1) {
-                            tx_data = LEDS[r][c]->red;
-                            //submit_for_tx_B(tx_data);
-                        } else if (trn%4 == 2) {
-                            tx_data = LEDS[r][c]->blue;
-                            //submit_for_tx_B(tx_data);
-                        } else if (trn%4 == 3) {
-                            tx_data = LEDS[r][c]->green;
-                            //submit_for_tx_B(tx_data);
-                        }
-                        submit_for_tx_B(tx_data);
-                        trn++; // Increment transmission count
-                    }
-                }
-            }
-        } else if (trn >= (LEDS_PER_FIN*FINS*TX_PER_LED)+FRAME_BORDER && trn < total_trn) {
-            // 32 bits of 1s define the end frame, send the first three 8 bit chunks
-            tx_data = END_FRAME;
-            submit_for_tx_B(tx_data);
-            trn++;
-        }
-    }
-
-    trn = 0;
-}
 
 
 //*****************************************************************************

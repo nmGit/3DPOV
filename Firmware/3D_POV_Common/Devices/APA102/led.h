@@ -33,6 +33,30 @@
 #define NONE    0xE0
 
 //*****************************************************************************
+// Single LED Data Structure
+//*****************************************************************************
+typedef struct {
+    uint8_t brightness;     // 111 + 5bit brightness
+    uint8_t red;            // 8bit red data
+    uint8_t blue;           // 8bit blue data
+    uint8_t green;          // 8bit green data
+} data_frame_type;
+
+//*****************************************************************************
+// Full LED Data Structure
+// 12 rows for all 12 fins
+// 16 columns for all 16 LEDs on each fin
+//*****************************************************************************
+data_frame_type*** LEDS;
+
+//*****************************************************************************
+// Image data structure
+// Contains information for all LEDs for a single position (out of 100)
+// in the 360 degree sweep of the image.
+//*****************************************************************************
+
+
+//*****************************************************************************
 // Function Prototypes
 //*****************************************************************************
 
@@ -68,6 +92,13 @@ void led_set_image(uint32_t** data);
 // set all LEDs from 0 to numLEDs with a specified color
 //*****************************************************************************
 void led_set_all(uint8_t brightness, uint32_t led_color);
+
+//*****************************************************************************
+// transmit function to turn on LEDs
+//*****************************************************************************
+void led_transmit_data(void);
+void led_transmit_B_type(void);
+void led_transmit_A_type(void);
 
 
 

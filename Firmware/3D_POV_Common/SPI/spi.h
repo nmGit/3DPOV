@@ -15,7 +15,12 @@
 #include <ti/devices/msp432p4xx/inc/msp.h>
 #include "MSP_EXP432P401R.h"
 
+//*****************************************************************************
+// Globals
+//*****************************************************************************
 
+uint8_t trn;          // For counting transmissions
+uint8_t total_trn;    // Total number of transmissions
 uint32_t base;  // SPI base address
 
 //// CMS: color constants & brightness constants copied from led.h for testing
@@ -42,31 +47,31 @@ uint32_t base;  // SPI base address
 //#define DIM     0x1F
 //#define NONE    0xE0
 
-//*****************************************************************************
-// Single LED Data Structure
-//*****************************************************************************
-typedef struct {
-    uint8_t brightness;     // 111 + 5bit brightness
-    uint8_t red;            // 8bit red data
-    uint8_t blue;           // 8bit blue data
-    uint8_t green;          // 8bit green data
-} data_frame_type;
-
-//*****************************************************************************
-// Full LED Data Structure
-// 12 rows for all 12 fins
-// 16 columns for all 16 LEDs on each fin
-//*****************************************************************************
-data_frame_type*** LEDS;
-
-//*****************************************************************************
-// Image data structure
-// Contains information for all LEDs for a single position (out of 100)
-// in the 360 degree sweep of the image.
-//*****************************************************************************
-typedef struct {
-    LEDS img[100];
-} image_type;
+////*****************************************************************************
+//// Single LED Data Structure
+////*****************************************************************************
+//typedef struct {
+//    uint8_t brightness;     // 111 + 5bit brightness
+//    uint8_t red;            // 8bit red data
+//    uint8_t blue;           // 8bit blue data
+//    uint8_t green;          // 8bit green data
+//} data_frame_type;
+//
+////*****************************************************************************
+//// Full LED Data Structure
+//// 12 rows for all 12 fins
+//// 16 columns for all 16 LEDs on each fin
+////*****************************************************************************
+//data_frame_type*** LEDS;
+//
+////*****************************************************************************
+//// Image data structure
+//// Contains information for all LEDs for a single position (out of 100)
+//// in the 360 degree sweep of the image.
+////*****************************************************************************
+//typedef struct {
+//    LEDS img[100];
+//} image_type;
 
 
 //*****************************************************************************
@@ -91,7 +96,7 @@ void spiInit(void);
 //*****************************************************************************
 // General transmit method for SPI
 //*****************************************************************************
-void spiTx(void);
+//void spiTx(void);
 
 //*****************************************************************************
 // Checks if the base address for SPI is type A or type B.
@@ -114,8 +119,8 @@ void configure_B_pins(void);
 //*****************************************************************************
 // Transmit method for EUSCI_A_SPI_Type or EUSCI_B_SPI_TYPE
 //*****************************************************************************
-void spi_transmit_A_type(void);
-void spi_transmit_B_type(void);
+//void spi_transmit_A_type(void);
+//void spi_transmit_B_type(void);
 
 //*****************************************************************************
 // Transmit the data by putting it into the buffer.
