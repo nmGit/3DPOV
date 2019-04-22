@@ -67,7 +67,6 @@ void disable_wdt()
 }
 void processor_init()
 {
-
     init_clocks();
 }
 

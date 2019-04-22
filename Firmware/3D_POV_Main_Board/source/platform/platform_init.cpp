@@ -44,7 +44,7 @@ extern "C" void bt_UART_init() {
     // Configure UART
     EUSCI_A2->CTLW0 |= EUSCI_A_CTLW0_SWRST;         // Put eUSCI in reset
     EUSCI_A2->CTLW0 = EUSCI_A_CTLW0_SWRST |         // Remain eUSCI in reset
-                      EUSCI_B_CTLW0_SSEL__SMCLK;    // Configure eUSCI clock source for SMCLK
+                      EUSCI_A_CTLW0_SSEL__SMCLK;    // Configure eUSCI clock source for SMCLK
 
     // Baud Rate calculation
     // N = 48000000/(115200) = 416.66666
@@ -73,7 +73,7 @@ extern "C" void bt_UART_init() {
     Interrupt_enableInterrupt( INT_EUSCIA2);
 #endif // NAM
 #ifdef NAM
-    // Enable eUSCIA0 interrupt in NVIC module
+    // Enable eUSCIA2 interrupt in NVIC module
     NVIC->ISER[0] = 1 << ((EUSCIA2_IRQn) & 31);
 #endif // NAM
 
