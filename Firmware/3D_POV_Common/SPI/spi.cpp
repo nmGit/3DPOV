@@ -6,17 +6,12 @@
  *****************************************************************************/
 
 #include "spi.h"
-#include <stdint.h>
-#include "C:\ti\simplelink_msp432p4_sdk_2_40_00_10\source\ti\devices\msp432p4xx\inc\msp432p401r.h"
-#include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-#include <ti/devices/msp432p4xx/inc/msp.h>
-#include "MSP_EXP432P401R.h"
+
 
 //*****************************************************************************
 // Globals
 //*****************************************************************************
-volatile bool tx_rdy; // For alerting when the hardware is ready
-                      // to transmit more data
+
 
 uint8_t trn;          // For counting transmissions
 uint8_t total_trn;    // Total number of transmissions
@@ -49,7 +44,7 @@ void spiTx() {
 
     // Initialize the transmission counter and total number of transmissions
     trn = 0;
-    total_trn = 8 + (LEDS_PER_FIN * 4 * FINS); // 4 for start frame
+    total_trn = FRAME_BORDER + (LEDS_PER_FIN * TX_PER_LED * FINS) + FRAME_BORDER; // 4 for start frame
                                                // Plus 4 per LED
                                                // Plus 4 for end frame
 
@@ -289,35 +284,35 @@ void spi_transmit_B_type(void) {
     while(trn < total_trn) {
 
         // Transmit Data
-        if (trn >= 0 && trn <= 3) {
+        if (trn >= 0 && trn < FRAME_BORDER) {
             // 32 bits of 0s define the start frame, send in 8 bit chunks
             tx_data = START_FRAME;
             submit_for_tx_B(tx_data);
             trn++;
-        } else if (trn > 3 && trn < (LEDS_PER_FIN*FINS) + 4) {
+        } else if (trn >= FRAME_BORDER && trn < (LEDS_PER_FIN*FINS*TX_PER_LED) + FRAME_BORDER) {
             for (r = 0; r < FINS; r++) {
                 for (c = 0; c < LEDS_PER_FIN; c++) {
-                    for (trn_per_led = 0; trn_per_led < 4; trn_per_led++) {
+                    for (trn_per_led = 0; trn_per_led < TX_PER_LED; trn_per_led++) {
 
                         if (trn%4 == 0) {
                             tx_data = LEDS[r][c]->brightness;
-                            submit_for_tx_B(tx_data);
+                            //submit_for_tx_B(tx_data);
                         } else if (trn%4 == 1) {
                             tx_data = LEDS[r][c]->red;
-                            submit_for_tx_B(tx_data);
+                            //submit_for_tx_B(tx_data);
                         } else if (trn%4 == 2) {
                             tx_data = LEDS[r][c]->blue;
-                            submit_for_tx_B(tx_data);
+                            //submit_for_tx_B(tx_data);
                         } else if (trn%4 == 3) {
                             tx_data = LEDS[r][c]->green;
-                            submit_for_tx_B(tx_data);
+                            //submit_for_tx_B(tx_data);
                         }
-
+                        submit_for_tx_B(tx_data);
                         trn++; // Increment transmission count
                     }
                 }
             }
-        } else if (trn >= (LEDS_PER_FIN*FINS)+FRAME_BORDER && trn < total_trn) {
+        } else if (trn >= (LEDS_PER_FIN*FINS*TX_PER_LED)+FRAME_BORDER && trn < total_trn) {
             // 32 bits of 1s define the end frame, send the first three 8 bit chunks
             tx_data = END_FRAME;
             submit_for_tx_B(tx_data);
@@ -366,8 +361,9 @@ void spiInit_B_type() {
                         EUSCI_B_CTLW0_MST |        // Master mode
                         EUSCI_B_CTLW0_MODE_1 |     // 4-pin mode
                         EUSCI_B_CTLW0_STEM |       // STE mode select
-                        EUSCI_B_CTLW0_SSEL__ACLK;  // ACLK
-    spi_struct->BRW = 0x01;                        // Baud Rate 115200
+                        EUSCI_B_CTLW0_SSEL__SMCLK;  // SMCLK
+    //    spi_struct->BRW = 0x01;                        // Baud Rate 115200
+        spi_struct->BRW = 1;                        // Baud Rate 115200
 
     spi_struct->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;     // Initialize
     spi_struct->IE |=  EUSCI_B_IE_TXIE;// Transmit interrupt enable
@@ -436,65 +432,6 @@ void configure_B_pins(void) {
 }
 
 
-//*****************************************************************************
-// General IRQ A Handler
-//*****************************************************************************
-void EUSCIAX_IRQHandler(void) {
-    EUSCI_A_SPI_Type* spi_struct = (EUSCI_A_SPI_Type*) base;
-
-    // Set trx_rdy to true
-    tx_rdy = 1;
-
-    // Clear the transmit interrupt flag
-    spi_struct->IFG &= ~EUSCI_B_IFG_TXIFG0;
-
-}
-
-//*****************************************************************************
-// General IRQ B Handler
-//*****************************************************************************
-void EUSCIBX_IRQHandler(void) {
-    EUSCI_B_SPI_Type* spi_struct = (EUSCI_B_SPI_Type*) base;
-
-    // Set trx_rdy to true
-    tx_rdy = 1;
-
-    // Clear the transmit interrupt flag
-    spi_struct->IFG &= ~EUSCI_B_IFG_TXIFG0;
-
-}
 
 
-//*****************************************************************************
-// EUSCI type A Handlers
-//*****************************************************************************
-//extern "C" void EUSCIA0_IRQHandler(void) {
-//    EUSCIAX_IRQHandler();
-//}
 
-extern "C" void EUSCIA1_IRQHandler(void) {
-    EUSCIAX_IRQHandler();
-}
-
-extern "C" void EUSCIA3_IRQHandler(void) {
-    EUSCIAX_IRQHandler();
-}
-
-//*****************************************************************************
-// EUSCI type B Handlers
-//*****************************************************************************
-extern "C" void EUSCIB0_IRQHandler(void) {
-    EUSCIBX_IRQHandler();
-}
-
-extern "C" void EUSCIB1_IRQHandler(void) {
-    EUSCIBX_IRQHandler();
-}
-
-extern "C" void EUSCIB2_IRQHandler(void) {
-    EUSCIBX_IRQHandler();
-}
-
-extern "C" void EUSCIB3_IRQHandler(void) {
-    EUSCIBX_IRQHandler();
-}
