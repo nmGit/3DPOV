@@ -82,9 +82,9 @@
 //   Built with CCSv6.1, IAR, Keil, GCC
 //******************************************************************************
 #include <stdlib.h>
-#include "ti/devices/msp432p4xx/inc/msp.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "ti/devices/msp432p4xx/driverlib/cs.h"
+#include "ti/devices/msp432p4xx/inc/msp.h"
 #include "platform/irq_handlers.h"
 #include "platform/platform_init.h"
 #include "Proc/processor_init.h"
