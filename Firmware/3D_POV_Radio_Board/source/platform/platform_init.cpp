@@ -78,15 +78,15 @@ void platform_init()
 //    timerA_init();
     led_init();             // Creates LED data structure
     spiInit();              // Initializes SPI pins on MSP
-    bt_raw_data_init();     // Creates raw data structure for Bluetooth communication
-    bt_UART_init();         // Initializes Bluetooth UART pins on MSP
+//    bt_raw_data_init();     // Creates raw data structure for Bluetooth communication
+//    bt_UART_init();         // Initializes Bluetooth UART pins on MSP
     print_init_message();
 
 }
 
 void platform_free()
 {
-    led_free();         // Free space used by LED data structure
-    bt_raw_data_free(); // Free space used by Bluetooth raw data structure
+    led_free_image();         // Free space used by LED data structure
+    led_free_bt_buf();        // Free space used by Bluetooth buffer
 }
 

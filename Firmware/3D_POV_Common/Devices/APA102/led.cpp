@@ -4,273 +4,276 @@
  * DATE CREATED:    2/26/19                                                   *
  *                                                                            *
  *****************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "led.h"
-#include "spi.h"
-#include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-#include "C:\ti\simplelink_msp432p4_sdk_2_40_00_10\source\ti\devices\msp432p4xx\inc\msp432p401r.h"
-#include <ti/devices/msp432p4xx/inc/msp.h>
-#include "MSP_EXP432P401R.h"
-
 
 //*****************************************************************************
-// Full LED Data Structure
-// 12 rows for all 12 fins
-// 16 columns for all 16 LEDs on each fin
-//*****************************************************************************
-
-
-//*****************************************************************************
-// Initialize all LEDs -- 12 rows by 16 columns for all 192 LEDs
+// Initialize the image data structure
 //*****************************************************************************
 void led_init(void) {
 
-    int i, j;
+    brightness = DIM;
+    int fin_idx, pos_idx, led_idx;
 
-    // Allocate memory for the full LED data structure
-    LEDS = (data_frame_type***) malloc(FINS * LEDS_PER_FIN * sizeof(data_frame_type**));
-    for(i = 0; i < FINS; i++) {
-        LEDS[i] = (data_frame_type**) malloc(LEDS_PER_FIN * sizeof(data_frame_type*));
-        for(j = 0; j < LEDS_PER_FIN; j++) {
-            LEDS[i][j] = (data_frame_type*) malloc(sizeof(data_frame_type));
+    // Allocate space for the image
+    image = (position_type**)malloc(sizeof(position_type*) * TOTAL_POS);
+
+    // Allocate space for all positions
+    for (pos_idx = 0; pos_idx < TOTAL_POS; pos_idx++) {
+        image[pos_idx] = (position_type*)malloc(sizeof(position_type));
+        image[pos_idx]->pos_idx = pos_idx;
+        image[pos_idx]->all_fins = (fin_type**)malloc(sizeof(fin_type*) * FINS);
+
+        // Allocate space for all fins and all leds
+        for(fin_idx = 0; fin_idx < FINS; fin_idx++) {
+            image[pos_idx]->all_fins[fin_idx] = (fin_type*)malloc(sizeof(fin_type));
+            image[pos_idx]->all_fins[fin_idx]->fin_idx = fin_idx;
+            image[pos_idx]->all_fins[fin_idx]->leds = (led_type**)malloc(sizeof(led_type*) * LEDS_PER_FIN);
+
+            // Allocate space for all leds
+            for(led_idx = 0; led_idx < LEDS_PER_FIN; led_idx++) {
+                image[pos_idx]->all_fins[fin_idx]->leds[led_idx] = (led_type*)malloc(sizeof(led_type));
+
+                // Set brightness to none
+                image[pos_idx]->all_fins[fin_idx]->leds[led_idx]->brightness = brightness;
+
+                // Set color to off
+                color_set(&(image[pos_idx]->all_fins[fin_idx]->leds[led_idx]->color), OFF);
+
+
+            }
         }
     }
 
-    // Set all LEDs to 0
-    for(i = 0; i < FINS; i++) {
-        for (j = 0; j < LEDS_PER_FIN; j++) {
-            LEDS[i][j]->brightness = 0xE0;
-            LEDS[i][j]->red = 0x00;
-            LEDS[i][j]->blue = 0x00;
-            LEDS[i][j]->green = 0x00;
+}
+
+//*****************************************************************************
+// Initialize the Bluetooth image buffer
+//*****************************************************************************
+void led_bt_buf_init() {
+
+    int pos_idx, led_idx;
+
+    // Allocate space for the Bluetooth image buffer
+    bt_buffer = (img_pos_packet*)malloc(sizeof(img_pos_packet));
+
+}
+
+//*****************************************************************************
+// Get a packet of information over Bluetooth.
+// If packet is image information (IMG), fill in the bt_buffer
+//*****************************************************************************
+void led_bt_get_packet() {
+
+    uint8_t msg[3];    // For sending messages over bluetooth
+
+    // Send connection message to Bluetooth master
+    strcpy((char*)msg, "CON");
+    bt_uart_write(msg, 3);
+
+    // Find out what type of packet Bluetooth master is sending
+    bt_uart_read(msg, 3, TIMEOUT_MS);
+    if (strcmp((char*)msg, "IMG") == 0) {
+        led_bt_fill_buffer();
+    }
+
+
+}
+
+//*****************************************************************************
+// Fill in the Bluetooth buffer.
+// Use the Bluetooth buffer to fill in the image structure.
+//*****************************************************************************
+void led_bt_fill_buffer() {
+
+    uint8_t msg[3];    // For sending messages over bluetooth
+
+    // Map the Bluetooth data to the bt_buffer structure
+    bt_uart_read((uint8_t*)bt_buffer, sizeof(img_pos_packet), TIMEOUT_MS);
+
+    // Fill in the image data structure with information from Bluetooth
+    led_set_pos(bt_buffer->pos_idx,
+                bt_buffer->fin_idx,
+                bt_buffer->led_colors);
+
+    // Send a finish message to Bluetooth master
+    strcpy((char*)msg, "END");
+    bt_uart_write(msg, 3);
+
+}
+
+//*****************************************************************************
+// Set a single LED with a specified color
+// Assumes curr_led is pointing to the specific LED to set
+//*****************************************************************************
+void led_set(color_type led_color) {
+
+    curr_led->brightness = brightness | 0xE0;     // Top 3 bits should be 111
+    curr_led->color = led_color;
+
+}
+
+//*****************************************************************************
+// Set the LEDs of a single fin
+// Assumes curr_fin is pointing to the specific fin to set
+// and that led_colors is an array containing colors for all LEDs on that fin
+//*****************************************************************************
+void led_set_fin(color_type* led_colors) {
+
+    int led_idx;
+
+    for (led_idx = 0; led_idx < LEDS_PER_FIN; led_idx++) {
+        curr_led = curr_fin->leds[led_idx];
+        led_set(led_colors[led_idx]);
+    }
+
+}
+
+//*****************************************************************************
+// Set the LEDs of a specific fin for a single position
+//*****************************************************************************
+void led_set_pos(uint8_t fin_idx, uint8_t pos_idx, color_type* led_colors) {
+
+    // Point to the fin indicated by fin_idx
+    curr_fin = image[pos_idx]->all_fins[fin_idx];
+
+    // Set the fin
+    led_set_fin(led_colors);
+
+}
+
+//*****************************************************************************
+// Function to use for setting test colors
+//*****************************************************************************
+void color_set(color_type* test_color, uint32_t color_value) {
+    test_color->blue = (color_value);
+    test_color->green = (color_value >> 8);
+    test_color->red = (color_value >> 16);
+}
+
+//*****************************************************************************
+// Function to use for testing fins
+//*****************************************************************************
+void led_set_test(uint32_t color_value) {
+
+    int pos_idx, fin_idx, led_idx;
+
+    // Allocate space for test colors
+    color_type* test_colors = (color_type*)malloc(sizeof(color_type) * LEDS_PER_FIN);
+    for (led_idx = 0; led_idx < LEDS_PER_FIN; led_idx++) {
+        // Set test color
+        color_set(&test_colors[led_idx], color_value);
+    }
+
+
+    for (pos_idx = 0; pos_idx < TOTAL_POS; pos_idx++) {
+        for (fin_idx = 0; fin_idx < FINS; fin_idx++) {
+            led_set_pos(pos_idx, fin_idx, test_colors);
         }
     }
-
 }
 
 //*****************************************************************************
-// set a single LED with a specified color
+// Data transmit method for turning on LEDs
+// Assumes the entire image data structure has been set in memory
 //*****************************************************************************
-void led_set(uint8_t led_row, uint8_t led_col,
-             uint8_t brightness, uint32_t led_color) {
+void led_transmit_data(uint8_t pos_idx) {
 
 
-    LEDS[led_row][led_col]->brightness = brightness | 0xE0; // Top 3 bits should be 111
-    LEDS[led_row][led_col]->blue = (led_color);                 // Find the blue LED data in the color
-    LEDS[led_row][led_col]->green = (led_color >> 8);           // Find the green LED data in the color
-    LEDS[led_row][led_col]->red = (led_color >> 16);            // Find the red LED data in the color
-
-}
-
-//*****************************************************************************
-// Set the LEDs of a single fin with data transferred over
-// from the interface board.
-//*****************************************************************************
-void led_set_fin(uint8_t fin, uint32_t* data) {
-
-    int i; // loop counter
-    for (i = 0; i < 16; i++) {
-        LEDS[fin][i]->brightness = data[i] >> 24;   // Brightness is top 8 bits
-        LEDS[fin][i]->blue = data[i] >> 16;         // Blue is next 8 bits
-        LEDS[fin][i]->green = data[i] >> 8;         // Green is next 8 bits
-        LEDS[fin][i]->red = data[i];                // Red is last 8 bits
-    }
-
-}
-
-//*****************************************************************************
-// Set the LEDs of all fins with data transferred over
-// from the interface board.
-//*****************************************************************************
-void led_set_image(uint32_t** data) {
-
-    // Update the LEDS data structure
-    int i; // loop counter
-    for (i = 0; i < FINS; i++){
-        // Set each fin's data
-        led_set_fin(i, data[i]);
-    }
-
-    // Turn on the LEDs
-    led_transmit_data();
-
-}
-
-//*****************************************************************************
-// set all LEDs from 0 to numLEDs with a specified color //JS
-//*****************************************************************************
-void led_set_all(uint8_t brightness, uint32_t led_color) {
-    uint8_t r,c;
-    for (r = 0; r < FINS; r++) {
-        for (c = 0; c < LEDS_PER_FIN; c++) {
-            led_set(r, c, brightness, led_color);
-        }
-    }
-
-    // Turn on the LEDs
-    led_transmit_data();
-}
-
-
-//*****************************************************************************
-// General transmit method for turning on LEDs
-//*****************************************************************************
-void led_transmit_data() {
-
-    // Initialize the SPI  transmission counter and total number of transmissions
+    // Initialize the SPI transmission counter and total number of transmissions
     trn = 0;
-    total_trn = FRAME_BORDER + (LEDS_PER_FIN * TX_PER_LED * FINS) + FRAME_BORDER;
-                    // 4 for start frame
-                    // Plus 4 per LED
-                    // Plus 4 for end frame
+    total_trn = FRAME_BORDER + (TX_PER_LED*LEDS_PER_FIN*FINS) + FRAME_BORDER;
 
-    // Pass to appropriate EUSCI-type transmit method
-    if (spi_is_A_type()) {
-        led_transmit_A_type();
-    } else if (spi_is_B_type()) {
-        led_transmit_B_type();
-    } else {
-        //printf("Error: base address not correct. Unable to transmit data.");
-    }
-
-}
-
-
-//*****************************************************************************
-// Transmit method for EUSCI_B_SPI_Type
-// The global variable trn counts the number of transmissions for this
-// SPI transaction.
-//     - The first four transmissions (trn = 0 to trn = 3)
-//       define the start frame, which is 32 bits of 0s.
-//     - The next set of transmissions are the LED frames. Information for
-//       all LEDs in the data structure will be transmitted in the pattern
-//       brightness, red, blue, green.
-//     - The last four transmissions define the end frame, which is
-//       32 bits of 1s. This is split up into 3 transmissions
-//       (for trn >= (LEDS_PER_FIN*FINS)+FRAME_BORDER && trn < total_trn-1)
-//       and then the final transmission, which resets the trn count back to 0.
-//
-//*****************************************************************************
-void led_transmit_B_type(void) {
-
-    uint8_t r, c;           // row, column counters for LED data structure
     uint8_t trn_per_led;    // Counts 4 transmissions per LED frame
-    uint8_t tx_data;
+    uint8_t tx_data;        // LED data to transmit over SPI interface
+
+    int fin_idx, led_idx;
 
     while(trn < total_trn) {
 
         // Transmit Data
+
         if (trn >= 0 && trn < FRAME_BORDER) {
             // 32 bits of 0s define the start frame, send in 8 bit chunks
             tx_data = START_FRAME;
-            submit_for_tx_B(tx_data);
+            submit_for_tx(tx_data);
             trn++;
-        } else if (trn >= FRAME_BORDER && trn < (LEDS_PER_FIN*FINS*TX_PER_LED) + FRAME_BORDER) {
-            for (r = 0; r < FINS; r++) {
-                for (c = 0; c < LEDS_PER_FIN; c++) {
+
+
+        } else if (trn >= FRAME_BORDER && trn < (TX_PER_LED*LEDS_PER_FIN*FINS) + FRAME_BORDER) {
+            // Next, send all of the LED frames
+            for (fin_idx = 0; fin_idx < FINS; fin_idx++) {
+                curr_fin = image[pos_idx]->all_fins[fin_idx];
+                for (led_idx = 0; led_idx < LEDS_PER_FIN; led_idx++) {
+                    curr_led = curr_fin->leds[led_idx];
                     for (trn_per_led = 0; trn_per_led < TX_PER_LED; trn_per_led++) {
 
                         if (trn%4 == 0) {
-                            tx_data = LEDS[r][c]->brightness;
+                            tx_data = curr_led->brightness;
                         } else if (trn%4 == 1) {
-                            tx_data = LEDS[r][c]->red;
+                            tx_data = curr_led->color.red;
                         } else if (trn%4 == 2) {
-                            tx_data = LEDS[r][c]->blue;
+                            tx_data = curr_led->color.blue;
                         } else if (trn%4 == 3) {
-                            tx_data = LEDS[r][c]->green;
+                            tx_data = curr_led->color.green;
                         }
-                        submit_for_tx_B(tx_data);
+
+                        submit_for_tx(tx_data);
                         trn++; // Increment transmission count
                     }
                 }
             }
-        } else if (trn >= (LEDS_PER_FIN*FINS*TX_PER_LED)+FRAME_BORDER && trn < total_trn) {
+
+
+        } else if (trn >= (TX_PER_LED*LEDS_PER_FIN*FINS)+FRAME_BORDER && trn < total_trn) {
             // 32 bits of 1s define the end frame, send the first three 8 bit chunks
             tx_data = END_FRAME;
-            submit_for_tx_B(tx_data);
+            submit_for_tx(tx_data);
             trn++;
         }
     }
 
+    // Reset trn counter to 0 after all transmissions have taken place
     trn = 0;
 }
 
-
-//*****************************************************************************
-// Transmit method for EUSCI_A_SPI_Type
-//*****************************************************************************
-void led_transmit_A_type(void) {
-
-    uint8_t r, c;           // row, column counters for LED data structure
-    uint8_t trn_per_led;    // Counts 4 transmissions per LED frame
-    uint8_t tx_data;
-
-    while(trn < total_trn) {
-
-        // Transmit Data
-        if (trn >= 0 && trn < FRAME_BORDER) {
-            // 32 bits of 0s define the start frame, send in 8 bit chunks
-            tx_data = START_FRAME;
-            submit_for_tx_A(tx_data);
-            trn++;
-        } else if (trn >= FRAME_BORDER && trn < (LEDS_PER_FIN*FINS*TX_PER_LED) + FRAME_BORDER) {
-            for (r = 0; r < FINS; r++) {
-                for (c = 0; c < LEDS_PER_FIN; c++) {
-                    for (trn_per_led = 0; trn_per_led < 4; trn_per_led++) {
-
-                        if (trn%4 == 0) {
-                            tx_data = LEDS[r][c]->brightness;
-                            submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 1) {
-                            tx_data = LEDS[r][c]->red;
-                            submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 2) {
-                            tx_data = LEDS[r][c]->blue;
-                            submit_for_tx_A(tx_data);
-                        } else if (trn%4 == 3) {
-                            tx_data = LEDS[r][c]->green;
-                        }
-
-                        submit_for_tx_A(tx_data);
-                        trn++; // Increment transmission count
-                    }
-                }
-            }
-        } else if (trn >= (LEDS_PER_FIN*FINS*TX_PER_LED)+FRAME_BORDER && trn < total_trn) {
-            // 32 bits of 1s define the end frame, send the first three 8 bit chunks
-            tx_data = END_FRAME;
-            submit_for_tx_A(tx_data);
-            trn++;
-        }
-    }
-
-    trn = 0;
-
-}
 
 //*****************************************************************************
 // Free the LEDs data structure
 //*****************************************************************************
-void led_free(void) {
+void led_free_image(void) {
 
-    // Free in the opposite order allocated
-    int i, j;
-    for(i = 0; i < FINS; i++) {
-        for (j = 0; j < LEDS_PER_FIN; j++) {
-            free(LEDS[i][j]);
-            LEDS[i][j] = NULL;
+    int fin_idx, pos_idx, led_idx;
+
+
+    for (pos_idx = 0; pos_idx < TOTAL_POS; pos_idx++) {
+        for(fin_idx = 0; fin_idx < FINS; fin_idx++) {
+            for(led_idx = 0; led_idx < LEDS_PER_FIN; led_idx++) {
+
+                // Free space for all LEDs
+                free(image[pos_idx]->all_fins[fin_idx]->leds[led_idx]);
+            }
+
+            // Free space for all fins
+            free(image[pos_idx]->all_fins[fin_idx]->leds);
+            free(image[pos_idx]->all_fins[fin_idx]);
+
         }
-        free(LEDS[i]);
-        LEDS[i] = NULL;
+
+        // Free space for all positions
+        free(image[pos_idx]->all_fins);
+        free(image[pos_idx]);
     }
-    free(LEDS);
-    LEDS = NULL;
+
+    // Free space for the image
+    free(image);
+
 }
 
-
-
-
-
-
+//*****************************************************************************
+// Free the Bluetooth buffer
+//*****************************************************************************
+void led_free_bt_buf() {
+    free(bt_buffer);
+}
 

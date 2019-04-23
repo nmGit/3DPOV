@@ -7,9 +7,6 @@
 
 #include "spi.h"
 
-
-
-
 //*****************************************************************************
 // General initialization method for SPI
 //*****************************************************************************
@@ -66,6 +63,18 @@ bool spi_is_A_type(void) {
   {
     return false;
   }
+}
+
+//*****************************************************************************
+// General submission method for tx_data.
+// Passes to A or B type method depending on SPI base type.
+//*****************************************************************************
+void submit_for_tx(uint8_t tx_data) {
+    if (spi_is_A_type()) {
+        submit_for_tx_A(tx_data);
+    } else if (spi_is_B_type()) {
+        submit_for_tx_B(tx_data);
+    }
 }
 
 //***************************** A TYPE FUNCTIONS ******************************
