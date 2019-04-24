@@ -22,6 +22,7 @@ MainThread::MainThread(unsigned priority, unsigned stack_size, const char * name
 {
 
 }
+extern MotorThread * motorthread;
 void MainThread::Task()
 {
 
@@ -35,10 +36,10 @@ void MainThread::Task()
     RadioThread * radioThread = new RadioThread(3, 0x500, "Radio Thread");
     radioThread->Start();
 
-    //MotorThread * motorthread = new MotorThread(3, 0x500, "Motor Thread");
-    //motorthread->Start();
+    motorthread = new MotorThread(3, 0x500, "Motor Thread");
+    motorthread->Start();
 
-    ComputerInterfaceThread * computerthread = new ComputerInterfaceThread(3, 0x500, "Computer Thread");
+    ComputerInterfaceThread * computerthread = new ComputerInterfaceThread(5, 0x800, "Computer Thread");
     computerthread->Start();
     while(1){
         PALYield();
