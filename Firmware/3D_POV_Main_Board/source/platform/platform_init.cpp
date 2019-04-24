@@ -99,7 +99,7 @@ extern "C" void dbg_UART_init()
     // UCBRSx = [(N - INT(N))] = [0.681] = 0xD6
 
     EUSCI_A0->BRW = 26;                     // 12000000/16/9600
-    EUSCI_A0->MCTLW =   (1 << EUSCI_A_MCTLW_BRS_OFS) |
+    EUSCI_A0->MCTLW =   (0xD6 << EUSCI_A_MCTLW_BRS_OFS) |
                         (0 << EUSCI_A_MCTLW_BRF_OFS) |
                         EUSCI_A_MCTLW_OS16;
 
@@ -157,7 +157,7 @@ void platform_init()
 
 void print_init_message()
 {
-    dbg_printf("-----------------------------\r\n");
+    dbg_printf("\r-----------------------------\r\n");
     dbg_printf("MCLK at \t%d Hz\r\n", CS_getMCLK());
     dbg_printf("BCLK at \t%d Hz\r\n", CS_getBCLK());
     dbg_printf("HSMCLK at \t%d Hz\r\n", CS_getHSMCLK());
