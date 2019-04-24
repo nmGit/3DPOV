@@ -144,7 +144,13 @@ class POVDataLink(QtCore.QThread):
                             self.mn_request_port_flag = False
                             self.main_driver.set_rx_port(port_resp_pair[0])
                             self.main_driver.set_tx_port(port_resp_pair[0])
-
+                if(self.bt_request_port_flag):
+                    for port_resp_pair in responses:
+                        if ("3DRadio" in port_resp_pair[1]):
+                            print("Found 3dRadio port")
+                            self.bt_request_port_flag = False
+                            self.radio_driver.set_rx_port(port_resp_pair[0])
+                            self.radio_driver.set_tx_port(port_resp_pair[0])
 
 
 class POVCOMPortDriver(QtCore.QThread):

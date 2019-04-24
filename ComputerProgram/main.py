@@ -54,28 +54,28 @@ class main(QtGui.QMainWindow):
         self.bt_settings_gb.setLayout(self.bt_settings_layout)
 
         # Create drop-down menus to select the bluetooth com ports
-        self.bt_settings_incoming_port_select = QtGui.QComboBox()
-        self.bt_settings_outgoing_port_select = QtGui.QComboBox()
-
-        self.bt_settings_incoming_port_select.currentIndexChanged.connect(self.bt_incoming_port_change_handler)
-        self.bt_settings_outgoing_port_select.currentIndexChanged.connect(self.bt_outgoing_port_change_handler)
-
-        self.bt_settings_incoming_port_select_layout = QtGui.QHBoxLayout()
-        self.bt_settings_outgoing_port_select_layout = QtGui.QHBoxLayout()
-
-        self.bt_settings_incoming_port_select_layout.addWidget(QtGui.QLabel("Incoming port (From Radio board):"))
-        self.bt_settings_outgoing_port_select_layout.addWidget(QtGui.QLabel("Outgoing port (To Radio board):"))
-
-        self.bt_settings_incoming_port_select_layout.addWidget(self.bt_settings_incoming_port_select)
-        self.bt_settings_outgoing_port_select_layout.addWidget(self.bt_settings_outgoing_port_select)
-
-        self.bt_settings_port_select_refresh = QtGui.QPushButton("Refresh")
-        self.bt_settings_port_select_refresh.clicked.connect(self.bt_com_port_refresh)
-
-        self.bt_settings_layout.addLayout(self.bt_settings_incoming_port_select_layout)
-        self.bt_settings_layout.addLayout(self.bt_settings_outgoing_port_select_layout)
-        self.bt_settings_layout.addWidget(self.bt_settings_port_select_refresh)
-        self.bt_settings_layout.addStretch(0)
+        # self.bt_settings_incoming_port_select = QtGui.QComboBox()
+        # self.bt_settings_outgoing_port_select = QtGui.QComboBox()
+        #
+        # self.bt_settings_incoming_port_select.currentIndexChanged.connect(self.bt_incoming_port_change_handler)
+        # self.bt_settings_outgoing_port_select.currentIndexChanged.connect(self.bt_outgoing_port_change_handler)
+        #
+        # self.bt_settings_incoming_port_select_layout = QtGui.QHBoxLayout()
+        # self.bt_settings_outgoing_port_select_layout = QtGui.QHBoxLayout()
+        #
+        # self.bt_settings_incoming_port_select_layout.addWidget(QtGui.QLabel("Incoming port (From Radio board):"))
+        # self.bt_settings_outgoing_port_select_layout.addWidget(QtGui.QLabel("Outgoing port (To Radio board):"))
+        #
+        # self.bt_settings_incoming_port_select_layout.addWidget(self.bt_settings_incoming_port_select)
+        # self.bt_settings_outgoing_port_select_layout.addWidget(self.bt_settings_outgoing_port_select)
+        #
+        # self.bt_settings_port_select_refresh = QtGui.QPushButton("Refresh")
+        # self.bt_settings_port_select_refresh.clicked.connect(self.bt_com_port_refresh)
+        #
+        # self.bt_settings_layout.addLayout(self.bt_settings_incoming_port_select_layout)
+        # self.bt_settings_layout.addLayout(self.bt_settings_outgoing_port_select_layout)
+        # self.bt_settings_layout.addWidget(self.bt_settings_port_select_refresh)
+        # self.bt_settings_layout.addStretch(0)
 
         self.control_layout.addWidget(self.bt_settings_gb, 1, 0)
 
@@ -120,17 +120,17 @@ class main(QtGui.QMainWindow):
         self.bt_settings_incoming_port_select.addItems([port[0] for port in ports])
         self.bt_settings_outgoing_port_select.addItems([port[0] for port in ports])
 
-    def bt_outgoing_port_change_handler(self, index):
-
-        port = self.bt_settings_outgoing_port_select.itemText(index)
-        print port
-        self.datalink.radio_driver.set_tx_port(port)
-
-    def bt_incoming_port_change_handler(self, index):
-
-        port = self.bt_settings_incoming_port_select.itemText(index)
-        print port
-        self.datalink.radio_driver.set_rx_port(port)
+    # def bt_outgoing_port_change_handler(self, index):
+    #
+    #     port = self.bt_settings_outgoing_port_select.itemText(index)
+    #     print port
+    #     #self.datalink.radio_driver.set_tx_port(port)
+    #
+    # def bt_incoming_port_change_handler(self, index):
+    #
+    #     port = self.bt_settings_incoming_port_select.itemText(index)
+    #     print port
+    #     #self.datalink.radio_driver.set_rx_port(port)
 
     def mtr_spd_change_handler(self, value):
         self.cmd_line.addLine("Setting Motor speed: %d" % value, (100, 100, 255))
