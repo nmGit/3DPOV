@@ -31,15 +31,16 @@
 							<tool id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.exe.compilerDebug.1382131411" name="ARM Compiler" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.exe.compilerDebug">
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.INCLUDE_PATH.1200215745" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="${INHERITED_INCLUDE_PATH}"/>
+									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source"/>
+									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source\UART"/>
+									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source\communication\include"/>
+									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source\platform\include"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/3D_POV_Common}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/3D_POV_Common/Proc}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/source/platform}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/freertos_builds_MSP_EXP432P401R_release_ccs}"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../3D_POV_Common/"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}\SimpleLink"/>
-									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source"/>
-									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source\UART"/>
-									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source\platform\include"/>
-									<listOptionValue builtIn="false" value="${WORKSPACE_LOC}\3D_POV_Main_Board\source\communication\include"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_MSP432_SDK_INSTALL_DIR}/source"/>
 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_MSP432_SDK_INSTALL_DIR}/source/third_party/CMSIS/Include"/>
@@ -48,11 +49,9 @@
 									<listOptionValue builtIn="false" value="${FREERTOS_INSTALL_DIR}/FreeRTOS/Source/portable/CCS/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="${REF_PROJECT_1_LOC}"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
-									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../3D_POV_Common/Devices/APA102"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../3D_POV_Common/PAL"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../3D_POV_Common/PWM"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../3D_POV_Common/Proc"/>
-									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../3D_POV_Common/SPI"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../3D_POV_Common/UART"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../3D_POV_Common/Devices"/>
 								</option>
@@ -64,7 +63,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.CODE_STATE.963580878" name="Designate code state, 16-bit (thumb) or 32-bit (--code_state)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.CODE_STATE" value="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.CODE_STATE.16" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.FLOAT_SUPPORT.722035383" name="Specify floating point support (--float_support)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.FLOAT_SUPPORT" value="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.FLOAT_SUPPORT.FPv4SPD16" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.LITTLE_ENDIAN.1547487718" name="Little endian code [See 'General' page to edit] (--little_endian, -me)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.LITTLE_ENDIAN" value="true" valueType="boolean"/>
-								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.ADVICE__POWER.1633374179" name="Enable checking of ULP power rules (--advice:power)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.ADVICE__POWER" value="none" valueType="string"/>
+								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.ADVICE__POWER.1633374179" name="Enable checking of ULP power rules (--advice:power)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.ADVICE__POWER" value="" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.DEBUGGING_MODEL.1182102548" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.DIAG_WARNING.1059425513" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.1.compilerID.DIAG_WARNING" valueType="stringList">
 									<listOptionValue builtIn="false" value="225"/>
@@ -113,7 +112,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="source/UART" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="source/communication/BluetoothUART.cpp|source/UART" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

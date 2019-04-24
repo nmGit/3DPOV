@@ -52,11 +52,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>SPI</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>UART</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -142,16 +137,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Proc/processor_tools.cpp</locationURI>
 		</link>
 		<link>
-			<name>SPI/spi.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/SPI/spi.cpp</locationURI>
-		</link>
-		<link>
-			<name>SPI/spi.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/SPI/spi.h</locationURI>
-		</link>
-		<link>
 			<name>UART/UART.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/UART/UART.cpp</locationURI>
@@ -160,16 +145,6 @@
 			<name>UART/UART.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/UART/UART.h</locationURI>
-		</link>
-		<link>
-			<name>Devices/APA102/led.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/APA102/led.cpp</locationURI>
-		</link>
-		<link>
-			<name>Devices/APA102/led.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/APA102/led.h</locationURI>
 		</link>
 		<link>
 			<name>Devices/ESC/ESC.cpp</name>
