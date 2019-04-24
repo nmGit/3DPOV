@@ -36,10 +36,12 @@ int main(void) {
     processor_init();
     platform_init();
 
-    uint32_t i; // for testing with delays
+    //led_set_test(BLUE);
+    //led_transmit_data(0);
 
-    led_set_test(BLUE);
-    led_transmit_data(0);
+
+    led_bt_get_packet();
+
 
     while(1){
 
@@ -65,9 +67,6 @@ int main(void) {
     char* msg = "hello, world! ";
     bt_uart_write((uint8_t *)msg, 14);
 
-
-    bt_uart_get_data_test();
-    led_set_image(raw_data);
 
 
     //platform_free();

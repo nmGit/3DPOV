@@ -79,7 +79,7 @@ void platform_init()
     led_init();             // Creates LED data structure
     spiInit();              // Initializes SPI pins on MSP
 //    bt_raw_data_init();     // Creates raw data structure for Bluetooth communication
-//    bt_UART_init();         // Initializes Bluetooth UART pins on MSP
+    bt_UART_init();         // Initializes Bluetooth UART pins on MSP
     print_init_message();
 
 }
