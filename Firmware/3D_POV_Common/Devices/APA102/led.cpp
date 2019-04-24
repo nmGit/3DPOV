@@ -168,7 +168,7 @@ void led_set_test(uint32_t color_value) {
 
     for (pos_idx = 0; pos_idx < TOTAL_POS; pos_idx++) {
         for (fin_idx = 0; fin_idx < FINS; fin_idx++) {
-            led_set_pos(pos_idx, fin_idx, test_colors);
+            led_set_pos(fin_idx, pos_idx, test_colors);
         }
     }
 }
