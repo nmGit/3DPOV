@@ -21,7 +21,7 @@ RadioThread::RadioThread(unsigned priority, unsigned stack_size, const char * na
 
 }
 
-
+#ifdef NAM
 uint32_t** data;
 
 /* CMS
@@ -67,9 +67,10 @@ void test_data(void) {
     data[0][15] = (DIM << 24) | BLUE;
 
 }
-
+#endif //NAM
 void RadioThread::Task()
 {
+        return;
     dbg_printf("In Radio Thread\r\n");
 
 

@@ -33,8 +33,8 @@ void MainThread::Task()
 
     dbg_printf("In Main Thread\r\n");
 
-    RadioThread * radioThread = new RadioThread(3, 0x500, "Radio Thread");
-    radioThread->Start();
+    //RadioThread * radioThread = new RadioThread(3, 0x500, "Radio Thread");
+    //radioThread->Start();
 
     motorthread = new MotorThread(3, 0x500, "Motor Thread");
     motorthread->Start();
