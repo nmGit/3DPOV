@@ -15,38 +15,60 @@
 #include "Devices/ESC/ESC.h"
 #include "PAL/PALDelay.h"
 
+MotorThread * motorthread;
+
 MotorThread::MotorThread(unsigned priority, unsigned stack_size, const char * name):
     PALThread(priority, stack_size, name)
 {
 
+}
+void MotorThread::setSpeed(uint16_t spd)
+{
+    goal = spd;
 }
 void MotorThread::Task()
 {
     dbg_printf("In Motor Thread\r\n");
 
     uint16_t var;
-    uint16_t pct_pwr = 0;
 
-    //dbg_printf("\rMotor at %d percent power", pct_pwr);
+
+    dbg_printf("Motor at %d percent power\n", 0);
 
     PALDelay_ms(1000);
-    pct_pwr = pct_pwr_esc(pct_pwr);
+    pct_pwr_esc(0);
     PALDelay_ms(5000);
 
     while(1){
-        for (var = 0; var < 15; ++var) {
+        if(goal != curr)
+        {
+            dbg_printf("goal: %d, curr: %d\n", goal, curr);
+            if(curr < goal)
+            {
+                curr++;
+            }else if(curr > goal)
+            {
+                curr--;
+            }
+            PALDelay_ms(100);
+            pct_pwr_esc(curr);
+        }
+        PALDelay_ms(200);
+#ifdef NAM
+        for (var = 0; var < 20; ++var) {
             PALDelay_ms(250);
             pct_pwr++;
             pct_pwr_esc(pct_pwr);
-            dbg_printf("\rMotor at %d percent power", pct_pwr);
+            //dbg_printf("Motor at %d percent power\n", pct_pwr);
         }
-        for (var = 0; var < 15; ++var) {
+        for (var = 0; var < 20; ++var) {
             PALDelay_ms(250);
             pct_pwr--;
             pct_pwr_esc(pct_pwr);
-            dbg_printf("\rMotor at %d percent power", pct_pwr);
+          //  dbg_printf("Motor at %d percent power\n", pct_pwr);
         }
-        dbg_printf("\rMotor at %d percent power", pct_pwr);
+        //dbg_printf("Motor at %d percent power\n", pct_pwr);
         PALDelay_ms(5000);
+#endif //NAM
     }
 }
