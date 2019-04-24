@@ -22,6 +22,7 @@ class rasterViewer(QtGui.QWidget):
         self.szx = szx
         self.szy = szy
         self.aspect_square = False
+        self.setSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
     def setResolution(self, x, y):
         self.szx = x
         self.szy = y
@@ -40,7 +41,7 @@ class rasterViewer(QtGui.QWidget):
         img = img.astype(np.uint32)
         print("Converting to raster")
         for i in range(len(pilimg)/3):
-            print("%f percent" % ((i/float((len(pilimg)/3)))*100))
+            #print("%f percent" % ((i/float((len(pilimg)/3)))*100))
             pix = 0xFF000000
             pix |= (pilimg[i*3+0] << 16)
             pix |= (pilimg[i*3+1] << 8)

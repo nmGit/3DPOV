@@ -1,4 +1,5 @@
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QObject, pyqtSignal
 import numpy as np
 import sys
 
@@ -14,6 +15,8 @@ import cv2
 class POVMappedImageWidget(QtGui.QFrame):
     szx = 32
     szy = 32
+    new_image_sig = pyqtSignal()
+
     def __init__(self):
         super(POVMappedImageWidget, self).__init__()
         self.mainLayout = QtGui.QGridLayout()
@@ -34,6 +37,8 @@ class POVMappedImageWidget(QtGui.QFrame):
 
         self.raster_mapped_scaled = rasterViewer(5, 5)
         self.mainLayout.addWidget(self.raster_mapped_scaled, 2, 0, 1, 2)
+
+        self.image_data = []
         pass
 
     def dragEnterEvent(self, event):
@@ -65,13 +70,15 @@ class POVMappedImageWidget(QtGui.QFrame):
             # For each path, process the dropped image
             for url in event.mimeData().urls():
                 path_to_image = url.toLocalFile()
-                self.process_image(path_to_image)
-
+                self.image_data = self.process_image(path_to_image)
+                self.new_image_sig.emit()
 
 #            print self.image_pix_flat
 
         else:
             event.ignore()
+    def get_image_data(self):
+        return self.image_data
 
     def process_image(self, path_to_image):
         # Read the image using OpenCV library
@@ -96,7 +103,7 @@ class POVMappedImageWidget(QtGui.QFrame):
         # Where n = szx * szy
         # The following loop will take the flat image and convert it to this format
         for i in range(0, len(self.image_pix_flat_raw), 3):
-            print("%f percent"%((i / float(len(self.image_pix_flat_raw))*100)))
+            #print("%f percent"%((i / float(len(self.image_pix_flat_raw))*100)))
             self.image_pix_rgb.append((self.image_pix_flat_raw[i + 2],
                                            self.image_pix_flat_raw[i + 1],
                                            self.image_pix_flat_raw[i + 0]))
@@ -135,3 +142,5 @@ class POVMappedImageWidget(QtGui.QFrame):
         self.image_pix_mapped_flat = self.flatten_img(self.map_result[2])
         self.raster_mapped.setResolution(self.map_result[0], self.map_result[1])
         self.raster_mapped.setImage([int(x*255) for x in self.map_result_float])
+
+        return self.scale_result_flat

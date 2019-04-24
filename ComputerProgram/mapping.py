@@ -19,7 +19,7 @@ def map_to_donut(img_data, img_size_x, img_size_y, inner_circle_fraction, outer_
             pix_x = (int(math.cos(math.radians(a)) * r)) + img_size_x/2
             pix_y = (int(math.sin(math.radians(a)) * r)) + img_size_y/2
             row.append(img_data[(pix_x * img_size_x) + pix_y])
-        print("\r%d of %d" %(r, img_size_x/2))
+        #print("\r%d of %d" %(r, img_size_x/2))
         mapped_img.extend(row)
             # X size, Y size, data
     return (circle_circumference, outer_circle_radius-inner_circle_radius, mapped_img)
