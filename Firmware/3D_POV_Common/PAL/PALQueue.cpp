@@ -117,3 +117,14 @@ bool PALQueue::isFull()
     }
 
 }
+
+void PALQueue::clear()
+{
+    xQueueReset(m_queue_handle);
+}
+#ifdef NAM
+unsigned PALQueue::spacesAvailable()
+{
+    unsigned spaces = (unsigned)uxQueueSpacesAvailable(m_queue_handle);
+}
+#endif //NAM

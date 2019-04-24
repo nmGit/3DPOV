@@ -15,6 +15,7 @@ public:
     bool get(void * item, unsigned timeout_ms = (~(0)));
     bool isEmpty();
     bool isFull();
+    void clear();
 protected:
 private:
     QueueHandle_t m_queue_handle;
