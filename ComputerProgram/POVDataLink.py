@@ -108,8 +108,10 @@ class POVDataLink(QtCore.QThread):
 
         for port in ports:
             try:
-                ser = serial.Serial(port[0], 115200, timeout=1)
+                print "trying port %s"%(str(port))
+                ser = serial.Serial(port[0], 115200, timeout=1, write_timeout=0)
             except:
+                traceback.print_exc()
                 continue
             ser.write("*IDN?\r\n")
             ser.flushInput()
@@ -131,9 +133,9 @@ class POVDataLink(QtCore.QThread):
         while(1):
             self.msleep(500)
             if(self.mn_request_port):
-
+                print "Received prot request!"
                 responses = self.search_com_ports()
-                #print "Responses:", responses
+                print "Responses:", responses
 
                 if(self.mn_request_port_flag):
                     for port_resp_pair in responses:
@@ -295,7 +297,7 @@ class POVRadioBoardDriver(POVCOMPortDriver):
 
     def __init__(self):
         super(POVRadioBoardDriver, self).__init__()
-        print("Starting main board driver...")
+        print("Starting radio board driver...")
         self.connected = 0
         self.disconnected = 1
         self.requesting_port = 2
