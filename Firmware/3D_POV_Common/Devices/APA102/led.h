@@ -44,7 +44,7 @@
 // LED Count Constants
 //*****************************************************************************
 #define LEDS_PER_FIN        16      // TESTING -- ultimate goal is 16 LEDs/fin
-#define FINS                3       // TESTING -- ultimate goal is 12 fins
+#define FINS                4       // TESTING -- ultimate goal is 12 fins
 #define TOTAL_POS           1       // TESTING -- ultimately 100 positions per 360 deg sweep
 #define TX_PER_LED          4       // 4 SPI transmissions per LED
 #define FRAME_BORDER        4       // Each frame byte is sent 4 times for 32 bits

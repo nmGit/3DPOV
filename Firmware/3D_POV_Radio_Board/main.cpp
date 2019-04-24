@@ -38,33 +38,8 @@ int main(void) {
 
     uint32_t i; // for testing with delays
 
-    led_set_test(MAGENTA);
-    led_transmit_data(0);
-
-    led_set_test(RED);
-    led_transmit_data(0);
-
-    led_set_test(ORANGE);
-    led_transmit_data(0);
-
-    led_set_test(YELLOW);
-    led_transmit_data(0);
-
-    led_set_test(GREEN);
-    led_transmit_data(0);
-
-    led_set_test(CYAN);
-    led_transmit_data(0);
-
     led_set_test(BLUE);
     led_transmit_data(0);
-
-    led_set_test(PURPLE);
-    led_transmit_data(0);
-
-    led_set_test(OFF);
-    led_transmit_data(0);
-
 
     while(1){
 
