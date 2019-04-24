@@ -107,14 +107,15 @@ void dbg_uart_write(const char * buf, unsigned len)
 unsigned dbg_readLine(char * buf, unsigned len, unsigned timeout_ms)
 {
     unsigned pos = 0;
-    while (pos == 0 || (buf[pos - 1] != '\r' && pos < len))
+
+    while (pos == 0 || (buf[pos - 1] != '\n' && pos < len))
     {
 
         buf[pos] = getc_dbg(timeout_ms);
-        if (buf[pos] == '\0')
-        {
-            break;
-        }
+       // if (buf[pos] == '\0')
+       // {
+       //     break;
+       // }
         pos++;
     }
     buf[pos] = '\0'; // Null terminate that shit
