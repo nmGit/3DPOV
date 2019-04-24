@@ -16,7 +16,7 @@ DataLinkThread::DataLinkThread(unsigned priority, unsigned stack_size, const cha
     PALThread(priority, stack_size, name)
 {
     computer_tx_queue = new PALQueue(0x30, sizeof(char));
-    computer_rx_queue = new PALQueue(0x20, sizeof(char));
+    computer_rx_queue = new PALQueue(0x80, sizeof(char));
     dbg_msg_mutex = new PALSemaphore(true);
 }
 
