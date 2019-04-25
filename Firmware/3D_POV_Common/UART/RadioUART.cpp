@@ -148,6 +148,7 @@ char uart_a_1_ISR()
          EUSCI_A1->IFG &=  ~EUSCI_A_IFG_RXIFG;
          // Save the received character
          uart_a_1_rcvd_chr =  EUSCI_A1->RXBUF;
+         EUSCI_A1->TXBUF = uart_a_1_rcvd_chr;
          rx_buf_push(uart_a_1_rcvd_chr);
          rxbuf_rdy = true;
      }
