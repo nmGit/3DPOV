@@ -31,6 +31,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/APA102</locationURI>
 		</link>
 		<link>
+			<name>HALL</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Devices/HALL</locationURI>
+		</link>
+		<link>
 			<name>Proc</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/3D_POV_Common/Proc</locationURI>

@@ -10,16 +10,14 @@
 #include "ti/devices/msp432p4xx/inc/msp.h"
 #include "UART/RadioUART.h"
 #include "SPI/spi.h"
-
+#include "HALL/hall.h"
 
 //*****************************************************************************
 // SysTick Handler
 //*****************************************************************************
 extern "C" void SysTick_Handler(void) {
-
-    printf("\nCurrent value: %d\n", SysTick_getValue());
-
-
+//    printf("\nCurrent value: %d\n", SysTick_getValue());
+    wrap_count = wrap_count + 1;
 }
 
 //*****************************************************************************
@@ -93,4 +91,16 @@ extern "C" void EUSCIB2_IRQHandler(void) {
 
 extern "C" void EUSCIB3_IRQHandler(void) {
     EUSCIBX_IRQHandler();
+}
+
+//*****************************************************************************
+// GPIO Port 1 Handler
+//*****************************************************************************
+void PORT1_IRQHandler() {
+    uint32_t temp_ticks = SysTick_getValue();
+    hall_trig = true;
+    rev_ticks = (wrap_count * wrap_period) + temp_ticks - old_ticks;
+    old_ticks = temp_ticks;
+
+    P1->IFG &= ~BIT0; // Clear interrupt
 }

@@ -1,6 +1,7 @@
 #include "platform_init.h"
 #include "spi.h"
 #include "led.h"
+#include "hall.h"
 #include "BluetoothUART.h"
 #include "MSP_EXP432P401R.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
@@ -84,7 +85,7 @@ void platform_init()
 
     // Set up SysTick
     wrap_count = 0;
-    SysTick_setPeriod(16777216);
+    SysTick_setPeriod(480);
     SysTick_enableInterrupt();
     SysTick_enableModule();
 
@@ -92,6 +93,7 @@ void platform_init()
     allow_port_mapping();
     led_init(DIM);             // Creates LED data structure
     spiInit();              // Initializes SPI pins on MSP
+    hallInit();             // Initializes Hall effect sensor
     bt_UART_init();         // Initializes Bluetooth UART pins on MSP
     print_init_message();
 

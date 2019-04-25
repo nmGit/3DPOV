@@ -13,6 +13,7 @@
 #include "ti/devices/msp432p4xx/inc/msp.h"
 #include "spi.h"
 #include "led.h"
+#include "hall.h"
 #include "platform_init.h"
 #include "BluetoothUART.h"
 #include "Board.h"
@@ -56,6 +57,11 @@ int main(void) {
          * Divide that number of ticks by 100.
          *
          */
+
+        if(hall_trig){
+            pos = 0;
+            hall_trig = false;
+        }
 
         led_transmit_data(pos);
 

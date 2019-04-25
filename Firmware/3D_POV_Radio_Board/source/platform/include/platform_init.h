@@ -13,7 +13,6 @@ extern "C" {
 #endif
 
     void platform_init();
-    uint32_t wrap_count;
 
 #if __cplusplus
 }
