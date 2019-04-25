@@ -17,12 +17,16 @@
 #include "BluetoothUART.h"
 #include "Board.h"
 #include "Proc/processor_init.h"
+#include "Image.h"
 
 
 
 //*****************************************************************************
 // Main Method
 //*****************************************************************************
+
+extern img_pos_packet test_bars[];
+
 int main(void) {
 
     /* platform_init:
@@ -36,45 +40,32 @@ int main(void) {
     processor_init();
     platform_init();
 
-    //led_set_test(BLUE);
-    //led_transmit_data(0);
+    led_get_img_str(test_bars);
 
-    char* msg = "hello, world! ";
-    bt_uart_write((uint8_t *)msg, 14);
-
-//    led_bt_get_packet();
-
+    int pos = 0;
 
     while(1){
 
-        led_bt_get_packet();
-        //for(int i = 0; i < 10000; i++) {
-        //    asm("");
-        //}
+        // TESTING -- just making an arbitrary delay
+        for(int i = 0; i < 1000000; i++) {
+            asm("");
+        }
+
+        /* NOTE: Instead of some arbitrary delay, going to use SysTick timer.
+         * Use the hall effect sensor to find the number of ticks in one full revolution.
+         * Divide that number of ticks by 100.
+         *
+         */
+
+        led_transmit_data(pos);
+
+        // Keep transmitting forever
+        pos++;
+        pos %= TOTAL_POS;
+
 
     }
 
 
 }
 
-/*
- * Stuff that used to be in main:
- *  // Test led_set_image with some arbitrary data
-    // led_set_image(data);
-    //led_set_all(base, FINS, LEDS_PER_FIN, NONE, OFF);
-
-    // Set LED at row, col
-    //led_set(base, 0, 0, DIM, MAGENTA);
-    //led_set(base, 0, 1, FULL, RED);
-    //led_set(base, 0, 2, FULL, BLUE);
- */
-
-/* Bluetooth stuff
- *     // Check connection
-    char* msg = "hello, world! ";
-    bt_uart_write((uint8_t *)msg, 14);
-
-
-
-    //platform_free();
- */
