@@ -15,6 +15,12 @@ char        input;
 
 extern "C" void bt_UART_init() {
 
+    // Configure GPIO pins
+    P2->SEL0 &= ~BIT1;  // Clear P2.1
+    P2->SEL1 &= ~BIT1;  // SEL1 and SEL0 combined for 00b, for GPIO
+    P2->DIR |= BIT1;    // Configure the port as output (Pg 696 MSP432 user guide)
+    P2->OUT |= BIT1;   // Drive the output of this pin high (Pg 696 MSP432 user guide)
+
     // Configure UART pins
     P2->SEL0 |= BIT2 | BIT3;       // Bit 2 is RX, Bit 3 is TX
 

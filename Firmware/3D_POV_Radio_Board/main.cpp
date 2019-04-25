@@ -39,11 +39,18 @@ int main(void) {
     //led_set_test(BLUE);
     //led_transmit_data(0);
 
+    char* msg = "hello, world! ";
+    bt_uart_write((uint8_t *)msg, 14);
 
-    led_bt_get_packet();
+//    led_bt_get_packet();
 
 
     while(1){
+
+        led_bt_get_packet();
+        //for(int i = 0; i < 10000; i++) {
+        //    asm("");
+        //}
 
     }
 

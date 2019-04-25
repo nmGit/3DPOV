@@ -15,7 +15,6 @@
 
 #define BYTES_PER_TX   1
 #define BITS_PER_TX    8
-#define TIMEOUT_MS     1000
 
 
 #ifndef SOURCE_COMMUNICATION_INCLUDE_BLUETOOTHUART_H_
@@ -26,8 +25,8 @@ extern "C" {
 #endif
 
     void bt_uart_write(const uint8_t * buf, unsigned len);
-    unsigned bt_uart_read(uint8_t * buf, unsigned len, unsigned timeout_ms = TIMEOUT_MS);
-    char get_val_bt(unsigned timeout_ms = TIMEOUT_MS);
+    unsigned bt_uart_read(uint8_t * buf, unsigned len);
+    char get_val_bt(void);
     void put_val_bt(uint8_t val);
 
 #if __cplusplus

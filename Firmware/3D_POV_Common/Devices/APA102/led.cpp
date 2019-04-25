@@ -65,18 +65,26 @@ void led_bt_buf_init() {
 //*****************************************************************************
 void led_bt_get_packet() {
 
-    uint8_t msg[8];    // For sending messages over bluetooth
+    uint8_t msg[32];    // For sending messages over bluetooth
 
-    // Send connection message to Bluetooth master
-    strcpy((char*)msg, "CON");
-    bt_uart_write(msg, 4);
+//    // Send connection message to Bluetooth master
+//    strcpy((char*)msg, "CON");
+//    bt_uart_write(msg, 4);
 
     // Find out what type of packet Bluetooth master is sending
-    bt_uart_read(msg, 7, TIMEOUT_MS);
-
+    printf("Trying to read line\n");
+    while(!read_line((char*)msg, 32))
+    {
+        for(int i = 0; i < 10000; i++) {
+            asm("");
+        }
+    }
+    printf("Received Line: %s\n",msg);
+    /*
     if (strcmp((char*)msg, "IMG") == 0) {
         led_bt_fill_buffer();
-    } else if (strcmp((char*)msg, "*IDN\r\n") == 0) {
+    } else */
+    if (strncmp((char*)msg, "*IDN?", 5) == 0) {
         strcpy((char*)msg,"3DRadio");
         bt_uart_write(msg, 8);
     }
@@ -93,7 +101,7 @@ void led_bt_fill_buffer() {
     uint8_t msg[4];    // For sending messages over bluetooth
 
     // Map the Bluetooth data to the bt_buffer structure
-    bt_uart_read((uint8_t*)bt_buffer, sizeof(img_pos_packet), TIMEOUT_MS);
+    bt_uart_read((uint8_t*)bt_buffer, sizeof(img_pos_packet));
 
     strcpy((char*)msg, "REC:");
     bt_uart_write(msg, 4);

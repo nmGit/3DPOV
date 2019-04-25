@@ -29,13 +29,13 @@ void bt_uart_write(const uint8_t * buf, unsigned len)
 // buf: buffer to read into
 // len: length of buffer (exceeding this would be out of bounds for the buffer)
 // returns: Number of characters received
-unsigned bt_uart_read(uint8_t * buf, unsigned len, unsigned timeout_ms)
+unsigned bt_uart_read(uint8_t * buf, unsigned len)
 {
     unsigned pos = 0;
     while(pos == 0 || (buf[pos - 1] != '\r' && pos < len))
     {
 
-        buf[pos] = get_val_bt(timeout_ms);
+        buf[pos] = get_val_bt();
         if(buf[pos] == '\0')
         {
             break;
@@ -47,10 +47,11 @@ unsigned bt_uart_read(uint8_t * buf, unsigned len, unsigned timeout_ms)
 }
 
 static char rx_val; // 8-bit integer value being stored as char
-char get_val_bt(unsigned timeout_ms)
+char get_val_bt()
 {
-    if(uart_a_getc(EUSCI_A1, &rx_val, timeout_ms))
+    if(uart_a_getc(EUSCI_A1, &rx_val))
     {
+       // printf("Received: %c\n",rx_val);
         return rx_val;
     }
     else
