@@ -12,11 +12,6 @@
 //*****************************************************************************
 void spiInit() {
 
-    //base = base_in; // base is now global
-
-    P1->OUT &= ~BIT0;
-    P1->DIR |= BIT0;                        // Set P1.0 LED
-
     // Pass to appropriate EUSCI-type initialization method
     if (spi_is_A_type()) {
         spiInit_A_type();
