@@ -45,6 +45,8 @@ class POVDataLink(QtCore.QThread):
 
         self.com_tx_port = None
         self.com_rx_port = None
+
+        self.radio_ser = None
         pass
 
     def mn_rx_handler(self, string):
@@ -109,16 +111,25 @@ class POVDataLink(QtCore.QThread):
         for port in ports:
             try:
                 print "trying port %s"%(str(port))
-                ser = serial.Serial(port[0], 115200, timeout=1, write_timeout=0)
+                ser = serial.Serial(port[0], 115200, timeout=1, write_timeout=0, inter_byte_timeout = 0.2)
+                print "port opened..."
             except:
                 traceback.print_exc()
                 continue
-            ser.write("*IDN?\r\n")
+            print "Flushing input"
             ser.flushInput()
+            print "writing"
+            ser.write("*IDN?\r\n")
+            print "reading"
 
             responses.append((port[0], ser.readline()))
-            ser.close()
-
+            print "read, ", responses[-1]
+            print "closing..."
+            if(not ("3DRadio" in responses[-1][1])):
+                ser.close()
+            else:
+                self.radio_ser = ser
+            print "closed"
         return responses
 
     def mn_request_port(self):
@@ -201,6 +212,8 @@ class POVCOMPortDriver(QtCore.QThread):
             if (self.serialState == self.disconnected):
 
                 self.serialState = self.requesting_port
+                self.set_tx_port(None)
+                self.set_rx_port(None)
                 self.msg("Disconnected :(")
 
             elif (self.serialState == self.requesting_port):
@@ -224,7 +237,8 @@ class POVCOMPortDriver(QtCore.QThread):
                     else:
                         rx_ser = None
                     self.msg("Opening port %s..." % self.com_rx_port)
-                    rx_ser = serial.Serial(str(self.com_rx_port), 115200, timeout=0.2)
+                    if(not rx_ser.isOpen()):
+                        rx_ser = serial.Serial(str(self.com_rx_port), 115200, timeout=0.2)
 
                     self.msg("%s Connected..." % self.com_rx_port)
                     self.serialState = self.connected
