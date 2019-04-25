@@ -6,56 +6,14 @@
  *****************************************************************************/
 
 #include "led.h"
+#include "Image.h"
 
 //*****************************************************************************
 // Initialize the image data structure
 //*****************************************************************************
-void led_init(void) {
+void led_init(uint8_t bright_val) {
 
-    brightness = DIM;
-    int fin_idx, pos_idx, led_idx;
-
-    // Allocate space for the image
-    image = (position_type**)malloc(sizeof(position_type*) * TOTAL_POS);
-
-    // Allocate space for all positions
-    for (pos_idx = 0; pos_idx < TOTAL_POS; pos_idx++) {
-        image[pos_idx] = (position_type*)malloc(sizeof(position_type));
-        image[pos_idx]->pos_idx = pos_idx;
-        image[pos_idx]->all_fins = (fin_type**)malloc(sizeof(fin_type*) * FINS);
-
-        // Allocate space for all fins and all leds
-        for(fin_idx = 0; fin_idx < FINS; fin_idx++) {
-            image[pos_idx]->all_fins[fin_idx] = (fin_type*)malloc(sizeof(fin_type));
-            image[pos_idx]->all_fins[fin_idx]->fin_idx = fin_idx;
-            image[pos_idx]->all_fins[fin_idx]->leds = (led_type**)malloc(sizeof(led_type*) * LEDS_PER_FIN);
-
-            // Allocate space for all leds
-            for(led_idx = 0; led_idx < LEDS_PER_FIN; led_idx++) {
-                image[pos_idx]->all_fins[fin_idx]->leds[led_idx] = (led_type*)malloc(sizeof(led_type));
-
-                // Set brightness to none
-                image[pos_idx]->all_fins[fin_idx]->leds[led_idx]->brightness = brightness;
-
-                // Set color to off
-                color_set(&(image[pos_idx]->all_fins[fin_idx]->leds[led_idx]->color), OFF);
-
-
-            }
-        }
-    }
-
-}
-
-//*****************************************************************************
-// Initialize the Bluetooth image buffer
-//*****************************************************************************
-void led_bt_buf_init() {
-
-    int pos_idx, led_idx;
-
-    // Allocate space for the Bluetooth image buffer
-    bt_buffer = (img_pos_packet*)malloc(sizeof(img_pos_packet));
+    brightness = bright_val;
 
 }
 
@@ -63,31 +21,37 @@ void led_bt_buf_init() {
 // Get a packet of information over Bluetooth.
 // If packet is image information (IMG), fill in the bt_buffer
 //*****************************************************************************
+uint8_t msg[256];
+uint8_t rxmsg[256];
+unsigned msg_size;
 void led_bt_get_packet() {
 
-    uint8_t msg[32];    // For sending messages over bluetooth
+       // For sending messages over bluetooth
 
 //    // Send connection message to Bluetooth master
 //    strcpy((char*)msg, "CON");
 //    bt_uart_write(msg, 4);
 
     // Find out what type of packet Bluetooth master is sending
-    printf("Trying to read line\n");
-    while(!read_line((char*)msg, 32))
+    msg_size = sprintf((char*)rxmsg, "Trying to read Line\r\n");
+    bt_uart_write(msg, msg_size);
+    while(!read_line((char*)rxmsg, 32))
     {
         for(int i = 0; i < 10000; i++) {
             asm("");
         }
     }
-    printf("Received Line: %s\n",msg);
+    if (strncmp((char*)msg, "*IDN?", 5) == 0) {
+            strcpy((char*)msg,"3DRadio");
+            bt_uart_write(msg, 8);
+        }
+    msg_size = sprintf((char*)msg, "Read line: %s\r\n",rxmsg );
+    bt_uart_write(msg, msg_size);
     /*
     if (strcmp((char*)msg, "IMG") == 0) {
         led_bt_fill_buffer();
     } else */
-    if (strncmp((char*)msg, "*IDN?", 5) == 0) {
-        strcpy((char*)msg,"3DRadio");
-        bt_uart_write(msg, 8);
-    }
+
 
 
 }
@@ -193,6 +157,26 @@ void led_set_test(uint32_t color_value) {
 }
 
 //*****************************************************************************
+// Get a statically stored image from Image.h file
+//*****************************************************************************
+void led_get_img_str(img_pos_packet* img_array) {
+
+    int pos_idx;
+
+    // Iterate through all positions
+    for (pos_idx = 0; pos_idx < TOTAL_POS; pos_idx++) {
+        str_buffer = img_array[pos_idx];
+
+        // Fill in the image data structure with information from the array
+        led_set_pos(str_buffer.fin_idx,
+                    str_buffer.pos_idx,
+                    str_buffer.led_colors);
+    }
+
+
+}
+
+//*****************************************************************************
 // Data transmit method for turning on LEDs
 // Assumes the entire image data structure has been set in memory
 //*****************************************************************************
@@ -257,42 +241,5 @@ void led_transmit_data(uint8_t pos_idx) {
 }
 
 
-//*****************************************************************************
-// Free the LEDs data structure
-//*****************************************************************************
-void led_free_image(void) {
 
-    int fin_idx, pos_idx, led_idx;
-
-
-    for (pos_idx = 0; pos_idx < TOTAL_POS; pos_idx++) {
-        for(fin_idx = 0; fin_idx < FINS; fin_idx++) {
-            for(led_idx = 0; led_idx < LEDS_PER_FIN; led_idx++) {
-
-                // Free space for all LEDs
-                free(image[pos_idx]->all_fins[fin_idx]->leds[led_idx]);
-            }
-
-            // Free space for all fins
-            free(image[pos_idx]->all_fins[fin_idx]->leds);
-            free(image[pos_idx]->all_fins[fin_idx]);
-
-        }
-
-        // Free space for all positions
-        free(image[pos_idx]->all_fins);
-        free(image[pos_idx]);
-    }
-
-    // Free space for the image
-    free(image);
-
-}
-
-//*****************************************************************************
-// Free the Bluetooth buffer
-//*****************************************************************************
-void led_free_bt_buf() {
-    free(bt_buffer);
-}
 

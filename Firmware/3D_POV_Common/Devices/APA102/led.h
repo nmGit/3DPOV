@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "spi.h"
 #include "BluetoothUART.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
@@ -44,8 +45,8 @@
 // LED Count Constants
 //*****************************************************************************
 #define LEDS_PER_FIN        16      // TESTING -- ultimate goal is 16 LEDs/fin
-#define FINS                4       // TESTING -- ultimate goal is 12 fins
-#define TOTAL_POS           1       // TESTING -- ultimately 100 positions per 360 deg sweep
+#define FINS                1       // TESTING -- ultimate goal is 12 fins
+#define TOTAL_POS           100       // TESTING -- ultimately 100 positions per 360 deg sweep
 #define TX_PER_LED          4       // 4 SPI transmissions per LED
 #define FRAME_BORDER        4       // Each frame byte is sent 4 times for 32 bits
 #define START_FRAME         0x00    // Transmit 4 times for 32 bits of 0
@@ -81,7 +82,7 @@ typedef struct {
 //*****************************************************************************
 typedef struct {
     uint8_t fin_idx;      // Valued at 1 through N total fins
-    led_type** leds;      // All LEDs on that fin
+    led_type leds[LEDS_PER_FIN][1];      // All LEDs on that fin
 } fin_type;
 
 //*****************************************************************************
@@ -89,7 +90,7 @@ typedef struct {
 //*****************************************************************************
 typedef struct {
     uint8_t pos_idx;        // Valued at 1 through 100 total positions
-    fin_type** all_fins;    // Holds information for all fins at that position
+    fin_type all_fins[FINS][1];    // Holds information for all fins at that position
 } position_type;
 
 //*****************************************************************************
@@ -107,6 +108,7 @@ uint8_t brightness;
 // Image position data packet for each of the 100 positions in a 360 deg sweep
 //*****************************************************************************
 typedef struct {
+    uint8_t msg[4];                       // Holds the data type, i.e. "IMG\0"
     uint8_t fin_idx;                      // Valued at 0 through N-1 total fins
     uint8_t pos_idx;                      // 8bit position index, 0 through 99
     color_type led_colors[LEDS_PER_FIN];  // LED color data
@@ -116,8 +118,9 @@ typedef struct {
 //*****************************************************************************
 // Image Data Structures
 //*****************************************************************************
-position_type** image;                   // Image stored in memory
-img_pos_packet* bt_buffer;               // Image buffer from Bluetooth
+position_type image[TOTAL_POS][1];       // Image stored in memory
+img_pos_packet* bt_buffer;              // Image buffer from Bluetooth
+img_pos_packet str_buffer;              // Image buffer from string
 
 //*****************************************************************************
 // Function Prototypes
@@ -126,12 +129,7 @@ img_pos_packet* bt_buffer;               // Image buffer from Bluetooth
 //*****************************************************************************
 // Initialize data structure of LEDs
 //*****************************************************************************
-void led_init(void);
-
-//*****************************************************************************
-// Initialize the Bluetooth image buffer
-//*****************************************************************************
-void led_bt_image_buf_init(void);
+void led_init(uint8_t bright_val);
 
 //*****************************************************************************
 // Set an LED with a specified color and brightness
@@ -150,6 +148,11 @@ void led_set_fin(color_type* led_colors);
 // Set the LEDs of all fins for a single position
 //*****************************************************************************
 void led_set_pos(uint8_t fin_idx, uint8_t pos_idx, color_type* led_colors);
+
+//*****************************************************************************
+// Get a statically stored image from a Image.h file
+//*****************************************************************************
+void led_get_img_str(img_pos_packet* img_array);
 
 //*****************************************************************************
 // Get a packet of information over bluetooth
@@ -177,15 +180,7 @@ void color_set(color_type* test_color, uint32_t color_value);
 //*****************************************************************************
 void led_transmit_data(uint8_t pos_idx);
 
-//*****************************************************************************
-// Free the image data structure
-//*****************************************************************************
-void led_free_image(void);
 
-//*****************************************************************************
-// Free the Bluetooth buffer
-//*****************************************************************************
-void led_free_bt_buf(void);
 
 
 #endif
