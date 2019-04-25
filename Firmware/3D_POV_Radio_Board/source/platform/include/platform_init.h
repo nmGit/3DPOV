@@ -13,11 +13,12 @@ extern "C" {
 #endif
 
     void platform_init();
-    void platform_free();
+    uint32_t wrap_count;
 
 #if __cplusplus
 }
 #endif
+
 
 
 
