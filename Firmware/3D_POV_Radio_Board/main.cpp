@@ -25,7 +25,10 @@
 //*****************************************************************************
 // Main Method
 //*****************************************************************************
-
+//*****************************************************************************
+// TELL ME TO SHIFT OR ELSE
+//*****************************************************************************
+bool shift_out;
 extern img_pos_packet test_bars[];
 
 int main(void) {
@@ -44,31 +47,28 @@ int main(void) {
     led_get_img_str(test_bars);
 
     int pos = 0;
-
+    shift_out = false;
     while(1){
 
         // TESTING -- just making an arbitrary delay
-        for(int i = 0; i < 1000000; i++) {
-            asm("");
-        }
+        //  for(int i = 0; i < 1000000; i++) {
+        //      asm("");
+        //  }
 
         /* NOTE: Instead of some arbitrary delay, going to use SysTick timer.
          * Use the hall effect sensor to find the number of ticks in one full revolution.
          * Divide that number of ticks by 100.
          *
          */
+        if(shift_out){
+// printf("SHIFT! %d\r\n", pos);
+            led_transmit_data(pos);
 
-        if(hall_trig){
-            pos = 0;
-            hall_trig = false;
+            // Keep transmitting forever
+            pos++;
+            pos %= TOTAL_POS;
+            shift_out = false;
         }
-
-        led_transmit_data(pos);
-
-        // Keep transmitting forever
-        pos++;
-        pos %= TOTAL_POS;
-
 
     }
 

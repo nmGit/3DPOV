@@ -18,6 +18,8 @@
 #include <ti/devices/msp432p4xx/inc/msp.h>
 #include "MSP_EXP432P401R.h"
 
+
+
 //*****************************************************************************
 // Color Constants -- First 8 bits are don't cares, then order is R G B
 //*****************************************************************************

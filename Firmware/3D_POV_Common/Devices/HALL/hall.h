@@ -10,12 +10,10 @@
 //*****************************************************************************
 // Globals
 //*****************************************************************************
-bool hall_trig;             // Set to true when GPIO interrupt triggered
+volatile bool hall_trig;             // Set to true when GPIO interrupt triggered
                             // set to false when read and initialized
-uint32_t old_ticks;        // Hall current tick value (NOT number of ticks per revolution)
-uint32_t wrap_count;        // Number of SysTick wraps before GPIO interrupt is triggered
-uint32_t wrap_period;       // SysTick period
-uint32_t rev_ticks;         // Ticks per revolution
+volatile uint32_t wrap_count;        // Number of SysTick wraps before GPIO interrupt is triggered
+volatile uint32_t rev_ticks;         // Ticks per revolution
 
 //*****************************************************************************
 // General initialization method for SPI
