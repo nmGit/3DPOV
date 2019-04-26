@@ -21,11 +21,13 @@ def data_to_packets(image, data_type, data_block_size):
         # We now construct the packet in steps
         # Step 1: Each packet starts with the packet type (i.e. 'IMG')
         packet.extend(packet_type)
-        # Step 2: Add a sequence number
+        # Step 2: Add a fin and sequence number
+        #packet.append(0)
         packet.append(seq)
         # Step 3: Add data (16 pixels x 3 bytes (RGB) per pixel)
         #print image[seq:(seq + data_block_size)]
-        packet_data = [byte for byte in image[seq:(seq + data_block_size)]]
+        packet_data = [byte for byte in image[seq*data_block_size:(seq*data_block_size + data_block_size)]]
+        print seq
         packet.extend(packet_data)
         # Step 4: Generate checksum. Should also be 1 byte, hence the and with 0xFF
         packet.append(sum(packet_data) & 0xFF)

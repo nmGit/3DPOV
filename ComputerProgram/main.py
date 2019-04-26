@@ -221,17 +221,43 @@ class main(QtGui.QMainWindow):
 #             event.ignore()
     def new_image_handler(self):
         data = self.mapped_image_widget.get_image_data()
+        # self.data_shower = QtGui.QTextEdit()
+        # cpackets = str(data)
+        # self.data_shower.setText(cpackets)
+        # self.data_shower.show()
         self.download_to_radio_board(data)
 
     def download_to_radio_board(self, image):
         # Now we have a bunch of packets that need to be sent
-        self.datalink.bt_transmit_image(image)
-        packets = self.datalink.radio_driver.get_last_image_packets()
+        # d = np.reshape(image, (1600, 3)).tolist()
+        #
+        # data = np.zeros(100*16*3).tolist()
+        # for i,pixel in enumerate(d):
+        #     position = (16 * (i % 100) + i/100)*3
+        #     data[position + 0] = pixel[0]
+        #     data[position + 1] = pixel[1]
+        #     data[position + 2] = pixel[2]
+
+        # self.datalink.bt_transmit_image(image)
+        # packets = self.datalink.radio_driver.get_last_image_packets()
+        # self.packet_shower = QtGui.QTextEdit()
+        # cpackets = str(packets).replace("[", "{").replace("]", "}").replace("},", "},\n")
+        # self.packet_shower.setText(cpackets)
+        # self.packet_shower.show()
         #print "image packets:", packets
+        self.datalink.bt_transmit_image(image)
         self.bt_cmd_line.addLine("Sending image...", (100, 180, 255))
+        packets = self.datalink.radio_driver.get_last_image_packets()
+
+        self.data_shower = QtGui.QTextEdit()
+        cpackets = str(packets).replace("],", "},\n").replace("[", "{")
+        self.data_shower.setText(str(cpackets))
+        self.data_shower.show()
+
         for num,packet in enumerate(packets):
             print "Packet number: %d: %s" %(num, str(packet))
             self.bt_cmd_line.addLine("Image packet number %d: %s" %(num, str(packet)), (100, 255, 255))
+
 
     # def process_image(self, path_to_image):
     #     # Read the image using OpenCV library
