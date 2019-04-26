@@ -22,7 +22,7 @@ def data_to_packets(image, data_type, data_block_size):
         # Step 1: Each packet starts with the packet type (i.e. 'IMG')
         packet.extend(packet_type)
         # Step 2: Add a fin and sequence number
-        #packet.append(0)
+        packet.append(0)
         packet.append(seq)
         # Step 3: Add data (16 pixels x 3 bytes (RGB) per pixel)
         #print image[seq:(seq + data_block_size)]

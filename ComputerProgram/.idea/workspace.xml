@@ -57,7 +57,7 @@
             <entry file="file://$PROJECT_DIR$/datapacking.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="792">
-                  <caret line="24" column="9" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+                  <caret line="24" column="8" lean-forward="false" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
                   <folding />
                 </state>
               </provider>
@@ -953,7 +953,7 @@
     <entry file="file://$PROJECT_DIR$/datapacking.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="792">
-          <caret line="24" column="9" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+          <caret line="24" column="8" lean-forward="false" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
           <folding />
         </state>
       </provider>
