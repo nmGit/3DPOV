@@ -121,7 +121,7 @@ typedef struct {
 // Image Data Structures
 //*****************************************************************************
 position_type image[TOTAL_POS][1];       // Image stored in memory
-img_pos_packet* bt_buffer;              // Image buffer from Bluetooth
+img_pos_packet bt_buffer[sizeof(img_pos_packet)];              // Image buffer from Bluetooth
 img_pos_packet str_buffer;              // Image buffer from string
 
 //*****************************************************************************
@@ -162,7 +162,6 @@ void led_get_img_str(img_pos_packet* img_array);
 void led_bt_get_packet(void);
 
 //*****************************************************************************
-// Fill in the Bluetooth buffer.
 // Use the Bluetooth buffer to fill in image structure.
 //*****************************************************************************
 void led_bt_fill_buffer(void);

@@ -70,12 +70,13 @@ bool rx_buf_push(char character) {
  */
 bool rx_buf_pop(char* character) {
 
-    if (rx_buf_tail == (rx_buf_head-1)%RX_BUF_SIZE) {
+    if (rx_buf_tail == (rx_buf_head)%RX_BUF_SIZE) {
         // Buffer is empty
         *character = 0;
         return false;
     } else {
         *character = rx_buf[rx_buf_tail];
+        rx_buf[rx_buf_tail] = '\0';
         rx_buf_tail++;
         rx_buf_tail %= RX_BUF_SIZE;
     }
@@ -94,15 +95,16 @@ bool read_line(char* buffer, unsigned max_len) {
     unsigned num_elems = num_rx_buffer_elements();
 
     unsigned curr = rx_buf_tail;
-
-    while(curr < num_elems)
+    unsigned elems_scanned = 0;
+    while(elems_scanned < num_elems)
     {
 
-        if(rx_buf[curr] == '\r')
+        if(rx_buf[curr] == '\n')
         {
             has_newline = true;
             break;
         }
+        elems_scanned++;
         curr++;
         curr %= RX_BUF_SIZE;
     }
@@ -114,10 +116,19 @@ bool read_line(char* buffer, unsigned max_len) {
 
     curr = rx_buf_tail;
     unsigned index = 0;
-    while(buffer[index] != '\n' && index < num_elems && index < max_len)
+    rx_buf_pop(&buffer[0]);
+    while(buffer[index] != '\n' && index+1 < num_elems && index+1 < max_len)
     {
-        rx_buf_pop(&buffer[index]);
         index++;
+        rx_buf_pop(&buffer[index]);
+
+    }
+
+//    //  Get rid of \r
+    if(buffer[index] == '\n')
+    {
+        index++;
+        buffer[index] = '\0';
     }
 
      return true;
@@ -148,7 +159,7 @@ char uart_a_1_ISR()
          EUSCI_A1->IFG &=  ~EUSCI_A_IFG_RXIFG;
          // Save the received character
          uart_a_1_rcvd_chr =  EUSCI_A1->RXBUF;
-         EUSCI_A1->TXBUF = uart_a_1_rcvd_chr;
+         //EUSCI_A1->TXBUF = uart_a_1_rcvd_chr;
          rx_buf_push(uart_a_1_rcvd_chr);
          rxbuf_rdy = true;
      }

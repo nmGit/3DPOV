@@ -26,53 +26,29 @@ uint8_t rxmsg[256];
 unsigned msg_size;
 void led_bt_get_packet() {
 
-       // For sending messages over bluetooth
-
-//    // Send connection message to Bluetooth master
-//    strcpy((char*)msg, "CON");
-//    bt_uart_write(msg, 4);
-
-    // Find out what type of packet Bluetooth master is sending
-    msg_size = sprintf((char*)rxmsg, "Trying to read Line\r\n");
-    bt_uart_write(msg, msg_size);
-    while(!read_line((char*)rxmsg, 32))
+    while(!read_line((char*)bt_buffer, sizeof(img_pos_packet)))
     {
-        for(int i = 0; i < 10000; i++) {
-            asm("");
-        }
+//        for(int i = 0; i < 1000; i++) {
+//            asm("");
+//        }
     }
-    if (strncmp((char*)msg, "*IDN?", 5) == 0) {
-            strcpy((char*)msg,"3DRadio");
-            bt_uart_write(msg, 8);
-        }
-    msg_size = sprintf((char*)msg, "Read line: %s\r\n",rxmsg );
-    bt_uart_write(msg, msg_size);
-    /*
-    if (strcmp((char*)msg, "IMG") == 0) {
+
+    //printf("Received line: %s", (char*)bt_buffer);
+    if (strncmp((char*)bt_buffer, "IMG", 3) == 0) {
+        msg_size = sprintf((char*)rxmsg,"3DRadio");
+        bt_uart_write(rxmsg, msg_size);
         led_bt_fill_buffer();
-    } else */
-
-
+    } else if (strncmp((char*)bt_buffer,"*IDN?",5) == 0) {
+        msg_size = sprintf((char*)rxmsg,"3DRadio");
+        bt_uart_write(rxmsg, msg_size);
+    }
 
 }
 
 //*****************************************************************************
-// Fill in the Bluetooth buffer.
 // Use the Bluetooth buffer to fill in the image structure.
 //*****************************************************************************
 void led_bt_fill_buffer() {
-
-    uint8_t msg[4];    // For sending messages over bluetooth
-
-    // Map the Bluetooth data to the bt_buffer structure
-    bt_uart_read((uint8_t*)bt_buffer, sizeof(img_pos_packet));
-
-    strcpy((char*)msg, "REC:");
-    bt_uart_write(msg, 4);
-    bt_uart_write((uint8_t*)bt_buffer, sizeof(img_pos_packet));
-
-    strcpy((char*)msg,"\r\n");
-    bt_uart_write(msg, 3);
 
     // Fill in the image data structure with information from Bluetooth
     led_set_pos(bt_buffer->pos_idx,
@@ -80,8 +56,8 @@ void led_bt_fill_buffer() {
                 bt_buffer->led_colors);
 
     // Send a finish message to Bluetooth master
-    strcpy((char*)msg, "END");
-    bt_uart_write(msg, 4);
+    msg_size = sprintf((char*)msg, "END");
+    bt_uart_write(msg, msg_size);
 
 }
 

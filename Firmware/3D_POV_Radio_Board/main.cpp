@@ -44,31 +44,28 @@ int main(void) {
     processor_init();
     platform_init();
 
-    led_get_img_str(test_bars);
+    //led_get_img_str(test_bars);
+
+    uint8_t msg[15];
+    uint8_t msg_size = sprintf((char*)msg,"hello, world!\n");
+    bt_uart_write((uint8_t*)msg,msg_size);
 
     int pos = 0;
     shift_out = false;
     while(1){
 
-        // TESTING -- just making an arbitrary delay
-        //  for(int i = 0; i < 1000000; i++) {
-        //      asm("");
-        //  }
+        led_bt_get_packet();
 
-        /* NOTE: Instead of some arbitrary delay, going to use SysTick timer.
-         * Use the hall effect sensor to find the number of ticks in one full revolution.
-         * Divide that number of ticks by 100.
-         *
-         */
-        if(shift_out){
-// printf("SHIFT! %d\r\n", pos);
-            led_transmit_data(pos);
 
-            // Keep transmitting forever
-            pos++;
-            pos %= TOTAL_POS;
-            shift_out = false;
-        }
+
+//        if(shift_out){
+//            led_transmit_data(pos);
+//
+//            // Keep transmitting forever
+//            pos++;
+//            pos %= TOTAL_POS;
+//            shift_out = false;
+//        }
 
     }
 
