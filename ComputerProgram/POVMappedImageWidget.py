@@ -116,7 +116,7 @@ class POVMappedImageWidget(QtGui.QFrame):
         # Tell the raster viewer what data it should be displaying
         self.raster_view.setImage(self.image_pix_rgb_flat)
         # This takes our 2-D array from above and maps it to the "donut" shape
-        self.map_result = mapping.map_to_donut(self.image_pix_rgb, self.szx, self.szy, 0.1, 1)
+        self.map_result = mapping.map_to_donut(self.image_pix_rgb, self.szx, self.szy, 0.2, 1)
         # Take the map result and flatten it using our flatten operation
         self.map_result_flat =self.flatten_img(self.map_result[2])
         # We now start the process of scaling the mapped image so that it can be displayed by our POV
