@@ -26,24 +26,31 @@ uint8_t rxmsg[256];
 unsigned msg_size;
 void led_bt_get_packet() {
 
-    while(!read_line((char*)bt_buffer, sizeof(img_pos_packet)))
+    if(read_line((char*)bt_buffer, sizeof(img_pos_packet)))
     {
-//        for(int i = 0; i < 1000; i++) {
-//            asm("");
-//        }
+        if (strncmp((char*)bt_buffer, "IMG", 3) == 0) {
+            msg_size = sprintf((char*)rxmsg, "Packet Number: %d\n", bt_buffer->pos_idx);
+            bt_uart_write(rxmsg, msg_size);
+            led_bt_fill_buffer();
+            msg_size = sprintf((char*)rxmsg, "END\n");
+            bt_uart_write(rxmsg, msg_size);
+        } else if (strncmp((char*)bt_buffer,"*IDN?",5) == 0) {
+            msg_size = sprintf((char*)rxmsg,"3DRadio");
+            bt_uart_write(rxmsg, msg_size);
+        }
     }
 
-    printf("Received line: %s", (char*)bt_buffer);
-    if (strncmp((char*)bt_buffer, "IMG", 3) == 0) {
-        msg_size = sprintf((char*)rxmsg, "END\n");
-        bt_uart_write(rxmsg, msg_size);
-        msg_size = sprintf((char*)rxmsg, "Packet Number: %d\n", bt_buffer->pos_idx);
-        bt_uart_write(rxmsg, msg_size);
-        led_bt_fill_buffer();
-    } else if (strncmp((char*)bt_buffer,"*IDN?",5) == 0) {
-        msg_size = sprintf((char*)rxmsg,"3DRadio");
-        bt_uart_write(rxmsg, msg_size);
-    }
+//    printf("Received line: %s", (char*)bt_buffer);
+//    if (strncmp((char*)bt_buffer, "IMG", 3) == 0) {
+//        msg_size = sprintf((char*)rxmsg, "Packet Number: %d\n", bt_buffer->pos_idx);
+//        bt_uart_write(rxmsg, msg_size);
+//        led_bt_fill_buffer();
+//        msg_size = sprintf((char*)rxmsg, "END\n");
+//        bt_uart_write(rxmsg, msg_size);
+//    } else if (strncmp((char*)bt_buffer,"*IDN?",5) == 0) {
+//        msg_size = sprintf((char*)rxmsg,"3DRadio");
+//        bt_uart_write(rxmsg, msg_size);
+//    }
 
 }
 
@@ -53,8 +60,8 @@ void led_bt_get_packet() {
 void led_bt_fill_buffer() {
 
     // Fill in the image data structure with information from Bluetooth
-    led_set_pos(bt_buffer->pos_idx,
-                bt_buffer->fin_idx,
+    led_set_pos(bt_buffer->fin_idx,
+                bt_buffer->pos_idx,
                 bt_buffer->led_colors);
 
     // Send a finish message to Bluetooth master

@@ -58,14 +58,14 @@ int main(void) {
 
 
 
-//        if(shift_out){
-//            led_transmit_data(pos);
-//
-//            // Keep transmitting forever
-//            pos++;
-//            pos %= TOTAL_POS;
-//            shift_out = false;
-//        }
+        if(shift_out){
+            led_transmit_data(pos);
+
+            // Keep transmitting forever
+            pos++;
+            pos %= TOTAL_POS;
+            shift_out = false;
+        }
 
     }
 
