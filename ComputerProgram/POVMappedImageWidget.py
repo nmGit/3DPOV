@@ -2,7 +2,7 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QObject, pyqtSignal
 import numpy as np
 import sys
-
+import traceback
 from rasterViewer import rasterViewer
 import mapping
 
@@ -24,16 +24,16 @@ class POVMappedImageWidget(QtGui.QFrame):
 
         self.setAcceptDrops(True)
 
-        self.raster_view = rasterViewer(self.szx, self.szy)
-        self.raster_view.makeSquare(True)
+        #self.raster_view = rasterViewer(self.szx, self.szy)
+        #self.raster_view.makeSquare(True)
 
         self.setLayout(self.mainLayout)
 
-        self.mainLayout.addWidget(self.raster_view, 0, 0, 1, 1)
-        self.raster_view.show()
+        #self.mainLayout.addWidget(self.raster_view, 0, 0, 1, 1)
+        #self.raster_view.show()
 
-        self.raster_mapped = rasterViewer(5, 5)
-        self.mainLayout.addWidget(self.raster_mapped, 1, 0, 1, 2)
+        #self.raster_mapped = rasterViewer(5, 5)
+        #self.mainLayout.addWidget(self.raster_mapped, 1, 0, 1, 2)
 
         self.raster_mapped_scaled = rasterViewer(5, 5)
         self.mainLayout.addWidget(self.raster_mapped_scaled, 2, 0, 1, 2)
@@ -71,8 +71,11 @@ class POVMappedImageWidget(QtGui.QFrame):
             for url in event.mimeData().urls():
                 path_to_image = url.toLocalFile()
                 self.image_data = self.process_image(path_to_image)
+            try:
                 self.new_image_sig.emit()
-
+                print "Done"
+            except:
+                traceback.print_exc()
 #            print self.image_pix_flat
 
         else:
@@ -112,9 +115,9 @@ class POVMappedImageWidget(QtGui.QFrame):
         # viewer to display the image.
         self.image_pix_rgb_flat = self.flatten_img(self.image_pix_rgb)
         # Tell the raster viewer what the resolution should be
-        self.raster_view.setResolution(self.szx, self.szy)
+#        self.raster_view.setResolution(self.szx, self.szy)
         # Tell the raster viewer what data it should be displaying
-        self.raster_view.setImage(self.image_pix_rgb_flat)
+        #self.raster_view.setImage(self.image_pix_rgb_flat)
         # This takes our 2-D array from above and maps it to the "donut" shape
         self.map_result = mapping.map_to_donut(self.image_pix_rgb, self.szx, self.szy, 0.2, 1)
         # Take the map result and flatten it using our flatten operation
@@ -140,7 +143,7 @@ class POVMappedImageWidget(QtGui.QFrame):
         self.raster_mapped_scaled.setImage(self.scale_result_flat)
         # Display our mapped image
         self.image_pix_mapped_flat = self.flatten_img(self.map_result[2])
-        self.raster_mapped.setResolution(self.map_result[0], self.map_result[1])
-        self.raster_mapped.setImage([int(x*255) for x in self.map_result_float])
+        #self.raster_mapped.setResolution(self.map_result[0], self.map_result[1])
+        #self.raster_mapped.setImage([int(x*255) for x in self.map_result_float])
 
         return self.scale_result_flat

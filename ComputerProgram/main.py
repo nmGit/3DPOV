@@ -182,13 +182,13 @@ class main(QtGui.QMainWindow):
             
             if("END" in ''.join(self.bt_rx_line)):
                 self.radio_ack_sig.emit(''.join(self.bt_rx_line))
-                
+                #self.bt_cmd_line.addLine("Received ACK", (150, 200, 255) )
             if(str(char) == '\n'):
                 self.bt_rx_line = []
-                
+                print "Line Received: %s" % ''.join(self.bt_rx_line)
             if(char == '\0'):
                 break
-        print "Line Received: %s" % ''.join(self.bt_rx_line)
+
     def new_bt_tx(self, string):
         for chr in string:
             self.bt_cmd_line.addChar(chr)
@@ -258,16 +258,16 @@ class main(QtGui.QMainWindow):
         #print "image packets:", packets
         self.datalink.bt_transmit_image(image)
         self.bt_cmd_line.addLine("Sending image...", (100, 180, 255))
-        packets = self.datalink.radio_driver.get_last_image_packets()
+        #packets = self.datalink.radio_driver.get_last_image_packets()
 
-        self.data_shower = QtGui.QTextEdit()
-        cpackets = str(packets).replace("],", "},\n").replace("[", "{")
-        self.data_shower.setText(str(cpackets))
-        self.data_shower.show()
+        #self.data_shower = QtGui.QTextEdit()
+        #cpackets = str(packets).replace("],", "},\n").replace("[", "{")
+        #self.data_shower.setText(str(cpackets))
+        #self.data_shower.show()
 
-        for num,packet in enumerate(packets):
-            print "Packet number: %d: %s" %(num, str(packet))
-            self.bt_cmd_line.addLine("Image packet number %d: %s" %(num, str(packet)), (100, 255, 255))
+        #for num,packet in enumerate(packets):
+        #    print "Packet number: %d: %s" %(num, str(packet))
+        #    self.bt_cmd_line.addLine("Image packet number %d: %s" %(num, str(packet)), (100, 255, 255))
 
 
     # def process_image(self, path_to_image):

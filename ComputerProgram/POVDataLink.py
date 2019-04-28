@@ -138,6 +138,7 @@ class POVDataLink(QtCore.QThread):
     def bt_request_port(self):
         self.bt_request_port_flag = True
 
+
     def run(self):
         self.main_driver.start()
         self.radio_driver.start()
@@ -146,7 +147,7 @@ class POVDataLink(QtCore.QThread):
             if(self.mn_request_port or self.bt_request_port_flag):
                # print "Received prot request!"
                 responses = self.search_com_ports()
-                #print "Responses:", responses
+                print "Responses:", responses
 
                 if(self.mn_request_port_flag):
                     for port_resp_pair in responses:
@@ -166,23 +167,29 @@ class POVDataLink(QtCore.QThread):
 
 class POVCOMPortDriver(QtCore.QThread):
 
-    new_message_sig = pyqtSignal(str)
-    new_rx_sig = pyqtSignal(str)
-    request_port_sig = pyqtSignal()
-    tx_packet_queue = Queue()
-
-    com_tx_port = None
-    com_rx_port = None
 
     def __init__(self):
         super(POVCOMPortDriver, self).__init__()
+
+
+        self.tx_packet_queue = Queue()
+
+        self.com_tx_port = None
+        self.com_rx_port = None
+
         self.connected = 0
         self.disconnected = 1
         self.requesting_port = 2
         self.establishing_connection = 3
 
         self.serialState = self.disconnected
-        self.com_rx_port = None
+        # self.connected = 0
+        # self.disconnected = 1
+        # self.requesting_port = 2
+        # self.establishing_connection = 3
+
+        # self.serialState = self.disconnected
+        # self.com_rx_port = None
         #self.start()
 
     def request_port(self):
@@ -274,6 +281,7 @@ class POVCOMPortDriver(QtCore.QThread):
                 self.msg("Connected to %s!" % self.com_rx_port)
                 try:
                     while (1):
+
                         if (rx_ser.inWaiting()):
                             c = rx_ser.read()
                             self.receive(c)
@@ -282,10 +290,11 @@ class POVCOMPortDriver(QtCore.QThread):
                         if (not self.tx_packet_queue.empty()):
                             data = self.tx_packet_queue.get()
                             print "Found new data in tx queue: %s" % str(data)
-                            if(data != None):
-                                tx_ser.write(data)
-                                self.msg("Outgoing: %s" % data);
+                            #if(data != None):
+                            tx_ser.write(data)
+                            #self.msg("Outgoing: %s " % (data));
                             #self.msleep(100)
+                        self.yieldCurrentThread()
                 except:
                     traceback.print_exc()
                     self.msg("Port error")
@@ -294,7 +303,9 @@ class POVCOMPortDriver(QtCore.QThread):
                     self.msleep(500)
 
 class POVMainBoardDriver(POVCOMPortDriver):
-
+    new_message_sig = pyqtSignal(str)
+    new_rx_sig = pyqtSignal(str)
+    request_port_sig = pyqtSignal()
     def __init__(self):
         super(POVMainBoardDriver, self).__init__()
         print("Starting main board driver...")
@@ -321,6 +332,7 @@ class POVRadioBoardDriver(POVCOMPortDriver):
     new_message_sig = pyqtSignal(str)
     new_rx_sig = pyqtSignal(str)
     new_tx_sig = pyqtSignal(str)
+    request_port_sig = pyqtSignal()
     tx_image_packet_queue = Queue()
     packets = []
     def __init__(self):
@@ -348,7 +360,7 @@ class POVRadioBoardDriver(POVCOMPortDriver):
         return self.packets
         
     def continue_image_transmission(self, text):
-        self.msg("Remaining packets: %d" % self.tx_image_packet_queue.qsize());
+        #self.msg("Remaining packets: %d" % self.tx_image_packet_queue.qsize());
         self.submit_packet_for_transmit(self.tx_image_packet_queue.get())
         
     def submit_image_for_transmit(self, data):
