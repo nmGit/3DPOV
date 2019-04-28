@@ -44,7 +44,8 @@ int main(void) {
     processor_init();
     platform_init();
 
-    //led_get_img_str(test_bars);
+    // Fill in image data structure using statically stored image
+    led_get_img_str(test_bars);
 
     uint8_t msg[15];
     uint8_t msg_size = sprintf((char*)msg,"hello, world!\n");
@@ -54,18 +55,20 @@ int main(void) {
     shift_out = false;
     while(1){
 
-        led_bt_get_packet();
+        led_transmit_data(pos);
+        pos++;
+        pos %= TOTAL_POS;
 
 
-
-        if(shift_out){
-            led_transmit_data(pos);
-
-            // Keep transmitting forever
-            pos++;
-            pos %= TOTAL_POS;
-            shift_out = false;
-        }
+//      led_bt_get_packet();
+//      if(shift_out){
+//          led_transmit_data(pos);
+//
+//          // Keep transmitting forever
+//          pos++;
+//          pos %= TOTAL_POS;
+//          shift_out = false;
+//      }
 
     }
 

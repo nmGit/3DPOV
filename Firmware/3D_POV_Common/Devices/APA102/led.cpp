@@ -64,9 +64,6 @@ void led_bt_fill_buffer() {
                 bt_buffer->pos_idx,
                 bt_buffer->led_colors);
 
-    // Send a finish message to Bluetooth master
-    //msg_size = sprintf((char*)msg, "END\n");
-    //bt_uart_write(msg, msg_size);
 
 }
 

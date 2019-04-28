@@ -14,12 +14,12 @@ void init_clocks()
     // For  UART
         // Map pins to uart
         CS->KEY = CS_KEY_VAL;                   // Unlock CS module for register access
-    //    CS->CTL0 = 0;                           // Reset tuning parameters
-    //    CS->CTL0 = CS_CTL0_DCORSEL_3;           // Set DCO to 12MHz (nominal, center of 8-16MHz range)
+    //    CS->CTL0 = 0;                         // Reset tuning parameters
+    //    CS->CTL0 = CS_CTL0_DCORSEL_3;         // Set DCO to 12MHz (nominal, center of 8-16MHz range)
         CS->CTL1 = CS_CTL1_SELA_2 |             // Select ACLK = REFO
-                   CS_CTL1_SELS_3;                // SMCLK = DCO
-    //               CS_CTL1_SELM_3;                 // MCLK = DCO
-       // CS->KEY = 0;                            // Lock CS module from unintended accesses
+                   CS_CTL1_SELS_3;              // SMCLK = DCO
+    //             CS_CTL1_SELM_3;              // MCLK = DCO
+     // CS->KEY = 0;                            // Lock CS module from unintended accesses
 
     /* Halting the Watchdog */
    // MAP_WDT_A_holdTimer();
