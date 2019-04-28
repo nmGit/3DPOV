@@ -91,7 +91,7 @@ void platform_init()
 
 
     allow_port_mapping();
-    led_init(DIM);             // Creates LED data structure
+    led_init(FULL);             // Creates LED data structure
     spiInit();              // Initializes SPI pins on MSP
     hallInit();             // Initializes Hall effect sensor
     bt_UART_init();         // Initializes Bluetooth UART pins on MSP
