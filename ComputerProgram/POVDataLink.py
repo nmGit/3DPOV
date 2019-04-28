@@ -361,7 +361,11 @@ class POVRadioBoardDriver(POVCOMPortDriver):
         
     def continue_image_transmission(self, text):
         #self.msg("Remaining packets: %d" % self.tx_image_packet_queue.qsize());
-        self.submit_packet_for_transmit(self.tx_image_packet_queue.get())
+        if(not self.tx_image_packet_queue.empty()):
+            packet = self.tx_image_packet_queue.get()
+            self.submit_packet_for_transmit(packet)
+
+
         
     def submit_image_for_transmit(self, data):
         d = np.reshape(data, (1600, 3)).tolist()
