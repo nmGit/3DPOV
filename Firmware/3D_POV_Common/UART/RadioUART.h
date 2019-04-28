@@ -8,7 +8,7 @@
 #ifndef SOURCE_UART_UART_H_
 #define SOURCE_UART_UART_H_
 
-#define RX_BUF_SIZE 256
+#define RX_BUF_SIZE 2048
 
 #include "ti/devices/msp432p4xx/inc/msp.h"
 #include <stdint.h>

@@ -33,9 +33,11 @@ void led_bt_get_packet() {
 //        }
     }
 
-    //printf("Received line: %s", (char*)bt_buffer);
+    printf("Received line: %s", (char*)bt_buffer);
     if (strncmp((char*)bt_buffer, "IMG", 3) == 0) {
-        msg_size = sprintf((char*)rxmsg,"3DRadio");
+        msg_size = sprintf((char*)rxmsg, "END\n");
+        bt_uart_write(rxmsg, msg_size);
+        msg_size = sprintf((char*)rxmsg, "Packet Number: %d\n", bt_buffer->pos_idx);
         bt_uart_write(rxmsg, msg_size);
         led_bt_fill_buffer();
     } else if (strncmp((char*)bt_buffer,"*IDN?",5) == 0) {
@@ -56,8 +58,8 @@ void led_bt_fill_buffer() {
                 bt_buffer->led_colors);
 
     // Send a finish message to Bluetooth master
-    msg_size = sprintf((char*)msg, "END");
-    bt_uart_write(msg, msg_size);
+    //msg_size = sprintf((char*)msg, "END\n");
+    //bt_uart_write(msg, msg_size);
 
 }
 
