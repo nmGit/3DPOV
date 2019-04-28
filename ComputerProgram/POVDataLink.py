@@ -97,7 +97,7 @@ class POVDataLink(QtCore.QThread):
         self.radio_driver.submit_for_transmit(data, "MSG")
 
     def bt_transmit_image(self, data):
-        self.radio_driver.submit_for_transmit(data, "IMG")
+        self.radio_driver.submit_image_for_transmit(data)
 
     def get_available_ports(self):
         ports = serial.tools.list_ports.comports()
@@ -110,26 +110,26 @@ class POVDataLink(QtCore.QThread):
 
         for port in ports:
             try:
-                print "trying port %s"%(str(port))
+                #print "trying port %s"%(str(port))
                 ser = serial.Serial(port[0], 115200, timeout=1, write_timeout=0, inter_byte_timeout = 0.2)
-                print "port opened..."
+                #print "port opened..."
             except:
                # traceback.print_exc()
                 continue
-            print "Flushing input"
+            #print "Flushing input"
             ser.flushInput()
-            print "writing"
+            #print "writing"
             ser.write("*IDN?\r\n")
-            print "reading"
+            #print "reading"
 
             responses.append((port[0], ser.readline()))
-            print "read, ", responses[-1]
-            print "closing..."
-            if(not ("3DRadio" in responses[-1][1])):
-                ser.close()
-            else:
-                self.radio_ser = ser
-            print "closed"
+            #print "read, ", responses[-1]
+            #print "closing..."
+            #if(not ("3DRadio" in responses[-1][1])):
+            ser.close()
+            #else:
+             #   self.radio_ser = ser
+            #print "closed"
         return responses
 
     def mn_request_port(self):
@@ -143,25 +143,25 @@ class POVDataLink(QtCore.QThread):
         self.radio_driver.start()
         while(1):
             self.msleep(500)
-            if(self.mn_request_port):
-                print "Received prot request!"
+            if(self.mn_request_port or self.bt_request_port_flag):
+               # print "Received prot request!"
                 responses = self.search_com_ports()
-                print "Responses:", responses
+                #print "Responses:", responses
 
                 if(self.mn_request_port_flag):
                     for port_resp_pair in responses:
                         if ("3DPOV" in port_resp_pair[1]):
-                            print("Found 3dpov port")
+                            #print("Found 3dpov port")
                             self.mn_request_port_flag = False
                             self.main_driver.set_rx_port(port_resp_pair[0])
                             self.main_driver.set_tx_port(port_resp_pair[0])
-                # if(self.bt_request_port_flag):
-                #     for port_resp_pair in responses:
-                #         if ("3DRadio" in port_resp_pair[1]):
-                #             print("Found 3dRadio port")
-                #             self.bt_request_port_flag = False
-                #             self.radio_driver.set_rx_port(port_resp_pair[0])
-                #             self.radio_driver.set_tx_port(port_resp_pair[0])
+                if(self.bt_request_port_flag):
+                    for port_resp_pair in responses:
+                        if ("3DRadio" in port_resp_pair[1]):
+                            #print("Found 3dRadio port")
+                            self.bt_request_port_flag = False
+                            self.radio_driver.set_rx_port(port_resp_pair[0])
+                            self.radio_driver.set_tx_port(port_resp_pair[0])
 
 
 class POVCOMPortDriver(QtCore.QThread):
@@ -203,6 +203,7 @@ class POVCOMPortDriver(QtCore.QThread):
     def msg(self, msg):
         print msg
         self.new_message_sig.emit(msg)
+
 
     def run(self):
         rx_ser = None
@@ -274,10 +275,17 @@ class POVCOMPortDriver(QtCore.QThread):
                 try:
                     while (1):
                         if (rx_ser.inWaiting()):
-                            self.receive(rx_ser.read())
+                            c = rx_ser.read()
+                            self.receive(c)
+                            #self.msg("Incoming: %s" % c);
+                            #print "Incoming %c" % c
                         if (not self.tx_packet_queue.empty()):
                             data = self.tx_packet_queue.get()
-                            tx_ser.write(data)
+                            print "Found new data in tx queue: %s" % str(data)
+                            if(data != None):
+                                tx_ser.write(data)
+                                self.msg("Outgoing: %s" % data);
+                            #self.msleep(100)
                 except:
                     traceback.print_exc()
                     self.msg("Port error")
@@ -313,6 +321,7 @@ class POVRadioBoardDriver(POVCOMPortDriver):
     new_message_sig = pyqtSignal(str)
     new_rx_sig = pyqtSignal(str)
     new_tx_sig = pyqtSignal(str)
+    tx_image_packet_queue = Queue()
     packets = []
     def __init__(self):
         super(POVRadioBoardDriver, self).__init__()
@@ -337,36 +346,60 @@ class POVRadioBoardDriver(POVCOMPortDriver):
 
     def get_last_image_packets(self):
         return self.packets
+        
+    def continue_image_transmission(self, text):
+        self.msg("Remaining packets: %d" % self.tx_image_packet_queue.qsize());
+        self.submit_packet_for_transmit(self.tx_image_packet_queue.get())
+        
+    def submit_image_for_transmit(self, data):
+        d = np.reshape(data, (1600, 3)).tolist()
 
+        data = np.zeros(100*16*3).tolist()
+        for i,pixel in enumerate(d):
+            position = (16 * (i % 100) + i/100)*3
+            data[position + 0] = pixel[0]
+            data[position + 1] = pixel[1]
+            data[position + 2] = pixel[2]
+
+        data = np.reshape(data, (100, 48)).tolist()
+        #print data
+        data_flat = []
+        for row in data:
+            for val in row:
+                data_flat.append(val)
+        self.image_packets = data_to_packets(data_flat, "IMG", 16 * 3)
+        print "Submitting first packet %s" % str(self.image_packets[0])
+        self.submit_packet_for_transmit(self.image_packets[0])
+        for packet in self.image_packets[1:-1]:
+            self.tx_image_packet_queue.put(packet)
+
+    def submit_packet_for_transmit(self, packet):
+
+        packet.append('\n')
+        print("Sending another packet: %s" % str(packet))
+        self.tx_packet_queue.put(packet)
+    
     def submit_for_transmit(self, data, data_type):
         #if(self.serialState == self.connected):
             # 16 pixels x 3 bytes (RGB) per pixel
         try:
             if data_type == "IMG":
-                d = np.reshape(data, (1600, 3)).tolist()
-
-                data = np.zeros(100*16*3).tolist()
-                for i,pixel in enumerate(d):
-                    position = (16 * (i % 100) + i/100)*3
-                    data[position + 0] = pixel[0]
-                    data[position + 1] = pixel[1]
-                    data[position + 2] = pixel[2]
-
-                data = np.reshape(data, (100, 48)).tolist()
-                print data
-                data_flat = []
-                for row in data:
-                    for val in row:
-                        data_flat.append(val)
+                print "You used the wrong function!"
                 #data = [d for d in data]
 
-
-                self.packets = data_to_packets(data_flat, data_type, 16 * 3)
             else:
                 self.packets = data_to_packets(data, data_type, len(data))
+                
             for packet in self.packets:
-                print "adding packet:", packet
+                #print "adding packet:", packet
+               # time.sleep(0.1)
+                
+                self.msg("Transmitting packet")
+                print "Transmitting packet"
+
                 self.tx_packet_queue.put(packet)
+                    
+                
         except:
             traceback.print_exc()
 

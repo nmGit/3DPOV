@@ -1,5 +1,5 @@
 from PyQt4 import QtCore, QtGui
-
+from PyQt4.QtCore import QObject, pyqtSignal
 import sys
 
 from rasterViewer import rasterViewer
@@ -19,13 +19,14 @@ class main(QtGui.QMainWindow):
 
     szx = 32
     szy = 32
+    radio_ack_sig = pyqtSignal(str)
     def __init__(self):
         super(main, self).__init__()
 
         self.setWindowTitle("3D POV Tools")
         self.mainTabWidget = DockArea()
 
-
+        self.bt_rx_line = []
 
         self.control_widget = QtGui.QFrame()
         self.control_layout = QtGui.QGridLayout()
@@ -106,7 +107,8 @@ class main(QtGui.QMainWindow):
         self.datalink.new_mn_rx.connect(self.new_main_rx)
         self.datalink.new_bt_driver_state.connect(self.new_bt_state)
         self.datalink.new_bt_rx.connect(self.new_bt_rx)
-
+        self.radio_ack_sig.connect(self.datalink.radio_driver.continue_image_transmission)
+        
         self.datalink.start()
 
         pass
@@ -168,16 +170,25 @@ class main(QtGui.QMainWindow):
             self.bt_cmd_line.addLine(state, (255, 255, 100))
 
     def new_bt_rx(self):
-
+        
+       # print "Received something from bluetooth:"
         while(True):
             char = self.datalink.bt_driver_next_byte()
             if(char == '\0'):
                 break
-            print "BT received:%s or %x" % (char[0], ord(str(char)))
+            #print "BT received:%s or %x" % (char[0], ord(str(char)))
             self.bt_cmd_line.addChar(char)
+            self.bt_rx_line.append(str(char))
+            
+            if("END" in ''.join(self.bt_rx_line)):
+                self.radio_ack_sig.emit(''.join(self.bt_rx_line))
+                
+            if(str(char) == '\n'):
+                self.bt_rx_line = []
+                
             if(char == '\0'):
                 break
-
+        print "Line Received: %s" % ''.join(self.bt_rx_line)
     def new_bt_tx(self, string):
         for chr in string:
             self.bt_cmd_line.addChar(chr)
