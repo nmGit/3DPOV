@@ -91,7 +91,6 @@
 #include "OS/main_freertos.h"
 #include "Board.h"
 #include "DebugUART.h"
-#include "PWM.h"
 
 int main(void)
 {
@@ -100,7 +99,6 @@ int main(void)
     Board_init();
     processor_init();
     platform_init();
-    pwm_init();
 
     // Starts scheduler. NO RETURN
     free_rtos_init();

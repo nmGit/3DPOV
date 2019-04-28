@@ -1,9 +1,10 @@
-#include <platform/platform_init.h>
+ #include <platform/platform_init.h>
 #include "MSP_EXP432P401R.h"
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <ti/devices/msp432p4xx/inc/msp.h>
 #include "DebugUART.h"
 #include "Board.h"
+#include "PWM.h"
 // NAM UART
 // JS TIMER/PWM
 char        input;
@@ -15,9 +16,9 @@ char        input;
 void timerA_init()
 {
     // Pin muxing
-    P2->DIR  |= BIT4;
-    P2->SEL0 |= BIT4;
-    P2->SEL1 &= ~BIT4;
+    P2->DIR  |= BIT5;
+    P2->SEL0 |= BIT5;
+    P2->SEL1 &= ~BIT5;
 
 //    TIMER_A0->CTL |= TIMER_A_CTL_TASSEL_1       // Using SMCLK
 //            | TIMER_A_CTL_MC__UP;               // Timer will count up to value in TA0CCR0 and reset (up mode)
@@ -153,6 +154,7 @@ void platform_init()
     bt_UART_init();
     dbg_UART_init();
     timerA_init();
+    pwm_init();
 }
 
 void print_init_message()
