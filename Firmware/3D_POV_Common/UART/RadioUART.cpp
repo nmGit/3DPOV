@@ -16,7 +16,7 @@
 extern char uart_a_1_rcvd_chr;
 
 static volatile bool done_transmitting = true;
-static bool rxbuf_rdy = false;
+volatile bool rxbuf_rdy = false;
 
 static uint8_t rx_buf[RX_BUF_SIZE];
 static unsigned rx_buf_head = 0;

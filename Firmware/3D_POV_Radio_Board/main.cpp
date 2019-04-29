@@ -30,6 +30,7 @@
 //*****************************************************************************
 bool shift_out;
 extern img_pos_packet test_bars[];
+extern volatile bool rxbuf_rdy;
 
 int main(void) {
 
@@ -60,7 +61,6 @@ int main(void) {
 //        pos %= TOTAL_POS;
 
 
-        led_bt_get_packet();
         if(shift_out){
             led_transmit_data(pos);
 
@@ -69,7 +69,10 @@ int main(void) {
             pos %= TOTAL_POS;
             shift_out = false;
         }
-
+        if(rxbuf_rdy){
+            led_bt_get_packet();
+            rxbuf_rdy = false;
+        }
     }
 
 
