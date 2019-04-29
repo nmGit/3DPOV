@@ -87,7 +87,7 @@ class POVCommandLine(QtGui.QFrame):
             self.line = ""
             pass
         else:
-            self.line += chr
+            self.line += str(chr)
             self.text_window.setItemWidget(self.last_item, QtGui.QLabel(self.line))
 
         self.text_window.setFont(QtGui.QFont("Lucida Console"))

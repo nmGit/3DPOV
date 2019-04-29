@@ -5,6 +5,7 @@ import serial
 from datapacking import data_to_packets
 import traceback
 import numpy as np
+import time
 class POVDataLink(QtCore.QThread):
 
     bt_rx_queue = Queue()
@@ -50,8 +51,8 @@ class POVDataLink(QtCore.QThread):
         pass
 
     def mn_rx_handler(self, string):
-        for c in string:
-            self.mn_rx_queue.put(c)
+
+        self.mn_rx_queue.put(chr(string))
         self.new_mn_rx.emit()
 
     def mn_driver_next_byte(self):
@@ -80,15 +81,19 @@ class POVDataLink(QtCore.QThread):
 
     def bt_rx_handler(self, string):
 
-        for c in string:
-            self.bt_rx_queue.put(c)
+       # for c in string:
+
+        self.bt_rx_queue.put(chr(string))
         self.new_bt_rx.emit()
+
+    def bt_driver_rx_queue_empty(self):
+        return self.bt_rx_queue.empty()
 
     def bt_driver_next_byte(self):
         if(not self.bt_rx_queue.empty()):
             return self.bt_rx_queue.get()
         else:
-            return '\0'
+            return None
     #def bt_tx_handler(self, string):
     #    for c in string:
     #        self.bt_tx_queue.put(c)
@@ -147,7 +152,7 @@ class POVDataLink(QtCore.QThread):
             if(self.mn_request_port or self.bt_request_port_flag):
                # print "Received prot request!"
                 responses = self.search_com_ports()
-                print "Responses:", responses
+                #print "Responses:", responses
 
                 if(self.mn_request_port_flag):
                     for port_resp_pair in responses:
@@ -285,15 +290,19 @@ class POVCOMPortDriver(QtCore.QThread):
                         if (rx_ser.inWaiting()):
                             c = rx_ser.read()
                             self.receive(c)
-                            #self.msg("Incoming: %s" % c);
+                            # if ord(c) >= 32 and ord(c) <= 127:
+                            #     self.msg("Incoming char: %s" % c);
+                            # else:
+                            #     self.msg("Incoming byte: [%d]" % ord(c))
                             #print "Incoming %c" % c
                         if (not self.tx_packet_queue.empty()):
                             data = self.tx_packet_queue.get()
-                            print "Found new data in tx queue: %s" % str(data)
+                            #print "Found new data in tx queue: %s" % str(data)
                             #if(data != None):
                             tx_ser.write(data)
                             #self.msg("Outgoing: %s " % (data));
                             #self.msleep(100)
+                        self.housekeeping()
                         self.yieldCurrentThread()
                 except:
                     traceback.print_exc()
@@ -304,7 +313,7 @@ class POVCOMPortDriver(QtCore.QThread):
 
 class POVMainBoardDriver(POVCOMPortDriver):
     new_message_sig = pyqtSignal(str)
-    new_rx_sig = pyqtSignal(str)
+    new_rx_sig = pyqtSignal(int)
     request_port_sig = pyqtSignal()
     def __init__(self):
         super(POVMainBoardDriver, self).__init__()
@@ -313,13 +322,16 @@ class POVMainBoardDriver(POVCOMPortDriver):
 
     def receive(self, rx_data):
         # print "Received", rx_data
-        self.new_rx_sig.emit(rx_data)
+        self.new_rx_sig.emit(int(ord(rx_data)))
+
+    def housekeeping(self):
+        pass
 
     def submit_for_transmit(self, data, data_type):
         if(self.serialState == self.connected):
             # 16 pixels x 3 bytes (RGB) per pixel
             packets = data_to_packets([data], data_type, 1)
-            print "Main tx:", packets
+            #print "Main tx:", packets
             #for packet in packets:
             #packets.append(ord("\r"))
             packets[0].append(ord("\n"))
@@ -330,11 +342,13 @@ class POVMainBoardDriver(POVCOMPortDriver):
 class POVRadioBoardDriver(POVCOMPortDriver):
 
     new_message_sig = pyqtSignal(str)
-    new_rx_sig = pyqtSignal(str)
-    new_tx_sig = pyqtSignal(str)
+    new_rx_sig = pyqtSignal(int)
+    new_tx_sig = pyqtSignal(int)
     request_port_sig = pyqtSignal()
     tx_image_packet_queue = Queue()
     packets = []
+
+    packet_seq_index = 5
     def __init__(self):
         super(POVRadioBoardDriver, self).__init__()
         print("Starting radio board driver...")
@@ -346,26 +360,55 @@ class POVRadioBoardDriver(POVCOMPortDriver):
         self.serialState = self.disconnected
         self.com_rx_port = None
         self.com_tx_port = None
+
+        self.time_since_last_ack = 0
+        self.max_ack_wait_time = 0.2
         self.start()
 
+        self.last_packet_sent = 0
+        self.acked_packets = []
+        self.time_of_transmit = time.time()
+        for a in range(100):
+            self.acked_packets.append(False)
     def msg(self, msg):
         print msg
         self.new_message_sig.emit(msg)
 
     def receive(self, rx_data):
-        # print "Received", rx_data
-        self.new_rx_sig.emit(rx_data)
+        print "Received", rx_data
+        self.new_rx_sig.emit(int(ord(rx_data)))
 
     def get_last_image_packets(self):
         return self.packets
-        
+
+    def resetAcketPackets(self):
+
+        for i,p in enumerate(self.acked_packets):
+            self.acked_packets[i] = False
+
+    def packetAcked(self, packet_num):
+        print "Acking message: %d" %(packet_num)
+        self.acked_packets[packet_num] = True
+
     def continue_image_transmission(self, text):
-        #self.msg("Remaining packets: %d" % self.tx_image_packet_queue.qsize());
-        if(not self.tx_image_packet_queue.empty()):
-            packet = self.tx_image_packet_queue.get()
-            self.submit_packet_for_transmit(packet)
+        # Send another packet only if the last one we have sent has been acked
+        if(self.acked_packets[self.last_packet_sent]):
+            if (not self.tx_image_packet_queue.empty()):
+                packet = self.tx_image_packet_queue.get()
+                self.time_of_transmit = time.time()
+                self.submit_packet_for_transmit(packet)
+                self.last_packet_sent = packet[self.packet_seq_index]
+
+        elif(not self.tx_image_packet_queue.empty()):
+            if( time.time() - self.time_of_transmit > self.max_ack_wait_time):
+                #print "Acknowledge timeout, sending ack request"
+                self.time_of_transmit = time.time()
+                self.submit_packet_for_transmit(['P','C','K'])
 
 
+
+    def housekeeping(self):
+        self.continue_image_transmission(None)
         
     def submit_image_for_transmit(self, data):
         d = np.reshape(data, (1600, 3)).tolist()
@@ -384,7 +427,9 @@ class POVRadioBoardDriver(POVCOMPortDriver):
             for val in row:
                 data_flat.append(val)
         self.image_packets = data_to_packets(data_flat, "IMG", 16 * 3)
-        print "Submitting first packet %s" % str(self.image_packets[0])
+
+        #print "Submitting first packet %s" % str(self.image_packets[0])
+        self.resetAcketPackets()
         self.submit_packet_for_transmit(self.image_packets[0])
         for packet in self.image_packets[1:-1]:
             self.tx_image_packet_queue.put(packet)
@@ -392,7 +437,7 @@ class POVRadioBoardDriver(POVCOMPortDriver):
     def submit_packet_for_transmit(self, packet):
 
         packet.append('\n')
-        print("Sending another packet: %s" % str(packet))
+        #print("Sending another packet: %s" % str(packet))
         self.tx_packet_queue.put(packet)
     
     def submit_for_transmit(self, data, data_type):
@@ -405,16 +450,16 @@ class POVRadioBoardDriver(POVCOMPortDriver):
 
             else:
                 self.packets = data_to_packets(data, data_type, len(data))
-                
+               # print "BT Transmit packets %s" % self.packets
             for packet in self.packets:
                 #print "adding packet:", packet
                # time.sleep(0.1)
                 
-                self.msg("Transmitting packet")
-                print "Transmitting packet"
+                #self.msg("Transmitting packet")
+                #print "Transmitting packet"
 
                 self.tx_packet_queue.put(packet)
-                    
+
                 
         except:
             traceback.print_exc()
