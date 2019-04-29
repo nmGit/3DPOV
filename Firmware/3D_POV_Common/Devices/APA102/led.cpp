@@ -14,6 +14,7 @@
 void led_init(uint8_t bright_val) {
 
     brightness = bright_val;
+//    bt_buffer->pos_idx = 101;
 
 }
 
@@ -32,7 +33,22 @@ void led_bt_get_packet() {
             msg_size = sprintf((char*)rxmsg, "Packet Number: %d\n", bt_buffer->pos_idx);
             bt_uart_write(rxmsg, msg_size);
             led_bt_fill_buffer();
-            msg_size = sprintf((char*)rxmsg, "END\n");
+            msg_size = 5;
+            rxmsg[0] = 'A';
+            rxmsg[1] = 'C';
+            rxmsg[2] = 'K';
+            rxmsg[3] = ' ';
+            rxmsg[4] = (bt_buffer->pos_idx);
+            //msg_size = sprintf((char*)rxmsg, "ACK\0%d\n", bt_buffer->pos_idx);
+            bt_uart_write(rxmsg, msg_size);
+        } else if (strncmp((char*)bt_buffer,"PCK",3) == 0) {
+            msg_size = 5;
+            rxmsg[0] = 'A';
+            rxmsg[1] = 'C';
+            rxmsg[2] = 'K';
+            rxmsg[3] = ' ';
+            rxmsg[4] = (bt_buffer->pos_idx);
+            //msg_size = sprintf((char*)rxmsg, "PCK\0%d", bt_buffer->pos_idx);
             bt_uart_write(rxmsg, msg_size);
         } else if (strncmp((char*)bt_buffer,"*IDN?",5) == 0) {
             msg_size = sprintf((char*)rxmsg,"3DRadio");

@@ -233,6 +233,8 @@ void spiInit_B_type() {
     // Enable global interrupt
     __enable_irq();
 
+    MAP_Interrupt_setPriority(INT_EUSCIB0,0x7);
+    MAP_Interrupt_enableInterrupt(INT_EUSCIB0);
 
     // Enable eUSCIAx interrupt in NVIC module -- must define IRQs for all!
     NVIC->ISER[0] = 1 << ((EUSCIB0_IRQn) & 31) |    // eUSCI_B0

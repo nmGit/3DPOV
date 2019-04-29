@@ -22,6 +22,6 @@ void hallInit(){
     P1->IES &= ~BIT0;   // Trigger interrupt on rising edge (0->1)
     P1->IE  |= BIT0;    // Interrupt Enable
 
-    MAP_Interrupt_setPriority(INT_PORT1, 0x20);
+    MAP_Interrupt_setPriority(INT_PORT1, 0x6);
     MAP_Interrupt_enableInterrupt(INT_PORT1);
 }

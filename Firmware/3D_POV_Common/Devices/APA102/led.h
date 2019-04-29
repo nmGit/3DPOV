@@ -121,7 +121,7 @@ typedef struct {
 // Image Data Structures
 //*****************************************************************************
 position_type image[TOTAL_POS][1];       // Image stored in memory
-img_pos_packet bt_buffer[sizeof(img_pos_packet)];              // Image buffer from Bluetooth
+img_pos_packet bt_buffer[1];              // Image buffer from Bluetooth
 img_pos_packet str_buffer;              // Image buffer from string
 
 //*****************************************************************************

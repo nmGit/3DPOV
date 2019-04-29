@@ -50,7 +50,7 @@ extern "C" void bt_UART_init() {
 #ifdef NAM
     __enable_irq();
 #endif // NAM
-    MAP_Interrupt_setPriority(INT_EUSCIA1,0x30);
+    MAP_Interrupt_setPriority(INT_EUSCIA1,0xA);
     MAP_Interrupt_enableInterrupt(INT_EUSCIA1);
 #ifdef NAM
     Interrupt_setPriority(INT_EUSCIA1,0x30);
@@ -88,7 +88,7 @@ void platform_init()
     SysTick_setPeriod(480);
     SysTick_enableInterrupt();
     SysTick_enableModule();
-
+    MAP_Interrupt_setPriority(FAULT_SYSTICK,0x8);
 
     allow_port_mapping();
     led_init(FULL);             // Creates LED data structure
