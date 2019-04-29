@@ -19,13 +19,16 @@ class main(QtGui.QMainWindow):
 
     szx = 32
     szy = 32
-    radio_ack_sig = pyqtSignal(int)
-    radio_rtr_sig = pyqtSignal(int)
+   # radio_ack_sig = pyqtSignal(int)
+   # radio_rtr_sig = pyqtSignal(int)
+
+
     def __init__(self):
         super(main, self).__init__()
 
         self.setWindowTitle("3D POV Tools")
         self.mainTabWidget = DockArea()
+
 
         self.bt_rx_line = []
 
@@ -108,11 +111,22 @@ class main(QtGui.QMainWindow):
         self.datalink.new_mn_rx.connect(self.new_main_rx)
         self.datalink.new_bt_driver_state.connect(self.new_bt_state)
         self.datalink.new_bt_rx.connect(self.new_bt_rx)
+
+
+        self.datalink.radio_cmd_line_sig.connect(self.bt_cmd_line_handler)
+        self.datalink.mn_cmd_line_sig.connect(self.mn_cmd_line_handler)
+
         #self.radio_ack_sig.connect(self.datalink.radio_driver.continue_image_transmission)
-        self.radio_ack_sig.connect(self.datalink.radio_driver.packetAcked)
+        #self.radio_ack_sig.connect(self.datalink.radio_driver.packetAcked)
         self.datalink.start()
 
         pass
+
+    def bt_cmd_line_handler(self, string, red, green, blue):
+        self.bt_cmd_line.addLine(string, (red, green, blue))
+
+    def mn_cmd_line_handler(self, string, red, green, blue):
+        self.mn_cmd_line.addLine(string, (red, green, blue))
 
     def bt_com_port_refresh(self):
         ports = self.datalink.get_available_ports()
@@ -171,29 +185,21 @@ class main(QtGui.QMainWindow):
             self.bt_cmd_line.addLine(state, (255, 255, 100))
 
     def new_bt_rx(self):
-        
-       # print "Received something from bluetooth:"
+        # We have received something on bluetooth
+
         while(not self.datalink.bt_driver_rx_queue_empty()):
             char = ord(self.datalink.bt_driver_next_byte())
-            #print "BT Rx char", char
-            # if(char == None):
-            #     break
-            #print "BT received:%s" % (char)
-            self.bt_cmd_line.addChar(char)
-            self.bt_rx_line.append(char)
-            #print "Bt RX line: ", self.bt_rx_line
-            self.bt_rx_line_str = [chr(c) for c in self.bt_rx_line]
-            if("ACK" in ''.join(self.bt_rx_line_str) and "ACK" in ''.join(self.bt_rx_line_str[-5:-2])):
-                num = self.bt_rx_line[-1]
-                self.radio_ack_sig.emit(num)
-                self.bt_cmd_line.addLine("Ack Received: %d"%num, (180, 230, 255))
-                self.bt_rx_line = []
-            # if("PCK" in ''.join(self.bt_rx_line)):
-            #     self.radio_rtr_sig.emit(''.join(self.bt_rx_line[4]))
-            #     self.bt_rx_line = []
-            if(str(char) == '\n'):
+            self.bt_cmd_line.addChar(chr(char))
+           # self.bt_rx_line.append(char)
+           # self.bt_rx_line_str = [chr(c) for c in self.bt_rx_line]
+           # if("ACK" in ''.join(self.bt_rx_line_str) and "ACK" in ''.join(self.bt_rx_line_str[-5:-2])):
+           #     num = self.bt_rx_line[-1]
+           #     self.radio_ack_sig.emit(num)
+           #     self.bt_cmd_line.addLine("Ack Received: %d"%num, (180, 230, 255))
+           #     self.bt_rx_line = []
+            #if(str(char) == '\n'):
 
-                print "Line Received: %s" % ''.join(self.bt_rx_line_str)
+             #   print "Line Received: %s" % ''.join(self.bt_rx_line_str)
 
 
     def new_bt_tx(self, string):

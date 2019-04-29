@@ -28,6 +28,10 @@ class POVDataLink(QtCore.QThread):
     mn_request_port_flag = False
     bt_request_port_flag = False
 
+    radio_ack_sig = pyqtSignal(int)
+
+    radio_cmd_line_sig = pyqtSignal(str, int, int, int)
+    mn_cmd_line_sig = pyqtSignal(str, int, int, int)
 
     def __init__(self):
         super(POVDataLink, self).__init__()
@@ -44,10 +48,16 @@ class POVDataLink(QtCore.QThread):
         self.radio_driver.new_rx_sig.connect(self.bt_rx_handler)
         self.radio_driver.new_message_sig.connect(self.bt_driver_state_change_handler)
 
+        self.radio_ack_sig.connect(self.radio_driver.packetAcked)
+
         self.com_tx_port = None
         self.com_rx_port = None
 
         self.radio_ser = None
+
+        self.last_packet_sent = None
+        self.bt_rx_line = []
+
         pass
 
     def mn_rx_handler(self, string):
@@ -79,12 +89,22 @@ class POVDataLink(QtCore.QThread):
     def bt_driver_get_state(self):
         return self.bt_driver_state
 
-    def bt_rx_handler(self, string):
+    def bt_rx_handler(self, char):
 
-       # for c in string:
+        #self.bt_cmd_line.addChar(char)
+        self.bt_rx_line.append(char)
+        self.bt_rx_line_str = [chr(c) for c in self.bt_rx_line]
+        if (str(char) == '\n'):
+            print "Line Received: %s" % ''.join(self.bt_rx_line_str)
+        if ("ACK" in ''.join(self.bt_rx_line_str) and "ACK" in ''.join(self.bt_rx_line_str[-5:-2])):
+            num = self.bt_rx_line[-1]
+            self.radio_ack_sig.emit(num)
+            self.radio_cmd_line_sig.emit("Ack Received: %d" % num, 180, 230, 255)
+            self.bt_rx_line = []
 
-        self.bt_rx_queue.put(chr(string))
-        self.new_bt_rx.emit()
+        else:
+            self.bt_rx_queue.put(chr(char))
+            self.new_bt_rx.emit()
 
     def bt_driver_rx_queue_empty(self):
         return self.bt_rx_queue.empty()
@@ -365,7 +385,9 @@ class POVRadioBoardDriver(POVCOMPortDriver):
         self.max_ack_wait_time = 0.2
         self.start()
 
-        self.last_packet_sent = 0
+        self.last_packet_num_sent = 0
+        self.last_packet_sent = None
+
         self.acked_packets = []
         self.time_of_transmit = time.time()
         for a in range(100):
@@ -382,7 +404,7 @@ class POVRadioBoardDriver(POVCOMPortDriver):
         return self.packets
 
     def resetAcketPackets(self):
-
+        self.last_packet_num_sent = 0
         for i,p in enumerate(self.acked_packets):
             self.acked_packets[i] = False
 
@@ -392,19 +414,24 @@ class POVRadioBoardDriver(POVCOMPortDriver):
 
     def continue_image_transmission(self, text):
         # Send another packet only if the last one we have sent has been acked
-        if(self.acked_packets[self.last_packet_sent]):
+
+        if(self.acked_packets[self.last_packet_num_sent]):
             if (not self.tx_image_packet_queue.empty()):
                 packet = self.tx_image_packet_queue.get()
+                self.last_packet_set = packet
                 self.time_of_transmit = time.time()
                 self.submit_packet_for_transmit(packet)
-                self.last_packet_sent = packet[self.packet_seq_index]
+                self.last_packet_num_sent = packet[self.packet_seq_index]
 
         elif(not self.tx_image_packet_queue.empty()):
             if( time.time() - self.time_of_transmit > self.max_ack_wait_time):
                 #print "Acknowledge timeout, sending ack request"
                 self.time_of_transmit = time.time()
-                self.submit_packet_for_transmit(['P','C','K'])
-
+                #
+                if(self.last_packet_sent == None):
+                    self.submit_packet_for_transmit(['P', 'C', 'K'])
+                else:
+                    self.submit_packet_for_transmit(self.last_packet_sent)
 
 
     def housekeeping(self):
